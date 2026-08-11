@@ -10,12 +10,18 @@ export interface SystemStatus {
   categories: Category[];
 }
 
-// Ask the backend whether it is alive.
+// Ask the backend whether it is alive, then read the category list from it.
 // Throwing on failure (bad HTTP status OR no connection at all) lets App.tsx show
 // one single Offline state instead of handling errors in several places.
 export async function checkSystem(): Promise<SystemStatus> {
   const health = await fetch(`${API_URL}/api/health`);
   if (!health.ok) throw new Error(`Health check failed (HTTP ${health.status})`);
 
-  return { online: true, categories: [] };
+  const categoriesResponse = await fetch(`${API_URL}/api/categories`);
+  if (!categoriesResponse.ok) {
+    throw new Error(`Category list failed (HTTP ${categoriesResponse.status})`);
+  }
+  const categories: Category[] = await categoriesResponse.json();
+
+  return { online: true, categories };
 }

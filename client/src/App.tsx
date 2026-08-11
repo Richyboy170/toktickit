@@ -7,7 +7,6 @@ type UiState = "idle" | "loading" | "success" | "error";
 export default function App() {
   const [state, setState] = useState<UiState>("idle");
   const [categories, setCategories] = useState<Category[]>([]);
-  void categories;
 
   async function handleCheck() {
     setState("loading");
@@ -32,13 +31,26 @@ export default function App() {
       </button>
 
       {state === "loading" && (
-        <p className="mt-4 text-muted">⏳ Loading…</p>
+        <p className="mt-4 text-muted" role="status">⏳ Loading…</p>
       )}
 
       {state === "success" && (
-        <p className="mt-4">
-          System Status: <span className="fw-bold text-success">Online</span>
-        </p>
+        <div className="mt-4">
+          <p>
+            System Status: <span className="fw-bold text-success">Online</span>
+          </p>
+
+          <h2 className="h5 mt-4">Supported Request Categories</h2>
+          {categories.length === 0 ? (
+            <p className="text-muted">No categories found in the database.</p>
+          ) : (
+            <ol>
+              {categories.map((category) => (
+                <li key={category.id}>{category.name}</li>
+              ))}
+            </ol>
+          )}
+        </div>
       )}
 
       {state === "error" && (

@@ -1,14 +1,23 @@
 import { getPrisma } from "../src/prisma.js";
 
-// Issue 3 — seed the four supported categories.
-// The four names are: Account and Access, Hardware, Software, Network.
-// Requirement: running the seed twice must NOT create duplicates.
-// Hint: prisma.category.upsert({ where:{name}, update:{}, create:{name} }).
+// The four categories the stakeholder asked for, in display order.
+const CATEGORY_NAMES = ["Account and Access", "Hardware", "Software", "Network"];
+
 async function main() {
   const prisma = getPrisma();
-  void prisma;
-  // TODO(Issue 3): upsert each category so the seed is idempotent.
-  console.log("TODO: implement the category seed.");
+
+  for (const name of CATEGORY_NAMES) {
+    // upsert = "insert it, or do nothing if a row with this name already exists".
+    // Combined with @unique on name, this makes the seed idempotent: running it
+    // ten times still leaves exactly four rows.
+    await prisma.category.upsert({
+      where: { name },
+      update: {},
+      create: { name },
+    });
+  }
+
+  console.log(`Seeded ${CATEGORY_NAMES.length} categories.`);
 }
 
 main()

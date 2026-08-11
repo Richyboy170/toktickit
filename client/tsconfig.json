@@ -6,6 +6,8 @@
     "moduleResolution": "bundler",
     "jsx": "react-jsx",
     "strict": true,
+    // Vite does the bundling; tsc is only used to type-check, so it emits nothing.
+    "noEmit": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "types": ["vitest/globals", "@testing-library/jest-dom"]

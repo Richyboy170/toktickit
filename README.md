@@ -25,11 +25,23 @@ React (client) ──HTTP──> Express (server) ──Prisma──> PostgreSQL
 
 ### 2.1 Database
 
-Create the database and user that `server/.env.example` expects
+PostgreSQL 17 must be listening on port 5432. This machine uses the official
+PostgreSQL zip binaries (no Windows service), so the server is started by hand:
+
+```bash
+"C:/Users/julia/pgsql/bin/pg_ctl" -D "C:/Users/julia/pgdata" -l "C:/Users/julia/pgdata/server.log" start
+# stop it again with:  pg_ctl -D "C:/Users/julia/pgdata" stop
+```
+
+If you installed PostgreSQL with the normal Windows installer instead, it already
+runs as a service and you can skip that step.
+
+Then create the database and user that `server/.env.example` expects
 (run in `psql` as the `postgres` superuser):
 
 ```sql
 CREATE USER toktickit WITH PASSWORD 'toktickit';
+ALTER USER toktickit CREATEDB;      -- Prisma needs this for its shadow database
 CREATE DATABASE toktickit OWNER toktickit;
 ```
 

@@ -15,6 +15,7 @@
 | [#7](https://github.com/Richyboy170/toktickit/pull/7) | `feature/3-category-seed` | TO FILL |
 | [#8](https://github.com/Richyboy170/toktickit/pull/8) | `feature/4-category-list` | TO FILL |
 | [#9](https://github.com/Richyboy170/toktickit/pull/9) | `lab1-staging` → `main` | TO FILL |
+| [#10](https://github.com/Richyboy170/toktickit/pull/10) | `docs/lab-01-review-evidence` | **left open for review before merge** |
 
 **Reviewer comment I received:** TO FILL
 **How I responded:** TO FILL

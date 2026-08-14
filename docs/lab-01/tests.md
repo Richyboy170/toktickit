@@ -60,4 +60,12 @@ $ curl http://localhost:3000/api/categories
  {"id":3,"name":"Software"},{"id":4,"name":"Network"}]
 ```
 
-<!-- TO FILL: paste your own screenshot of the two `npm test` runs on the main branch. -->
+## Passing test runs on `main`
+
+**Server — Supertest (API-01, API-02):**
+
+![Server test run: 2 passed (2) — health.test.ts and categories.test.ts](server-test.png)
+
+**Client — Vitest (UI-01, UI-02, UI-03):**
+
+![Client test run: 3 passed (3) — App.test.tsx](client-test.png)

@@ -22,3 +22,6 @@ then execution mode.
      - which prompt needed a follow-up and why
      - one thing the agent proposed that you rejected or changed
      - what made your later prompts better than your first one -->
+- The first prompt because we have to specify what we really want and by using plan mode, we need to follow up the work and approve to make sure that the LLM use our tokens in the correct direction that we want it to work on.
+- The agent proposed me that it wants to make a folder dev outside of the course folder that I created and I rejected it and changed it to make the dev folder inside the course folder so it will be /course/dev/toktickit instead of /dev.
+- Experiece of how AI agents work will help me to know what is understandable and not to the AI agent and able to improve how I interact with the AI agent to get better output.

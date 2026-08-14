@@ -16,6 +16,18 @@ then execution mode.
 | 7 | "Add `GET /api/categories` reading from PostgreSQL through Prisma, in id order." | Route plus the Supertest test (API-02) and the Vitest success test (UI-02). |
 | 8 | "Explain every file so I can defend it in the lab session." | Produced the "How it works" section of the README — one line per file, plus the reasoning behind splitting `app.ts` from `index.ts` and making the Prisma client lazy. |
 
+## A correction worth recording
+
+While trying to screenshot the running app, the agent could not load
+`http://localhost:5173` and concluded that the Vite dev server was binding to IPv6 only.
+It changed `vite.config.ts` to bind IPv4 explicitly — and the page still did not load.
+Testing the API port, which listens on every interface and answers `curl` correctly,
+produced the same failure, which showed the problem was the browser tooling and not the
+server at all. The binding was left in place because it is harmless and the app runs
+correctly with it, but the reason written in the comment above it is not the real
+explanation. This was the clearest lesson of the lab for me: a confident, plausible
+diagnosis from the agent is still only a guess until something is actually tested.
+
 ## Reflection
 
 <!-- TO FILL — write 2–3 sentences in your own words. Points worth making:

@@ -33,3 +33,10 @@ merged, and none of them required changes, so no Issue had to move from *PR Revi
 | PR | Branch | My verdict | My comment | Partner's response |
 |---|---|---|---|---|
 | *TO FILL* | *TO FILL* | *TO FILL* | *TO FILL* | *TO FILL* |
+
+---
+
+*Note on how the approvals were recorded:* for PRs #5–#9 the approval is the reviewer's
+comment on the Pull Request conversation, quoted verbatim above. GitHub hides the formal
+*Review changes → Approve* control once a Pull Request has been merged, so PR #11 was left
+open for the peer review of this document and carries the formal approval.

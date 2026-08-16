@@ -13,14 +13,11 @@
 
 | PR | Branch | Verdict | Reviewer's comment | My response |
 |---|---|---|---|---|
-| [#5](https://github.com/Richyboy170/toktickit/pull/5) | `feature/1-project-foundation` | ✅ Approved | "Nice work, all clear Gj!" | Thanked the reviewer; no changes were requested, so the branch was merged as-is. |
-| [#6](https://github.com/Richyboy170/toktickit/pull/6) | `feature/2-health-check` | ✅ Approved | "Nice work, clearly detailed, gj!" | Thanked the reviewer; no changes were requested, so the branch was merged as-is. |
-| [#7](https://github.com/Richyboy170/toktickit/pull/7) | `feature/3-category-seed` | ✅ Approved | "Good job! Nice work, well done!" | Thanked the reviewer; no changes were requested, so the branch was merged as-is. |
-| [#8](https://github.com/Richyboy170/toktickit/pull/8) | `feature/4-category-list` | ✅ Approved | "Very clearly detailed, good job!" | Thanked the reviewer; no changes were requested, so the branch was merged as-is. |
-| [#9](https://github.com/Richyboy170/toktickit/pull/9) | `lab1-staging` → `main` | ✅ Approved | "Well done! Very clearly detailed and good job, Richy!" | Thanked the reviewer for reviewing the whole Lab 1 integration branch before it entered `main`. |
-
-**Summary:** all five Pull Requests were approved with no change requests, so none of the
-Issues had to move from *PR Review* back to *Fixing* on the Kanban board.
+| [#5](https://github.com/Richyboy170/toktickit/pull/5) | `feature/1-project-foundation` | ✅ Approved | "Nice work, all clear Gj!" | "thank you!" |
+| [#6](https://github.com/Richyboy170/toktickit/pull/6) | `feature/2-health-check` | ✅ Approved | "nice work clearly detail gj!" | "thank you!"|
+| [#7](https://github.com/Richyboy170/toktickit/pull/7) | `feature/3-category-seed` | ✅ Approved | "Good job! nice work, well done!" | "thank you!"|
+| [#8](https://github.com/Richyboy170/toktickit/pull/8) | `feature/4-category-list` | ✅ Approved | "Very clearly detail good job!" | "thank you!"|
+| [#9](https://github.com/Richyboy170/toktickit/pull/9) | `lab1-staging` → `main` | ✅ Approved | "Well doneee! very cleary detail and good job Richy!" | "Thank you for your reviews, Ton!"|
 
 ---
 
@@ -28,4 +25,13 @@ Issues had to move from *PR Review* back to *Fixing* on the Kanban board.
 
 | PR | Branch | My verdict | My comment | Partner's response |
 |---|---|---|---|---|
-| *TO FILL* | *TO FILL* | *TO FILL* | *TO FILL* | *TO FILL* |
+| [#5](https://github.com/Tanakrit-triton/toktickit/pull/5) | `feature/1-project-foundation` | Approved | "passed the review, good job!" | "Thank you!" |
+| [#6](https://github.com/Tanakrit-triton/toktickit/pull/6) | `feature/2-health-check` | Approved | "passed the review, good job!" | "Thank you!" |
+| [#7](https://github.com/Tanakrit-triton/toktickit/pull/7) | `feature/3-category-seed` | Approved | "passed the review, good job!" | "Thank you!" |
+| [#8](https://github.com/Tanakrit-triton/toktickit/pull/8) | `feature/4-category-list` | Approved | "passed the review, good job!" | "Thank you!" |
+
+---
+
+*Note on how the approvals were recorded:* for PRs #5–#9 the approval is the reviewer's
+comment on the Pull Request conversation, quoted verbatim above. GitHub hides the formal
+*Review changes → Approve* control once a Pull Request has been merged, so we just try our best to review each other.

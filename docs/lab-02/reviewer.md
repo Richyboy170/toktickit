@@ -24,14 +24,15 @@ Review in dependency order. Every PR targets protected `lab2-staging` and instru
 | 5 | #17 My Tickets | [PR #25](https://github.com/Richyboy170/toktickit/pull/25) | Review required; no reviewer assigned | Open, unmerged |
 | 6 | #18 Ticket Detail/Attachments | [PR #26](https://github.com/Richyboy170/toktickit/pull/26) | Review required; no reviewer assigned | Open, unmerged |
 | 7 | #19 E2E/readiness evidence | [PR #27](https://github.com/Richyboy170/toktickit/pull/27) | Review required; client/server/E2E CI passed | Open, unmerged |
+| 8 | #20 Review/delivery evidence | [PR #28](https://github.com/Richyboy170/toktickit/pull/28) | Review required | Open, unmerged |
 
-The Issue #20 evidence PR will be appended after its real URL exists. A release PR from `lab2-staging` to `main` must not be opened until the reviewer has merged the stacked PRs and staging verification passes.
+A release PR from `lab2-staging` to `main` must not be opened until the reviewer has merged the stacked PRs and staging verification passes.
 
 ## Reviews, comments, responses, and approvals received
 
 | PR | Reviewer comments | Author responses / changes | Approval | Evidence |
 |---|---|---|---|---|
-| #21–#27 | None as of the snapshot | None possible yet | None | GitHub shows `REVIEW_REQUIRED`; collaborator invitation remains pending |
+| #21–#28 | None as of the snapshot | None possible yet | None | GitHub shows `REVIEW_REQUIRED`; collaborator invitation remains pending |
 
 This section deliberately does not invent review comments, responses, approvals, or merge evidence. It must be updated from GitHub after the reviewer accepts the invitation and performs the reviews.
 
@@ -42,7 +43,7 @@ The peer repository [Tanakrit-triton/toktickit](https://github.com/Tanakrit-trit
 ## Reviewer handoff checklist
 
 1. Accept the pending Write invitation.
-2. Review PRs #21–#27 and the Issue #20 evidence PR in order.
+2. Review PRs #21–#28 in order.
 3. Record specific findings as GitHub review comments; the author responds and pushes fixes on the same feature branch.
 4. Re-review changed files and passing checks.
 5. Approve and merge each PR into `lab2-staging` using **Create a merge commit**.

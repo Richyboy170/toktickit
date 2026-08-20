@@ -1,4 +1,14 @@
+import { loadEnv } from "vite";
 import { defineConfig } from "vitest/config";
+
+const env = loadEnv("test", process.cwd(), "");
+const sourceDatabaseUrl = env.TEST_DATABASE_URL ?? env.DATABASE_URL;
+
+if (sourceDatabaseUrl) {
+  const testDatabaseUrl = new URL(sourceDatabaseUrl);
+  if (!env.TEST_DATABASE_URL) testDatabaseUrl.pathname = "/toktickit_test";
+  process.env.DATABASE_URL = testDatabaseUrl.toString();
+}
 
 export default defineConfig({
   test: {

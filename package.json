@@ -1,0 +1,15 @@
+{
+  "name": "toktickit-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "npm --prefix server run build && npm --prefix client run build",
+    "test": "npm --prefix server test && npm --prefix client test",
+    "test:e2e": "playwright test --config=client/playwright.config.ts",
+    "audit": "npm audit && npm --prefix server audit && npm --prefix client audit"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1"
+  }
+}

@@ -1,3 +1,4 @@
+import { randomBytes, randomUUID } from "node:crypto";
 import request from "supertest";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 import { app } from "../../src/app.js";
@@ -14,12 +15,13 @@ const validBody = () => ({
   summary: "Laptop battery drains quickly",
   requestedPriority: "MEDIUM",
   description: "The battery falls from full to empty in under one hour.",
-  submissionToken: crypto.randomUUID(),
+  submissionToken: randomUUID(),
 });
 
 beforeAll(async () => {
+  const suffix = randomBytes(5).toString("hex");
   const [requester, inactive, category, system] = await Promise.all([
-    getPrisma().developmentRequester.findFirstOrThrow({ where: { isActive: true } }),
+    getPrisma().developmentRequester.create({ data: { name: "Create Test Requester", email: `create-${suffix}@example.test` } }),
     getPrisma().developmentRequester.findFirstOrThrow({ where: { isActive: false } }),
     getPrisma().category.findFirstOrThrow({ where: { isActive: true } }),
     getPrisma().relatedSystem.findFirstOrThrow({ where: { isActive: true } }),
@@ -34,7 +36,11 @@ afterEach(async () => {
   await getPrisma().ticket.deleteMany({ where: { requesterId } });
 });
 
-afterAll(async () => getPrisma().$disconnect());
+afterAll(async () => {
+  await getPrisma().ticket.deleteMany({ where: { requesterId } });
+  await getPrisma().developmentRequester.delete({ where: { id: requesterId } });
+  await getPrisma().$disconnect();
+});
 
 describe("POST /api/tickets", () => {
   it("creates one owned NEW Ticket and returns its official number", async () => {

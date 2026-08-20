@@ -62,7 +62,11 @@ describe("Create Ticket", () => {
   it("disables submission while busy and displays the backend Ticket Number", async () => {
     let resolve!: (value: { ticket: api.Ticket; replayed: boolean }) => void;
     vi.spyOn(api, "createTicket").mockReturnValue(new Promise((done) => { resolve = done; }));
-    vi.spyOn(api, "uploadAttachment").mockResolvedValue({ attachment: {} });
+    vi.spyOn(api, "uploadAttachment").mockResolvedValue({ attachment: {
+      id: 1, originalName: "evidence.jpg", mimeType: "image/jpeg", sizeBytes: 3,
+      uploadedAt: ticket.createdAt, removedAt: null, removalReason: null,
+      removedByRequesterId: null, available: true,
+    } });
     render(<App />);
     await fillValidForm();
     await userEvent.click(screen.getByRole("button", { name: /submit ticket/i }));

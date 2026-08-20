@@ -14,5 +14,9 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["tests/**/*.test.ts"],
+    // API suites share one PostgreSQL test database. Running files serially
+    // prevents one suite's temporary fixtures from changing another suite's
+    // reference-data or ownership assertions.
+    fileParallelism: false,
   },
 });

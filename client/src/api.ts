@@ -75,6 +75,39 @@ export interface Ticket {
   updatedAt: string;
 }
 
+export type TicketSort = "createdAt" | "updatedAt" | "ticketNumber" | "summary";
+export type SortOrder = "asc" | "desc";
+
+export interface TicketSummary {
+  id: number;
+  ticketNumber: string;
+  ticketDate: string;
+  summary: string;
+  category: ReferenceItem;
+  relatedSystem: ReferenceItem;
+  requestedPriority: RequestedPriority;
+  currentStatus: "NEW";
+  updatedAt: string;
+}
+
+export interface TicketListParams {
+  search?: string;
+  categoryId?: number;
+  relatedSystemId?: number;
+  requestedPriority?: RequestedPriority;
+  status?: "NEW";
+  sort?: TicketSort;
+  order?: SortOrder;
+  page?: number;
+  pageSize?: 5 | 10 | 20 | 50;
+}
+
+export interface TicketListResponse {
+  items: TicketSummary[];
+  pagination: { page: number; pageSize: number; totalItems: number; totalPages: number };
+  query: { search: string; sort: TicketSort; order: SortOrder };
+}
+
 export interface CreateTicketInput {
   categoryId: number;
   relatedSystemId: number;
@@ -94,6 +127,15 @@ export function createTicket(requesterId: number, input: CreateTicketInput): Pro
     headers: { "Content-Type": "application/json", ...requesterHeaders(requesterId) },
     body: JSON.stringify(input),
   });
+}
+
+export function listTickets(requesterId: number, params: TicketListParams = {}): Promise<TicketListResponse> {
+  const query = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== "") query.set(key, String(value));
+  });
+  const suffix = query.size ? `?${query.toString()}` : "";
+  return readJson(`/api/tickets${suffix}`, { headers: requesterHeaders(requesterId) });
 }
 
 export function uploadAttachment(requesterId: number, ticketId: number, file: File): Promise<{ attachment: unknown }> {

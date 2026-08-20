@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AppShell } from "./components/AppShell.js";
 import { RequesterSelection } from "./pages/RequesterSelection.js";
 import { CreateTicket } from "./pages/CreateTicket.js";
+import { MyTickets } from "./pages/MyTickets.js";
 import { RequesterProvider, useRequester } from "./requester-context.js";
 
 function OwnedApplication() {
@@ -25,10 +26,7 @@ export default function App() {
         <Routes>
           <Route path="/select-requester" element={<RequesterSelection />} />
           <Route element={<OwnedApplication />}>
-            <Route
-              path="/tickets"
-              element={<Placeholder title="My Tickets" message="Your requester-owned tickets will appear here." />}
-            />
+            <Route path="/tickets" element={<MyTickets />} />
             <Route
               path="/tickets/new"
               element={<CreateTicket />}

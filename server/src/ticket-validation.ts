@@ -20,6 +20,28 @@ export const createTicketSchema = z.object({
 
 export type CreateTicketInput = z.infer<typeof createTicketSchema>;
 
+const optionalPositiveInt = z.preprocess(
+  (value) => (value === undefined || value === "" ? undefined : Number(value)),
+  z.number().int().positive().optional(),
+);
+
+export const ticketListQuerySchema = z.object({
+  search: z.string().trim().max(120, "Search must be at most 120 characters.").optional().default(""),
+  categoryId: optionalPositiveInt,
+  relatedSystemId: optionalPositiveInt,
+  requestedPriority: z.enum(["LOW", "MEDIUM", "HIGH", "URGENT"]).optional(),
+  status: z.literal("NEW").optional(),
+  sort: z.enum(["createdAt", "updatedAt", "ticketNumber", "summary"]).optional().default("updatedAt"),
+  order: z.enum(["asc", "desc"]).optional().default("desc"),
+  page: z.preprocess((value) => (value === undefined || value === "" ? 1 : Number(value)), z.number().int().positive()),
+  pageSize: z.preprocess(
+    (value) => (value === undefined || value === "" ? 10 : Number(value)),
+    z.number().refine((value) => [5, 10, 20, 50].includes(value), "Page size must be 5, 10, 20, or 50."),
+  ),
+});
+
+export type TicketListQuery = z.infer<typeof ticketListQuerySchema>;
+
 export function zodFieldErrors(error: z.ZodError): FieldErrors {
   const fields: FieldErrors = {};
   for (const issue of error.issues) {

@@ -5,6 +5,56 @@ export interface Category {
   name: string;
 }
 
+export interface ReferenceItem {
+  id: number;
+  name: string;
+}
+
+export interface DevelopmentRequester {
+  id: number;
+  name: string;
+  email: string;
+}
+
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    public readonly status: number,
+    public readonly code?: string,
+  ) {
+    super(message);
+  }
+}
+
+async function readJson<T>(path: string, init?: RequestInit): Promise<T> {
+  const response = await fetch(`${API_URL}${path}`, init);
+  if (!response.ok) {
+    let code: string | undefined;
+    let message = "The request could not be completed.";
+    try {
+      const body = await response.json();
+      code = body?.error?.code;
+      message = body?.error?.message ?? message;
+    } catch {
+      // A non-JSON upstream failure still becomes one safe client error.
+    }
+    throw new ApiError(message, response.status, code);
+  }
+  return response.json() as Promise<T>;
+}
+
+export function getDevelopmentRequesters(): Promise<DevelopmentRequester[]> {
+  return readJson("/api/development-requesters");
+}
+
+export function getCategories(): Promise<ReferenceItem[]> {
+  return readJson("/api/categories");
+}
+
+export function getRelatedSystems(): Promise<ReferenceItem[]> {
+  return readJson("/api/related-systems");
+}
+
 export interface SystemStatus {
   online: boolean;
   categories: Category[];

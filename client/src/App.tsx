@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AppShell } from "./components/AppShell.js";
 import { RequesterSelection } from "./pages/RequesterSelection.js";
+import { CreateTicket } from "./pages/CreateTicket.js";
 import { RequesterProvider, useRequester } from "./requester-context.js";
 
 function OwnedApplication() {
@@ -19,7 +20,7 @@ function Placeholder({ title, message }: { title: string; message: string }) {
 
 export default function App() {
   return (
-    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <BrowserRouter>
       <RequesterProvider>
         <Routes>
           <Route path="/select-requester" element={<RequesterSelection />} />
@@ -30,7 +31,7 @@ export default function App() {
             />
             <Route
               path="/tickets/new"
-              element={<Placeholder title="Create Ticket" message="Create a requester-owned support ticket." />}
+              element={<CreateTicket />}
             />
             <Route
               path="/tickets/:ticketId"

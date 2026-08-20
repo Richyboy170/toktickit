@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import { getPrisma } from "./prisma.js";
+import { ticketsRouter } from "./routes/tickets.js";
 // getPrisma() is the lazy database handle. It is called INSIDE the route that
 // needs the DB, so importing this file never opens a connection by itself.
 
@@ -10,6 +11,7 @@ export const app = express();
 
 app.use(cors());          // already wired: lets the Vite dev server call this API
 app.use(express.json());
+app.use("/api/tickets", ticketsRouter);
 
 // ---------------------------------------------------------------------------
 // Issue 2 — API health check

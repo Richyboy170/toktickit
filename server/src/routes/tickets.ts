@@ -1,5 +1,8 @@
 import { Prisma } from "@prisma/client";
-import { Router } from "express";
+import { Request, Response, Router } from "express";
+import multer from "multer";
+import { activeFirst, attachmentMetadataSelect, serializeAttachment } from "../attachment-metadata.js";
+import { MAX_ATTACHMENT_BYTES, validateAttachment } from "../attachment-validation.js";
 import { sendError } from "../http.js";
 import { getPrisma } from "../prisma.js";
 import { requireActiveRequester } from "../requester-context.js";
@@ -7,6 +10,26 @@ import { generateTicketNumber } from "../ticket-number.js";
 import { createTicketSchema, ticketListQuerySchema, TicketListQuery, zodFieldErrors } from "../ticket-validation.js";
 
 export const ticketsRouter = Router();
+
+const attachmentUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: MAX_ATTACHMENT_BYTES, files: 1, fields: 0 },
+});
+
+class AttachmentRouteError extends Error {
+  constructor(public readonly status: number, public readonly code: string, message: string) { super(message); }
+}
+
+function pathId(raw: string): number | null {
+  if (!/^\d+$/.test(raw) || Number(raw) <= 0 || !Number.isSafeInteger(Number(raw))) return null;
+  return Number(raw);
+}
+
+function receiveOneAttachment(req: Request, res: Response): Promise<void> {
+  return new Promise((resolve, reject) => {
+    attachmentUpload.single("file")(req, res, (error) => error ? reject(error) : resolve());
+  });
+}
 
 const ticketInclude = {
   requester: { select: { id: true, name: true, email: true } },
@@ -168,5 +191,101 @@ ticketsRouter.post("/", async (req, res) => {
   } catch (error) {
     console.error("POST /api/tickets failed:", error);
     return sendError(res, 500, "TICKET_CREATE_FAILED", "Unable to create the Ticket. Please try again.");
+  }
+});
+
+ticketsRouter.get("/:ticketId", async (req, res) => {
+  try {
+    const requesterId = await requireActiveRequester(req, res);
+    if (!requesterId) return;
+    const ticketId = pathId(req.params.ticketId);
+    if (!ticketId) return sendError(res, 400, "INVALID_PATH", "Ticket ID must be a positive integer.");
+
+    const ticket = await getPrisma().ticket.findFirst({
+      where: { id: ticketId, requesterId },
+      include: {
+        ...ticketInclude,
+        attachments: { select: attachmentMetadataSelect, orderBy: [{ uploadedAt: "desc" }, { id: "desc" }] },
+      },
+    });
+    if (!ticket) return sendError(res, 404, "RESOURCE_NOT_FOUND", "Ticket not found.");
+    return res.status(200).json({
+      ...serializeTicket(ticket),
+      attachments: activeFirst(ticket.attachments).map(serializeAttachment),
+    });
+  } catch (error) {
+    console.error("GET /api/tickets/:ticketId failed:", error);
+    return sendError(res, 500, "TICKET_DETAIL_FAILED", "Unable to load the Ticket. Please try again.");
+  }
+});
+
+ticketsRouter.get("/:ticketId/attachments", async (req, res) => {
+  try {
+    const requesterId = await requireActiveRequester(req, res);
+    if (!requesterId) return;
+    const ticketId = pathId(req.params.ticketId);
+    if (!ticketId) return sendError(res, 400, "INVALID_PATH", "Ticket ID must be a positive integer.");
+    const ticket = await getPrisma().ticket.findFirst({
+      where: { id: ticketId, requesterId },
+      select: { attachments: { select: attachmentMetadataSelect, orderBy: [{ uploadedAt: "desc" }, { id: "desc" }] } },
+    });
+    if (!ticket) return sendError(res, 404, "RESOURCE_NOT_FOUND", "Ticket not found.");
+    return res.status(200).json(activeFirst(ticket.attachments).map(serializeAttachment));
+  } catch (error) {
+    console.error("GET /api/tickets/:ticketId/attachments failed:", error);
+    return sendError(res, 500, "ATTACHMENT_LIST_FAILED", "Unable to load Attachments. Please try again.");
+  }
+});
+
+ticketsRouter.post("/:ticketId/attachments", async (req, res) => {
+  try {
+    const requesterId = await requireActiveRequester(req, res);
+    if (!requesterId) return;
+    const ticketId = pathId(req.params.ticketId);
+    if (!ticketId) return sendError(res, 400, "INVALID_PATH", "Ticket ID must be a positive integer.");
+
+    const owned = await getPrisma().ticket.findFirst({ where: { id: ticketId, requesterId }, select: { id: true } });
+    if (!owned) return sendError(res, 404, "RESOURCE_NOT_FOUND", "Ticket not found.");
+
+    try {
+      await receiveOneAttachment(req, res);
+    } catch (error) {
+      if (error instanceof multer.MulterError && error.code === "LIMIT_FILE_SIZE") {
+        return sendError(res, 413, "FILE_TOO_LARGE", "Each Attachment must be 5 MB or smaller.");
+      }
+      if (error instanceof multer.MulterError) {
+        return sendError(res, 400, "INVALID_UPLOAD", "Upload exactly one file using the field named file.");
+      }
+      throw error;
+    }
+    if (!req.file || Object.keys(req.body).length > 0) {
+      return sendError(res, 400, "INVALID_UPLOAD", "Upload exactly one file using the field named file.");
+    }
+
+    const checked = await validateAttachment(req.file);
+    if (!checked.success) return sendError(res, 415, "UNSUPPORTED_FILE_TYPE", checked.message);
+
+    const attachment = await getPrisma().$transaction(async (transaction) => {
+      await transaction.$executeRaw`SELECT pg_advisory_xact_lock(${BigInt(ticketId)})`;
+      const stillOwned = await transaction.ticket.findFirst({ where: { id: ticketId, requesterId }, select: { id: true } });
+      if (!stillOwned) throw new AttachmentRouteError(404, "RESOURCE_NOT_FOUND", "Ticket not found.");
+      const activeCount = await transaction.attachment.count({ where: { ticketId, removedAt: null } });
+      if (activeCount >= 5) throw new AttachmentRouteError(409, "ATTACHMENT_LIMIT_REACHED", "A Ticket can have at most five active Attachments.");
+      return transaction.attachment.create({
+        data: {
+          ticketId,
+          originalName: checked.data.originalName,
+          mimeType: checked.data.mimeType,
+          sizeBytes: req.file!.size,
+          content: req.file!.buffer,
+        },
+        select: attachmentMetadataSelect,
+      });
+    });
+    return res.status(201).json({ attachment: serializeAttachment(attachment) });
+  } catch (error) {
+    if (error instanceof AttachmentRouteError) return sendError(res, error.status, error.code, error.message);
+    console.error("POST /api/tickets/:ticketId/attachments failed:", error);
+    return sendError(res, 500, "ATTACHMENT_UPLOAD_FAILED", "Unable to upload the Attachment. Please try again.");
   }
 });

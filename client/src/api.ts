@@ -30,20 +30,24 @@ export class ApiError extends Error {
 async function readJson<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${API_URL}${path}`, init);
   if (!response.ok) {
-    let code: string | undefined;
-    let message = "The request could not be completed.";
-    let fields: Record<string, string> | undefined;
-    try {
-      const body = await response.json();
-      code = body?.error?.code;
-      message = body?.error?.message ?? message;
-      fields = body?.error?.fields;
-    } catch {
-      // A non-JSON upstream failure still becomes one safe client error.
-    }
-    throw new ApiError(message, response.status, code, fields);
+    throw await responseError(response);
   }
   return response.json() as Promise<T>;
+}
+
+async function responseError(response: Response): Promise<ApiError> {
+  let code: string | undefined;
+  let message = "The request could not be completed.";
+  let fields: Record<string, string> | undefined;
+  try {
+    const body = await response.json();
+    code = body?.error?.code;
+    message = body?.error?.message ?? message;
+    fields = body?.error?.fields;
+  } catch {
+    // A non-JSON upstream failure still becomes one safe client error.
+  }
+  return new ApiError(message, response.status, code, fields);
 }
 
 export function getDevelopmentRequesters(): Promise<DevelopmentRequester[]> {
@@ -73,6 +77,22 @@ export interface Ticket {
   currentStatus: "NEW";
   createdAt: string;
   updatedAt: string;
+}
+
+export interface AttachmentMetadata {
+  id: number;
+  originalName: string;
+  mimeType: "image/jpeg" | "image/png" | "image/webp" | "application/pdf";
+  sizeBytes: number;
+  uploadedAt: string;
+  removedAt: string | null;
+  removalReason: string | null;
+  removedByRequesterId: number | null;
+  available: boolean;
+}
+
+export interface TicketDetail extends Ticket {
+  attachments: AttachmentMetadata[];
 }
 
 export type TicketSort = "createdAt" | "updatedAt" | "ticketNumber" | "summary";
@@ -138,13 +158,37 @@ export function listTickets(requesterId: number, params: TicketListParams = {}):
   return readJson(`/api/tickets${suffix}`, { headers: requesterHeaders(requesterId) });
 }
 
-export function uploadAttachment(requesterId: number, ticketId: number, file: File): Promise<{ attachment: unknown }> {
+export function getTicket(requesterId: number, ticketId: number): Promise<TicketDetail> {
+  return readJson(`/api/tickets/${ticketId}`, { headers: requesterHeaders(requesterId) });
+}
+
+export function getAttachments(requesterId: number, ticketId: number): Promise<AttachmentMetadata[]> {
+  return readJson(`/api/tickets/${ticketId}/attachments`, { headers: requesterHeaders(requesterId) });
+}
+
+export function uploadAttachment(requesterId: number, ticketId: number, file: File): Promise<{ attachment: AttachmentMetadata }> {
   const body = new FormData();
   body.append("file", file);
   return readJson(`/api/tickets/${ticketId}/attachments`, {
     method: "POST",
     headers: requesterHeaders(requesterId),
     body,
+  });
+}
+
+export async function downloadAttachment(requesterId: number, attachmentId: number): Promise<Blob> {
+  const response = await fetch(`${API_URL}/api/attachments/${attachmentId}/download`, {
+    headers: requesterHeaders(requesterId),
+  });
+  if (!response.ok) throw await responseError(response);
+  return response.blob();
+}
+
+export function removeAttachment(requesterId: number, attachmentId: number, reason: string): Promise<{ attachment: AttachmentMetadata }> {
+  return readJson(`/api/attachments/${attachmentId}`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json", ...requesterHeaders(requesterId) },
+    body: JSON.stringify({ reason }),
   });
 }
 

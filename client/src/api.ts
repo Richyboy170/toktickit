@@ -5,6 +5,193 @@ export interface Category {
   name: string;
 }
 
+export interface ReferenceItem {
+  id: number;
+  name: string;
+}
+
+export interface DevelopmentRequester {
+  id: number;
+  name: string;
+  email: string;
+}
+
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    public readonly status: number,
+    public readonly code?: string,
+    public readonly fields?: Record<string, string>,
+  ) {
+    super(message);
+  }
+}
+
+async function readJson<T>(path: string, init?: RequestInit): Promise<T> {
+  const response = await fetch(`${API_URL}${path}`, init);
+  if (!response.ok) {
+    throw await responseError(response);
+  }
+  return response.json() as Promise<T>;
+}
+
+async function responseError(response: Response): Promise<ApiError> {
+  let code: string | undefined;
+  let message = "The request could not be completed.";
+  let fields: Record<string, string> | undefined;
+  try {
+    const body = await response.json();
+    code = body?.error?.code;
+    message = body?.error?.message ?? message;
+    fields = body?.error?.fields;
+  } catch {
+    // A non-JSON upstream failure still becomes one safe client error.
+  }
+  return new ApiError(message, response.status, code, fields);
+}
+
+export function getDevelopmentRequesters(): Promise<DevelopmentRequester[]> {
+  return readJson("/api/development-requesters");
+}
+
+export function getCategories(): Promise<ReferenceItem[]> {
+  return readJson("/api/categories");
+}
+
+export function getRelatedSystems(): Promise<ReferenceItem[]> {
+  return readJson("/api/related-systems");
+}
+
+export type RequestedPriority = "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+
+export interface Ticket {
+  id: number;
+  ticketNumber: string;
+  ticketDate: string;
+  requester: DevelopmentRequester;
+  category: ReferenceItem;
+  relatedSystem: ReferenceItem;
+  summary: string;
+  requestedPriority: RequestedPriority;
+  description: string;
+  currentStatus: "NEW";
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AttachmentMetadata {
+  id: number;
+  originalName: string;
+  mimeType: "image/jpeg" | "image/png" | "image/webp" | "application/pdf";
+  sizeBytes: number;
+  uploadedAt: string;
+  removedAt: string | null;
+  removalReason: string | null;
+  removedByRequesterId: number | null;
+  available: boolean;
+}
+
+export interface TicketDetail extends Ticket {
+  attachments: AttachmentMetadata[];
+}
+
+export type TicketSort = "createdAt" | "updatedAt" | "ticketNumber" | "summary";
+export type SortOrder = "asc" | "desc";
+
+export interface TicketSummary {
+  id: number;
+  ticketNumber: string;
+  ticketDate: string;
+  summary: string;
+  category: ReferenceItem;
+  relatedSystem: ReferenceItem;
+  requestedPriority: RequestedPriority;
+  currentStatus: "NEW";
+  updatedAt: string;
+}
+
+export interface TicketListParams {
+  search?: string;
+  categoryId?: number;
+  relatedSystemId?: number;
+  requestedPriority?: RequestedPriority;
+  status?: "NEW";
+  sort?: TicketSort;
+  order?: SortOrder;
+  page?: number;
+  pageSize?: 5 | 10 | 20 | 50;
+}
+
+export interface TicketListResponse {
+  items: TicketSummary[];
+  pagination: { page: number; pageSize: number; totalItems: number; totalPages: number };
+  query: { search: string; sort: TicketSort; order: SortOrder };
+}
+
+export interface CreateTicketInput {
+  categoryId: number;
+  relatedSystemId: number;
+  summary: string;
+  requestedPriority: RequestedPriority;
+  description: string;
+  submissionToken: string;
+}
+
+function requesterHeaders(requesterId: number): HeadersInit {
+  return { "X-Development-Requester-Id": String(requesterId) };
+}
+
+export function createTicket(requesterId: number, input: CreateTicketInput): Promise<{ ticket: Ticket; replayed: boolean }> {
+  return readJson("/api/tickets", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...requesterHeaders(requesterId) },
+    body: JSON.stringify(input),
+  });
+}
+
+export function listTickets(requesterId: number, params: TicketListParams = {}): Promise<TicketListResponse> {
+  const query = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== "") query.set(key, String(value));
+  });
+  const suffix = query.size ? `?${query.toString()}` : "";
+  return readJson(`/api/tickets${suffix}`, { headers: requesterHeaders(requesterId) });
+}
+
+export function getTicket(requesterId: number, ticketId: number): Promise<TicketDetail> {
+  return readJson(`/api/tickets/${ticketId}`, { headers: requesterHeaders(requesterId) });
+}
+
+export function getAttachments(requesterId: number, ticketId: number): Promise<AttachmentMetadata[]> {
+  return readJson(`/api/tickets/${ticketId}/attachments`, { headers: requesterHeaders(requesterId) });
+}
+
+export function uploadAttachment(requesterId: number, ticketId: number, file: File): Promise<{ attachment: AttachmentMetadata }> {
+  const body = new FormData();
+  body.append("file", file);
+  return readJson(`/api/tickets/${ticketId}/attachments`, {
+    method: "POST",
+    headers: requesterHeaders(requesterId),
+    body,
+  });
+}
+
+export async function downloadAttachment(requesterId: number, attachmentId: number): Promise<Blob> {
+  const response = await fetch(`${API_URL}/api/attachments/${attachmentId}/download`, {
+    headers: requesterHeaders(requesterId),
+  });
+  if (!response.ok) throw await responseError(response);
+  return response.blob();
+}
+
+export function removeAttachment(requesterId: number, attachmentId: number, reason: string): Promise<{ attachment: AttachmentMetadata }> {
+  return readJson(`/api/attachments/${attachmentId}`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json", ...requesterHeaders(requesterId) },
+    body: JSON.stringify({ reason }),
+  });
+}
+
 export interface SystemStatus {
   online: boolean;
   categories: Category[];

@@ -12,3 +12,7 @@ server/prisma/*.db
 # logs & OS
 *.log
 .DS_Store
+# test runner output (curated Lab 02 screenshots under artifacts/ are committed)
+playwright-report/
+test-results/
+blob-report/

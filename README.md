@@ -1,147 +1,117 @@
-# TokTickIT — Lab 1
+# TokTickIT — Lab 2 Requester Experience
 
-A one-page IT service desk starter. It has a **[Check System]** button that calls the
-backend twice: once to prove the API is alive, once to read the four request categories
-out of PostgreSQL. The point of Lab 1 is not features — it is proving that all four
-layers talk to each other:
+TokTickIT is a full-stack IT service desk course project. Lab 2 lets a selected Development Requester create a Ticket, search and filter only their own Tickets, inspect read-only details, and upload, preview, download, or soft-remove supporting Attachments.
 
-```
-React (client) ──HTTP──> Express (server) ──Prisma──> PostgreSQL
-```
+The Requester selector is a visible Lab 2 testing mechanism, not authentication. Lab 3 will replace the `X-Development-Requester-Id` header with server-established identity.
 
----
+## Technology
 
-## 1. Prerequisites
-
-| Tool | Version used |
+| Layer | Technology |
 |---|---|
-| Node.js | 24.x (any 18+ works) |
-| npm | 11.x |
-| PostgreSQL | 17, listening on port 5432 |
+| Client | React 18, TypeScript, Vite 8, React Router, Bootstrap, Testing Library |
+| Server | Node.js, Express, TypeScript, Zod, Multer, file-type |
+| Data | PostgreSQL 17, Prisma 5 |
+| Quality | Vitest 4, Supertest, Playwright 1.62, GitHub Actions |
 
----
+Recommended local versions are Node.js 24.x, npm 11.x, and PostgreSQL 17. Node.js 20.19+ or 22.12+ is required by Vite 8.
 
-## 2. Setup
+## Setup
 
-### 2.1 Database
-
-PostgreSQL 17 must be listening on port 5432. This machine uses the official
-PostgreSQL zip binaries (no Windows service), so the server is started by hand:
-
-```bash
-"C:/Users/julia/pgsql/bin/pg_ctl" -D "C:/Users/julia/pgdata" -l "C:/Users/julia/pgdata/server.log" start
-# stop it again with:  pg_ctl -D "C:/Users/julia/pgdata" stop
-```
-
-If you installed PostgreSQL with the normal Windows installer instead, it already
-runs as a service and you can skip that step.
-
-Then create the database and user that `server/.env.example` expects
-(run in `psql` as the `postgres` superuser):
+Create development and test databases. The example credentials below are placeholders and match `server/.env.example`:
 
 ```sql
 CREATE USER toktickit WITH PASSWORD 'toktickit';
-ALTER USER toktickit CREATEDB;      -- Prisma needs this for its shadow database
+ALTER USER toktickit CREATEDB;
 CREATE DATABASE toktickit OWNER toktickit;
+CREATE DATABASE toktickit_test OWNER toktickit;
 ```
 
-### 2.2 Backend
+Install, migrate, and seed the server:
 
 ```bash
 cd server
-cp .env.example .env          # then edit DATABASE_URL if your password differs
-npm install
-npx prisma migrate dev --name init    # creates the Category table
-npm run prisma:seed                   # inserts the 4 categories
-npm run dev                           # http://localhost:3000
+cp .env.example .env
+npm ci
+npx prisma migrate deploy
+npm run prisma:seed
+npm run dev
 ```
 
-### 2.3 Frontend
+The idempotent seed creates four active Categories, seven active Related Systems, four active Development Requesters, and one inactive Requester used by tests.
+
+In a second terminal, start the client:
 
 ```bash
 cd client
-cp .env.example .env          # VITE_API_URL=http://localhost:3000
-npm install
-npm run dev                   # http://localhost:5173
+cp .env.example .env
+npm ci
+npm run dev
 ```
 
-Open <http://localhost:5173> and click **Check System**.
+Open `http://127.0.0.1:5173`, choose a Development Requester, and continue to My Tickets. The API listens on `http://127.0.0.1:3000`.
 
----
+## Verification
 
-## 3. Running the tests
+Run every unit, API, UI, build, audit, and browser check from the repository root:
 
 ```bash
-cd server && npm test     # Supertest: /api/health, /api/categories
-cd client && npm test     # Vitest: heading, success state, error state
+npm run test
+npm run build
+npm run audit
+npm run test:e2e
 ```
 
-The server tests need the database migrated and seeded first (step 2.2).
-The client tests do **not** — they mock the API module, so they run offline.
+Server API tests derive or use `TEST_DATABASE_URL`, so cleanup never targets development data. Playwright uses `E2E_DATABASE_URL`, then `TEST_DATABASE_URL`, then the documented `toktickit_test` fallback. Its preparation script refuses to delete fixtures unless the database name contains `test` or `e2e`.
 
----
+Playwright uses installed Chrome locally. CI installs Chromium and uploads the screenshot/report artifacts. Curated, visually inspected evidence is committed under `artifacts/lab-02/screenshots/`; transient `test-results/` and `playwright-report/` output is ignored.
 
-## 4. API
+## Requester API
 
-| Method | Path | Response |
+Requester-owned routes require `X-Development-Requester-Id: <positive integer>`.
+
+| Method | Path | Purpose |
 |---|---|---|
-| GET | `/api/health` | `200 {"status":"ok","service":"TokTickIT API"}` |
-| GET | `/api/categories` | `200 [{"id":1,"name":"Account and Access"}, ...]` |
+| GET | `/api/health` | Process health |
+| GET | `/api/categories` | Active Categories |
+| GET | `/api/related-systems` | Active Related Systems |
+| GET | `/api/development-requesters` | Active testing Requesters |
+| POST | `/api/tickets` | Create one owned Ticket with idempotency token |
+| GET | `/api/tickets` | Search, filter, sort, and paginate owned Tickets |
+| GET | `/api/tickets/:ticketId` | Read owned Ticket Detail and Attachment metadata |
+| GET | `/api/tickets/:ticketId/attachments` | List active and removed metadata |
+| POST | `/api/tickets/:ticketId/attachments` | Upload exactly one bounded file |
+| GET | `/api/attachments/:attachmentId/download` | Download active owned content |
+| DELETE | `/api/attachments/:attachmentId` | Soft-remove with a required reason |
 
----
+The complete request/response, validation, status, and safe-error contract is in [`docs/lab-02/api-spec.md`](docs/lab-02/api-spec.md).
 
-## 5. How it works — file by file
+## Attachment safety and lifecycle
 
-### Server (`server/`)
+- JPG/JPEG, PNG, WEBP, and PDF only; extension, declared MIME, and detected signature must agree.
+- Maximum 5 MiB per file and five active files per Ticket.
+- A PostgreSQL advisory transaction lock prevents concurrent uploads from exceeding the active limit.
+- Names are reduced to a sanitized basename; bytes are stored in PostgreSQL and never written to user-controlled paths.
+- Cross-requester operations use the same `404` response as missing resources.
+- Soft removal retains metadata, remover, timestamp, and reason; removed content returns `410` and has no preview/download action.
 
-| File | What it does |
-|---|---|
-| `src/app.ts` | Builds the Express app and defines both routes. Exports `app` **without** starting it. |
-| `src/index.ts` | Imports `app` and calls `app.listen(PORT)`. This is the only file that opens a port. |
-| `src/prisma.ts` | `getPrisma()` — creates one `PrismaClient` the first time it is called, then reuses it. |
-| `prisma/schema.prisma` | Declares the `Category` table (`id`, unique `name`, `createdAt`). |
-| `prisma/seed.ts` | Inserts the four category names using `upsert`, so re-running it never duplicates. |
-| `tests/lab-01/*.test.ts` | Supertest hits the exported `app` in memory — no server needs to be running. |
+## Repository layout
 
-**Why `app.ts` and `index.ts` are separate:** Supertest needs the app object, not a live
-port. If `app.listen()` lived in `app.ts`, importing it in a test would occupy port 3000
-and the test run would hang or clash.
-
-**Why `getPrisma()` is lazy:** creating a `PrismaClient` opens a database connection.
-The health check must answer even when the database is down, so the client is only built
-the moment a route actually needs the database.
-
-### Client (`client/`)
-
-| File | What it does |
-|---|---|
-| `src/main.tsx` | Mounts `<App />` and imports the Bootstrap stylesheet. |
-| `src/api.ts` | `checkSystem()` — the only file that knows about HTTP. Calls `/api/health`, then `/api/categories`, and throws if either fails. |
-| `src/App.tsx` | The whole UI. Holds one state variable (`idle`/`loading`/`success`/`error`) and renders one block per state. |
-| `tests/lab-01/App.test.tsx` | Vitest + Testing Library. Replaces `checkSystem` with a fake so the UI can be tested without a server. |
-
-**Why the fetch calls live in `api.ts` instead of `App.tsx`:** it gives the tests one
-single function to fake. That is what makes UI-02 and UI-03 possible offline.
-
----
-
-## 6. Repository layout
-
-```
+```text
 toktickit/
-├── client/                  React + TypeScript + Vite + Bootstrap
-│   ├── src/
-│   └── tests/lab-01/        Vitest UI tests
-├── server/                  Node + Express + TypeScript
-│   ├── prisma/              schema + seed
-│   ├── src/
-│   └── tests/lab-01/        Supertest API tests
-├── docs/lab-01/             ai_use.md, reviewer.md, tests.md
-├── .gitignore
-└── README.md
+├── .github/workflows/lab2-ci.yml
+├── artifacts/lab-02/screenshots/
+├── client/
+│   ├── src/                         React requester screens and API client
+│   └── tests/lab-01,lab-02/         UI and responsive-structure tests
+├── docs/lab-01,lab-02/              Contracts, plans, and evidence
+├── e2e/lab-02/                      Playwright requester flow
+├── server/
+│   ├── prisma/                      Schema, migrations, seed, guarded E2E prep
+│   ├── src/                         Express API and validation
+│   └── tests/lab-01,lab-02/         Unit and PostgreSQL API tests
+└── package.json                     Workspace verification commands
 ```
 
-## 7. Secrets
+## Git and secrets
 
-`.env` files are git-ignored. Only `.env.example` is committed, and it contains
-placeholder values — never a real password.
+`.env`, dependencies, builds, logs, and transient test reports are ignored. Only `.env.example` files with placeholder values are committed. Lab 2 feature PRs target the protected `lab2-staging` branch and must be peer-reviewed and merged by the reviewer with merge commits; the author does not merge them.

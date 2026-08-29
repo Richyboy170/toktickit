@@ -36,7 +36,9 @@ app.get("/api/categories", async (_req: Request, res: Response) => {
   } catch (error) {
     // Log the real reason for the developer, return a safe message to the browser.
     console.error("GET /api/categories failed:", error);
-    res.status(500).json({ error: "Unable to load categories" });
+    res.status(500).json({
+      error: { code: "REFERENCE_DATA_UNAVAILABLE", message: "Unable to load categories." },
+    });
   }
 });
 

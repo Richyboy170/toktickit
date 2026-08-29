@@ -28,6 +28,7 @@ app.get("/api/health", (_req: Request, res: Response) => {
 app.get("/api/categories", async (_req: Request, res: Response) => {
   try {
     const categories = await getPrisma().category.findMany({
+      where: { isActive: true },
       select: { id: true, name: true }, // never leak createdAt to the client
       orderBy: { id: "asc" },           // predictable order, so tests can assert it
     });
@@ -35,7 +36,41 @@ app.get("/api/categories", async (_req: Request, res: Response) => {
   } catch (error) {
     // Log the real reason for the developer, return a safe message to the browser.
     console.error("GET /api/categories failed:", error);
-    res.status(500).json({ error: "Unable to load categories" });
+    res.status(500).json({
+      error: { code: "REFERENCE_DATA_UNAVAILABLE", message: "Unable to load categories." },
+    });
+  }
+});
+
+app.get("/api/related-systems", async (_req: Request, res: Response) => {
+  try {
+    const systems = await getPrisma().relatedSystem.findMany({
+      where: { isActive: true },
+      select: { id: true, name: true },
+      orderBy: { name: "asc" },
+    });
+    res.status(200).json(systems);
+  } catch (error) {
+    console.error("GET /api/related-systems failed:", error);
+    res.status(500).json({
+      error: { code: "REFERENCE_DATA_UNAVAILABLE", message: "Unable to load related systems." },
+    });
+  }
+});
+
+app.get("/api/development-requesters", async (_req: Request, res: Response) => {
+  try {
+    const requesters = await getPrisma().developmentRequester.findMany({
+      where: { isActive: true },
+      select: { id: true, name: true, email: true },
+      orderBy: [{ name: "asc" }, { id: "asc" }],
+    });
+    res.status(200).json(requesters);
+  } catch (error) {
+    console.error("GET /api/development-requesters failed:", error);
+    res.status(500).json({
+      error: { code: "REQUESTERS_UNAVAILABLE", message: "Unable to load Development Requesters." },
+    });
   }
 });
 

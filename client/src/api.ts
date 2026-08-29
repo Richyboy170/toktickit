@@ -21,6 +21,7 @@ export class ApiError extends Error {
     message: string,
     public readonly status: number,
     public readonly code?: string,
+    public readonly fields?: Record<string, string>,
   ) {
     super(message);
   }
@@ -31,14 +32,16 @@ async function readJson<T>(path: string, init?: RequestInit): Promise<T> {
   if (!response.ok) {
     let code: string | undefined;
     let message = "The request could not be completed.";
+    let fields: Record<string, string> | undefined;
     try {
       const body = await response.json();
       code = body?.error?.code;
       message = body?.error?.message ?? message;
+      fields = body?.error?.fields;
     } catch {
       // A non-JSON upstream failure still becomes one safe client error.
     }
-    throw new ApiError(message, response.status, code);
+    throw new ApiError(message, response.status, code, fields);
   }
   return response.json() as Promise<T>;
 }
@@ -53,6 +56,54 @@ export function getCategories(): Promise<ReferenceItem[]> {
 
 export function getRelatedSystems(): Promise<ReferenceItem[]> {
   return readJson("/api/related-systems");
+}
+
+export type RequestedPriority = "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+
+export interface Ticket {
+  id: number;
+  ticketNumber: string;
+  ticketDate: string;
+  requester: DevelopmentRequester;
+  category: ReferenceItem;
+  relatedSystem: ReferenceItem;
+  summary: string;
+  requestedPriority: RequestedPriority;
+  description: string;
+  currentStatus: "NEW";
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateTicketInput {
+  categoryId: number;
+  relatedSystemId: number;
+  summary: string;
+  requestedPriority: RequestedPriority;
+  description: string;
+  submissionToken: string;
+}
+
+function requesterHeaders(requesterId: number): HeadersInit {
+  return { "X-Development-Requester-Id": String(requesterId) };
+}
+
+export function createTicket(requesterId: number, input: CreateTicketInput): Promise<{ ticket: Ticket; replayed: boolean }> {
+  return readJson("/api/tickets", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...requesterHeaders(requesterId) },
+    body: JSON.stringify(input),
+  });
+}
+
+export function uploadAttachment(requesterId: number, ticketId: number, file: File): Promise<{ attachment: unknown }> {
+  const body = new FormData();
+  body.append("file", file);
+  return readJson(`/api/tickets/${ticketId}/attachments`, {
+    method: "POST",
+    headers: requesterHeaders(requesterId),
+    body,
+  });
 }
 
 export interface SystemStatus {

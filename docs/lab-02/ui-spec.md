@@ -39,7 +39,7 @@ Use a system sans-serif stack, 16 px body text, 1.5 line height, 4/8/12/16/24/32
 ## 4. Reusable Components
 
 - Labels appear above fields with consistent weight. Required labels include a visible red asterisk and screen-reader text.
-- Inputs have a 44 px minimum height; Description has a minimum 160 px height.
+- Inputs have a 44 px minimum height; the Description textarea has a minimum 160 px height and is vertically resizable.
 - Editable fields are white. Read-only fields use `--readonly`, `aria-readonly`, and text indicating system generation where useful.
 - Invalid fields use `aria-invalid`, `aria-describedby`, an error border, and an immediate message below the field.
 - Focus uses a visible 3 px green outline with adequate contrast; it is never removed.
@@ -95,6 +95,7 @@ All sizes prohibit clipped labels, overlapping validation, hidden buttons, unrea
 ## 9. Accessibility
 
 - Semantic landmarks, one page `h1`, logical headings, explicit form labels, and descriptive button/link names.
+- Any icon-only control must have an accessible name and a tooltip; the tooltip supplements but never replaces the accessible name.
 - Keyboard access for all functionality; no hover-only information.
 - `role="status"` for non-urgent loading/progress and `role="alert"` for errors.
 - Success/error/warning/priority/status meaning includes text, not color alone.

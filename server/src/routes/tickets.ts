@@ -4,7 +4,7 @@ import { sendError } from "../http.js";
 import { getPrisma } from "../prisma.js";
 import { requireActiveRequester } from "../requester-context.js";
 import { generateTicketNumber } from "../ticket-number.js";
-import { createTicketSchema, zodFieldErrors } from "../ticket-validation.js";
+import { createTicketSchema, ticketListQuerySchema, TicketListQuery, zodFieldErrors } from "../ticket-validation.js";
 
 export const ticketsRouter = Router();
 
@@ -30,6 +30,75 @@ function serializeTicket(ticket: Prisma.TicketGetPayload<{ include: typeof ticke
     updatedAt: ticket.updatedAt,
   };
 }
+
+function listOrderBy(query: TicketListQuery): Prisma.TicketOrderByWithRelationInput[] {
+  const primary: Prisma.TicketOrderByWithRelationInput =
+    query.sort === "createdAt" ? { createdAt: query.order }
+      : query.sort === "ticketNumber" ? { ticketNumber: query.order }
+        : query.sort === "summary" ? { summary: query.order }
+          : { updatedAt: query.order };
+  return [primary, { id: query.order }];
+}
+
+ticketsRouter.get("/", async (req, res) => {
+  try {
+    const requesterId = await requireActiveRequester(req, res);
+    if (!requesterId) return;
+    const parsed = ticketListQuerySchema.safeParse(req.query);
+    if (!parsed.success) {
+      return sendError(res, 400, "INVALID_QUERY", "Please correct the Ticket-list parameters.", zodFieldErrors(parsed.error));
+    }
+    const query = parsed.data;
+    const where: Prisma.TicketWhereInput = {
+      requesterId,
+      ...(query.categoryId ? { categoryId: query.categoryId } : {}),
+      ...(query.relatedSystemId ? { relatedSystemId: query.relatedSystemId } : {}),
+      ...(query.requestedPriority ? { requestedPriority: query.requestedPriority } : {}),
+      ...(query.status ? { currentStatus: query.status } : {}),
+      ...(query.search ? {
+        OR: [
+          { ticketNumber: { contains: query.search, mode: "insensitive" } },
+          { summary: { contains: query.search, mode: "insensitive" } },
+          { description: { contains: query.search, mode: "insensitive" } },
+        ],
+      } : {}),
+    };
+
+    const [totalItems, tickets] = await getPrisma().$transaction([
+      getPrisma().ticket.count({ where }),
+      getPrisma().ticket.findMany({
+        where,
+        include: ticketInclude,
+        orderBy: listOrderBy(query),
+        skip: (query.page - 1) * query.pageSize,
+        take: query.pageSize,
+      }),
+    ]);
+    return res.status(200).json({
+      items: tickets.map((ticket) => ({
+        id: ticket.id,
+        ticketNumber: ticket.ticketNumber,
+        ticketDate: ticket.createdAt,
+        summary: ticket.summary,
+        category: ticket.category,
+        relatedSystem: ticket.relatedSystem,
+        requestedPriority: ticket.requestedPriority,
+        currentStatus: ticket.currentStatus,
+        updatedAt: ticket.updatedAt,
+      })),
+      pagination: {
+        page: query.page,
+        pageSize: query.pageSize,
+        totalItems,
+        totalPages: totalItems === 0 ? 0 : Math.ceil(totalItems / query.pageSize),
+      },
+      query: { search: query.search, sort: query.sort, order: query.order },
+    });
+  } catch (error) {
+    console.error("GET /api/tickets failed:", error);
+    return sendError(res, 500, "TICKET_LIST_FAILED", "Unable to load Tickets. Please try again.");
+  }
+});
 
 ticketsRouter.post("/", async (req, res) => {
   try {

@@ -155,6 +155,7 @@ export function AttachmentSection({ requesterId, ticketId, attachments, onChange
     setRemoveBusy(true);
     try {
       await removeAttachment(requesterId, removing.id, trimmed);
+      if (preview?.id === removing.id) setPreview(null);
       closeRemoval();
       setMessage({ kind: "success", text: `${removing.originalName} was removed.` });
       await onChanged();

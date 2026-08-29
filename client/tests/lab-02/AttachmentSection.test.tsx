@@ -32,8 +32,11 @@ describe("Attachment Section", () => {
 
   it("requires confirmation and a valid reason before soft removal", async () => {
     const remove = vi.spyOn(api, "removeAttachment").mockResolvedValue({ attachment: { ...active, available: false, removedAt: "2026-08-20T06:00:00.000Z", removalReason: "Outdated screenshot", removedByRequesterId: 1 } });
+    vi.spyOn(api, "downloadAttachment").mockResolvedValue(new Blob(["image"], { type: "image/png" }));
     const changed = vi.fn();
     render(<AttachmentSection requesterId={1} ticketId={41} attachments={[active, removed]} onChanged={changed} />);
+    await userEvent.click(screen.getByRole("button", { name: `Preview ${active.originalName}` }));
+    expect(await screen.findByRole("img", { name: `Preview of ${active.originalName}` })).toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: `Remove ${active.originalName}` }));
     expect(screen.getByRole("dialog", { name: "Remove Attachment" })).toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: "Confirm Removal" }));
@@ -43,6 +46,7 @@ describe("Attachment Section", () => {
     await userEvent.click(screen.getByRole("button", { name: "Confirm Removal" }));
     await waitFor(() => expect(remove).toHaveBeenCalledWith(1, 7, "Outdated screenshot"));
     expect(changed).toHaveBeenCalled();
+    expect(screen.queryByRole("img", { name: `Preview of ${active.originalName}` })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: `Remove ${removed.originalName}` })).not.toBeInTheDocument();
   });
 

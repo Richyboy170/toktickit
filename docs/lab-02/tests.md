@@ -94,14 +94,18 @@ Feature-stack verification on 20 August 2026:
 | `npm run test` | Pass: server 10 files / 27 tests; client 7 files / 25 tests; none skipped |
 | `npm run build` | Pass: server TypeScript and client TypeScript/Vite production builds |
 | `npm run audit` | Pass: root, server, and client report 0 vulnerabilities |
+| `npm run audit` recheck | Pass 2026-09-05 after pinning patched transitive `qs` 6.16.0: all three package trees report 0 vulnerabilities |
 | `npm run test:e2e` | Pass: 2 Chromium scenarios, 1 worker, isolated `toktickit_test` database |
+| `npm run test:evidence` | Pass 2026-09-05: 4 Chromium scenarios covering rubric-specific visible states |
 | [GitHub Actions run 32335233928](https://github.com/Richyboy170/toktickit/actions/runs/32335233928) | Pass: separate client, PostgreSQL server, and Chromium E2E jobs |
+| [Integrated staging run 33229210640](https://github.com/Richyboy170/toktickit/actions/runs/33229210640) | Pass at `efb0630`: server, client, and E2E jobs |
+| [Final main run 33237842734](https://github.com/Richyboy170/toktickit/actions/runs/33237842734) | Pass at release merge `806aa94`: server, client, and E2E jobs |
 | Visual inspection | Pass on the captured representative desktop/tablet/mobile states; preview-after-removal defect found and fixed |
 
 Evidence: [`artifacts/lab-02/screenshots/README.md`](../../artifacts/lab-02/screenshots/README.md) and the screenshot directories it indexes.
 
-These are genuine results for the open stacked feature branches. They are **not yet final staging or final main results** because the peer reviewer has not accepted the invitation or merged the PRs. Repeat the commands on `lab2-staging` and `main` after peer integration and append the corresponding GitHub Actions/final-main links before submission.
+These are genuine results for the feature branches, integrated `lab2-staging`, and released `main`. PRs #21–#28 were peer-reviewed and merged into staging; PR #29 was approved and merged into main. The evidence-only suite supplements the product suite and does not replace its database-backed assertions.
 
 ## 7. Known Limitations or Deferred Tests
 
-No product test is skipped or deferred on the current feature stack. Course-delivery evidence remains pending for peer comments/approvals/merges, staging integration, final-main command output, and the student's approval of the AI reflection; see `reviewer.md`.
+No product test is skipped or deferred. The final evidence-update PR must pass CI and receive Tanakrit's own review before the submission report describes that update as merged.

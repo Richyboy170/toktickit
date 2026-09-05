@@ -7,6 +7,7 @@
     "build": "npm --prefix server run build && npm --prefix client run build",
     "test": "npm --prefix server test && npm --prefix client test",
     "test:e2e": "playwright test --config=client/playwright.config.ts",
+    "test:evidence": "playwright test --config=client/playwright.evidence.config.ts",
     "audit": "npm audit && npm --prefix server audit && npm --prefix client audit"
   },
   "devDependencies": {

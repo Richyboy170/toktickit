@@ -1,59 +1,49 @@
 # Lab 2 Peer Review Record
 
-## Reviewer identity and access
+## Review group and responsibilities
 
-- Repository owner / author: [@Richyboy170](https://github.com/Richyboy170)
-- Intended peer reviewer: [@Tanakrit-triton](https://github.com/Tanakrit-triton)
-- Access requested: repository collaborator with Write permission
-- Invitation created: 20 August 2026 at 03:09 UTC, GitHub invitation ID `329778088`
-- Invitation URL: [pending repository invitation](https://github.com/Richyboy170/toktickit/invitations)
-- Status checked: 20 August 2026 — **pending and not expired**
+Lab 2 peer review was coordinated by a three-person group. The work was intentionally divided, so inbound and outbound reviewer names are not expected to be identical.
 
-Write access is needed so the peer reviewer can approve and perform the required merge commits. The author and coding agent will not merge these PRs.
+| Person | GitHub identity | Contribution |
+|---|---|---|
+| Patiharn Liangkobkit (author) | [@Richyboy170](https://github.com/Richyboy170) | Implemented this repository, answered findings, and reviewed Suwiwat's work. |
+| Tanakrit | [@Tanakrit-triton](https://github.com/Tanakrit-triton) | Reviewed, approved, and merged Patiharn's Lab 2 PRs. |
+| Suwiwat Sinsomboon | [@iceswift](https://github.com/iceswift) | Participated in the three-person review group; Patiharn reviewed Suwiwat's Lab 2 PRs. |
 
-## Lab 2 PR status
+## Reviews received by Patiharn
 
-Review in dependency order. Every PR targets protected `lab2-staging` and instructs the reviewer to use a merge commit rather than squash/rebase.
+Every implementation PR was reviewed and merged by Tanakrit using a merge commit. The feature/documentation branches targeted `lab2-staging`; the release branch targeted `main`.
 
-| Order | Issue | Pull Request | Review status | Merge status |
-|---|---|---|---|---|
-| 1 | #13 Engineering contract | [PR #21](https://github.com/Richyboy170/toktickit/pull/21) | Approved | Merged into `lab2-staging` |
-| 2 | #14 Requester/reference foundation | [PR #22](https://github.com/Richyboy170/toktickit/pull/22) | Review comment answered; re-review pending | Open, unmerged |
-| 3 | #15 Requester context/shell | [PR #23](https://github.com/Richyboy170/toktickit/pull/23) | Fix pushed; re-review pending | Open, unmerged |
-| 4 | #16 Create Ticket | [PR #24](https://github.com/Richyboy170/toktickit/pull/24) | Root fix answered in PR #22; re-review pending | Open, unmerged |
-| 5 | #17 My Tickets | [PR #25](https://github.com/Richyboy170/toktickit/pull/25) | Review required; no peer comment yet | Open, unmerged |
-| 6 | #18 Ticket Detail/Attachments | [PR #26](https://github.com/Richyboy170/toktickit/pull/26) | Review required; no peer comment yet | Open, unmerged |
-| 7 | #19 E2E/readiness evidence | [PR #27](https://github.com/Richyboy170/toktickit/pull/27) | Review required; no peer comment yet | Open, unmerged |
-| 8 | #20 Review/delivery evidence | [PR #28](https://github.com/Richyboy170/toktickit/pull/28) | Review required; no peer comment yet | Open, unmerged |
+| Work | Issue | Pull request | Result |
+|---|---|---|---|
+| Engineering contract | [#13](https://github.com/Richyboy170/toktickit/issues/13) | [#21](https://github.com/Richyboy170/toktickit/pull/21) | Approved and merged |
+| Requester/reference foundation | [#14](https://github.com/Richyboy170/toktickit/issues/14) | [#22](https://github.com/Richyboy170/toktickit/pull/22) | Finding fixed, re-reviewed, approved, and merged |
+| Requester context/shell | [#15](https://github.com/Richyboy170/toktickit/issues/15) | [#23](https://github.com/Richyboy170/toktickit/pull/23) | Finding fixed, re-reviewed, approved, and merged |
+| Create Ticket | [#16](https://github.com/Richyboy170/toktickit/issues/16) | [#24](https://github.com/Richyboy170/toktickit/pull/24) | Root finding resolved, approved, and merged |
+| My Tickets | [#17](https://github.com/Richyboy170/toktickit/issues/17) | [#25](https://github.com/Richyboy170/toktickit/pull/25) | Approved and merged |
+| Ticket Detail/Attachments | [#18](https://github.com/Richyboy170/toktickit/issues/18) | [#26](https://github.com/Richyboy170/toktickit/pull/26) | Approved and merged |
+| E2E and release readiness | [#19](https://github.com/Richyboy170/toktickit/issues/19) | [#27](https://github.com/Richyboy170/toktickit/pull/27) | Approved and merged |
+| Review/delivery evidence | [#20](https://github.com/Richyboy170/toktickit/issues/20) | [#28](https://github.com/Richyboy170/toktickit/pull/28) | Approved and merged |
+| Lab 2 release | — | [#29](https://github.com/Richyboy170/toktickit/pull/29) | Approved and merged to `main` |
 
-A release PR from `lab2-staging` to `main` must not be opened until the reviewer has merged the stacked PRs and staging verification passes.
+## Substantive findings and responses
 
-## Reviews, comments, responses, and approvals received
+| PR | Tanakrit's finding | Patiharn's response | Resolution evidence |
+|---|---|---|---|
+| [#21](https://github.com/Richyboy170/toktickit/pull/21) | Add explicit accessible-name/tooltip guidance for icon-only controls and make Description resizing explicit. | Clarified `ui-spec.md` on the evidence branch. | [Author reply](https://github.com/Richyboy170/toktickit/pull/21#issuecomment-5405064929), then approval and merge |
+| [#22](https://github.com/Richyboy170/toktickit/pull/22) | `GET /api/categories` returned a plain string instead of the documented error object. | Fixed the response shape in commit [`038716b`](https://github.com/Richyboy170/toktickit/commit/038716b). | Reviewer verified the commit, approved, and merged |
+| [#23](https://github.com/Richyboy170/toktickit/pull/23) | `:focus-visible` used an undeclared color instead of Secondary green. | Changed it to `var(--green-700)` in commit [`afd851f`](https://github.com/Richyboy170/toktickit/commit/afd851f). | Reviewer verified the commit, approved, and merged |
+| [#24](https://github.com/Richyboy170/toktickit/pull/24) | Repeated the category error-shape finding inherited from PR #22. | Explained that the stacked branch receives the root fix when merged in dependency order. | Reviewer accepted the root fix, approved, and merged |
 
-| PR | Reviewer comments | Author responses / changes | Approval | Evidence |
-|---|---|---|---|---|
-| #21 | Add explicit accessible-name/tooltip guidance for icon-only controls and explicit Description resizing guidance. | Clarified `ui-spec.md` in [`7c0cdab`](https://github.com/Richyboy170/toktickit/commit/7c0cdab) on the documentation/evidence branch. | Approved and merged | [Reply](https://github.com/Richyboy170/toktickit/pull/21#issuecomment-5405064929) |
-| #22 | `GET /api/categories` returned a plain-string error instead of the documented error object. | Fixed in [`038716b`](https://github.com/Richyboy170/toktickit/commit/038716b) on `feature/14-requester-reference-data`. | Re-review pending | [Reply](https://github.com/Richyboy170/toktickit/pull/22#issuecomment-5405065254) |
-| #23 | `:focus-visible` used undeclared `#37a66c` instead of the required Secondary green. | Fixed in [`afd851f`](https://github.com/Richyboy170/toktickit/commit/afd851f) on `feature/15-requester-context-shell`. | Re-review pending | [Reply](https://github.com/Richyboy170/toktickit/pull/23#issuecomment-5405065644) |
-| #24 | Repeated the category error-shape finding from PR #22. | Answered with the root fix in PR #22; no duplicate patch was added to the later stacked branch. | Re-review pending | [Reply](https://github.com/Richyboy170/toktickit/pull/24#issuecomment-5405066011) |
-| #25–#28 | No peer review comment yet. | None. | Review required | [PR #25](https://github.com/Richyboy170/toktickit/pull/25), [PR #26](https://github.com/Richyboy170/toktickit/pull/26), [PR #27](https://github.com/Richyboy170/toktickit/pull/27), [PR #28](https://github.com/Richyboy170/toktickit/pull/28) |
+PRs [#25](https://github.com/Richyboy170/toktickit/pull/25), [#26](https://github.com/Richyboy170/toktickit/pull/26), [#27](https://github.com/Richyboy170/toktickit/pull/27), and [#28](https://github.com/Richyboy170/toktickit/pull/28) also contain reviewer summaries or approvals. PR #29 records Tanakrit's final release approval.
 
-This section records the review activity currently visible on GitHub. The remaining open PRs still require review, re-review, approval, and reviewer-performed merge commits.
+## Reviews given by Patiharn
 
-## Reviews given to the peer
+Patiharn reviewed and merged Suwiwat's Lab 2 work in [iceswift/toktickit](https://github.com/iceswift/toktickit). This is outbound peer-review evidence and is separate from Patiharn's implementation repository.
 
-The peer repository [Tanakrit-triton/toktickit](https://github.com/Tanakrit-triton/toktickit) was queried on 20 August 2026. It had no open or closed Lab 2 PRs; only Lab 1 PRs #5–#10 existed. Therefore no genuine Lab 2 review could be given yet. When the peer opens Lab 2 PRs, the student must provide substantive comments on the actual diff and record the real PR/comment links here.
-
-## Reviewer handoff checklist
-
-1. Accept the pending Write invitation.
-2. Review PRs #21–#28 in order.
-3. Record specific findings as GitHub review comments; the author responds and pushes fixes on the same feature branch.
-4. Re-review changed files and passing checks.
-5. Approve and merge each PR into `lab2-staging` using **Create a merge commit**.
-6. After staging integration tests pass, review and merge the one release PR from `lab2-staging` to `main`.
-7. Only then update this record, move Issues to Done, and capture final-main evidence.
+- Implementation PRs: [#13](https://github.com/iceswift/toktickit/pull/13), [#15](https://github.com/iceswift/toktickit/pull/15), [#17](https://github.com/iceswift/toktickit/pull/17), [#19](https://github.com/iceswift/toktickit/pull/19), [#21](https://github.com/iceswift/toktickit/pull/21), [#23](https://github.com/iceswift/toktickit/pull/23), and [#25](https://github.com/iceswift/toktickit/pull/25)
+- Release PR: [#28](https://github.com/iceswift/toktickit/pull/28)
 
 ## Integrity note
 
-Current status is intentionally incomplete because peer action is external and pending. Open PRs, a pending invitation, or passing local tests are not evidence of review, approval, merge, final staging integration, or final-main completion.
+The links above point to real GitHub issues, comments, reviews, approvals, and merge commits. No review is attributed to a person who did not perform it. The final evidence update also requires Tanakrit's own approval and merge before it can be described as reviewed.

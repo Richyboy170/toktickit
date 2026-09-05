@@ -12,7 +12,7 @@ Lab 2 peer review was coordinated by a three-person group. The work was intentio
 
 ## Reviews received by Patiharn
 
-Every implementation PR was reviewed and merged by Tanakrit using a merge commit. The feature/documentation branches targeted `lab2-staging`; the release branch targeted `main`.
+PRs #21–#29 were reviewed and merged by Tanakrit using merge commits. PR #30 was reviewed and merged by Suwiwat after the requested Issue #20 linkage was added. The feature/documentation branches targeted `lab2-staging`; the release branch targeted `main`.
 
 | Work | Issue | Pull request | Result |
 |---|---|---|---|
@@ -35,7 +35,7 @@ Every implementation PR was reviewed and merged by Tanakrit using a merge commit
 | [#23](https://github.com/Richyboy170/toktickit/pull/23) | `:focus-visible` used an undeclared color instead of Secondary green. | Changed it to `var(--green-700)` in commit [`afd851f`](https://github.com/Richyboy170/toktickit/commit/afd851f). | Reviewer verified the commit, approved, and merged |
 | [#24](https://github.com/Richyboy170/toktickit/pull/24) | Repeated the category error-shape finding inherited from PR #22. | Explained that the stacked branch receives the root fix when merged in dependency order. | Reviewer accepted the root fix, approved, and merged |
 
-PRs [#25](https://github.com/Richyboy170/toktickit/pull/25), [#26](https://github.com/Richyboy170/toktickit/pull/26), [#27](https://github.com/Richyboy170/toktickit/pull/27), and [#28](https://github.com/Richyboy170/toktickit/pull/28) also contain reviewer summaries or approvals. PR #29 records Tanakrit's final release approval.
+PRs [#25](https://github.com/Richyboy170/toktickit/pull/25), [#26](https://github.com/Richyboy170/toktickit/pull/26), [#27](https://github.com/Richyboy170/toktickit/pull/27), and [#28](https://github.com/Richyboy170/toktickit/pull/28) also contain reviewer summaries or approvals. PR #29 records Tanakrit's final release approval for the earlier release. PR [#30](https://github.com/Richyboy170/toktickit/pull/30) records Suwiwat's requested-change review, author response, approval, and merge for the final evidence update.
 
 ## Reviews given by Patiharn
 
@@ -46,4 +46,4 @@ Patiharn reviewed and merged Suwiwat's Lab 2 work in [iceswift/toktickit](https:
 
 ## Integrity note
 
-The links above point to real GitHub issues, comments, reviews, approvals, and merge commits. No review is attributed to a person who did not perform it. The final evidence update also requires Tanakrit's own approval and merge before it can be described as reviewed.
+The links above point to real GitHub issues, comments, reviews, approvals, and merge commits. No review is attributed to a person who did not perform it. The final evidence update was reviewed and merged by Suwiwat after the Issue #20 linkage was corrected.

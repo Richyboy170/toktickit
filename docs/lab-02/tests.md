@@ -104,8 +104,8 @@ Feature-stack verification on 20 August 2026:
 
 Evidence: [`artifacts/lab-02/screenshots/README.md`](../../artifacts/lab-02/screenshots/README.md) and the screenshot directories it indexes.
 
-These are genuine results for the feature branches, integrated `lab2-staging`, and released `main`. PRs #21–#28 were peer-reviewed and merged into staging; PR #29 was approved and merged into main. The evidence-only suite supplements the product suite and does not replace its database-backed assertions.
+These are genuine results for the feature branches, integrated `lab2-staging`, and released `main`. PRs #21–#28 were peer-reviewed and merged into staging; PR #29 was approved and merged into main; PR #30 was approved and merged by Suwiwat after the Issue #20 linkage was corrected. The evidence-only suite supplements the product suite and does not replace its database-backed assertions.
 
 ## 7. Known Limitations or Deferred Tests
 
-No product test is skipped or deferred. The final evidence-update PR must pass CI and receive Tanakrit's own review before the submission report describes that update as merged.
+No product test is skipped or deferred. The final evidence-update PR passed CI and received Suwiwat's review and approval before it was merged.

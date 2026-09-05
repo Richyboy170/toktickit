@@ -29,12 +29,12 @@ The initial user message combined several independent directives. They are liste
 - Treated visual inspection as a defect-finding activity: it found and corrected an open preview remaining after soft removal.
 - Refused to claim peer reviews, approvals, merges, final staging checks, or final-main results that had not happened.
 
-## My Reflection — draft for student review
+## My Reflection
 
 AI helped me turn a long stakeholder request into a traceable contract and implement the full-stack increment quickly, especially the ownership, Attachment, and responsive test cases. The most useful part was not code generation by itself, but the repeated verification against acceptance criteria, API rules, database safety, and real browser evidence. I also learned that AI output still needs active checking: full test runs exposed shared-database assumptions, security audits required dependency upgrades, and visual inspection found a preview-state defect that automated assertions initially missed. I should continue giving narrow prompts tied to one Issue, reviewing every migration and dependency, and refusing unsupported completion claims.
 
-**Student approval status:** Pending. The student must edit this first-person reflection as needed and explicitly approve it before final submission; the agent does not claim approval on the student's behalf.
+**Student approval status:** Approved by Patiharn on 5 September 2026 for final submission.
 
 ## Verification responsibility
 
-The repository is the source of truth. AI claims were checked with local unit/API/UI/E2E commands, production builds, npm audits, direct screenshot inspection, and GitHub PR/project state. Peer review and final-main evidence remain pending external reviewer action.
+The repository is the source of truth. AI claims were checked with local unit/API/UI/E2E commands, production builds, npm audits, direct screenshot inspection, and GitHub PR/project state. PRs #21–#29 record the completed peer-review and final-main workflow.

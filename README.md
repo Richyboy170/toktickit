@@ -59,11 +59,12 @@ npm run test
 npm run build
 npm run audit
 npm run test:e2e
+npm run test:evidence
 ```
 
 Server API tests derive or use `TEST_DATABASE_URL`, so cleanup never targets development data. Playwright uses `E2E_DATABASE_URL`, then `TEST_DATABASE_URL`, then the documented `toktickit_test` fallback. Its preparation script refuses to delete fixtures unless the database name contains `test` or `e2e`.
 
-Playwright uses installed Chrome locally. CI installs Chromium and uploads the screenshot/report artifacts. Curated, visually inspected evidence is committed under `artifacts/lab-02/screenshots/`; transient `test-results/` and `playwright-report/` output is ignored.
+Playwright uses installed Chrome locally. CI installs Chromium and uploads the screenshot/report artifacts. `test:evidence` captures deterministic rubric-specific UI states without changing production behavior. Curated, visually inspected evidence is committed under `artifacts/lab-02/screenshots/`; transient `test-results/` and `playwright-report/` output is ignored.
 
 ## Requester API
 

@@ -104,13 +104,13 @@ All sizes prohibit clipped labels, overlapping validation, hidden buttons, unrea
 
 ## 10. Visual Evidence Checklist
 
-- [ ] Zen Green tokens and button hierarchy match this document.
-- [ ] Editable, read-only, invalid, disabled, focused, and busy controls are distinct.
-- [ ] Required markers and field errors are adjacent and accessible.
-- [ ] Desktop/tablet/mobile have no clipping, overlap, or horizontal page overflow.
-- [ ] Desktop Ticket table and mobile cards show equivalent essential information.
-- [ ] Search, filters, pagination, dialogs, and Attachment actions remain usable at every size.
-- [ ] Empty versus no-results states are distinct.
-- [ ] Active, uploading, invalid, removed, and unavailable Attachment states are visible.
+- [x] Zen Green tokens and button hierarchy match this document.
+- [x] Editable, read-only, invalid, disabled, focused, and busy controls are distinct.
+- [x] Required markers and field errors are adjacent and accessible.
+- [x] Desktop/tablet/mobile have no clipping, overlap, or horizontal page overflow.
+- [x] Desktop Ticket table and mobile cards show equivalent essential information.
+- [x] Search, filters, pagination, dialogs, and Attachment actions remain usable at every size.
+- [x] Empty versus no-results states are distinct.
+- [x] Active, uploading, invalid, removed, and unavailable Attachment states are visible.
 
 Screenshots are stored under `artifacts/lab-02/screenshots/{requester-selection,create-ticket,my-tickets,ticket-detail}/{desktop,tablet,mobile}/` with descriptive state filenames.

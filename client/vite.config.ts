@@ -1,18 +1,17 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [react()],
   // Vitest sets VITEST in its Node process, but that marker is not always
   // reflected in import.meta.env across Vitest versions. Expose it only to
   // test transforms so Lab 2 compatibility fixtures stay unavailable in the
-  // production build.
+  // production build. Playwright uses the explicit e2e mode for its legacy
+  // Lab 2 browser fixtures.
   define: {
     "import.meta.env.VITEST": JSON.stringify(process.env.VITEST === "true"),
-    // Playwright starts Vite as a child process with this flag in its
-    // environment. Keep the legacy Lab 2 fixture scoped to that test server.
     "import.meta.env.VITE_ENABLE_LEGACY_REQUESTER": JSON.stringify(
-      process.env.VITE_ENABLE_LEGACY_REQUESTER === "true",
+      mode === "e2e" || process.env.VITE_ENABLE_LEGACY_REQUESTER === "true",
     ),
   },
   // Bind IPv4 explicitly: on Windows, Vite's default "localhost" resolves to ::1
@@ -25,4 +24,4 @@ export default defineConfig({
     include: ["tests/**/*.test.tsx"],
     testTimeout: 10_000,
   },
-});
+}));

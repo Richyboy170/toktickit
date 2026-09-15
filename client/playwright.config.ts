@@ -33,7 +33,7 @@ export default defineConfig({
       timeout: 120_000,
     },
     {
-      command: "npm run dev -- --host 127.0.0.1",
+      command: "npm run dev -- --host 127.0.0.1 --mode e2e",
       cwd: import.meta.dirname,
       url: "http://127.0.0.1:5173",
       // Lab 2 compatibility is intentionally enabled only for the test

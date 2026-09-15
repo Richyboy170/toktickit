@@ -15,5 +15,5 @@ test("Administrator can search users and open the minimalist create form", async
   await expect(page.getByRole("heading", { name: "User Management" })).toBeVisible();
   await page.getByRole("button", { name: "Create User" }).click();
   await expect(page.getByRole("heading", { name: "Create User" })).toBeVisible();
-  await expect(page.getByLabel("Initial password")).toBeVisible();
+  await expect(page.getByLabel("Initial password", { exact: true })).toBeVisible();
 });

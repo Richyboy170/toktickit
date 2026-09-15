@@ -77,6 +77,9 @@ jobs:
     env:
       E2E_DATABASE_URL: postgresql://toktickit:toktickit@127.0.0.1:5432/toktickit_test?schema=public
       ENABLE_LEGACY_REQUESTER_CONTEXT: "true"
+      # Lab 2 browser fixtures still exercise the old selector; this flag is
+      # scoped to E2E only and is never included in the production build.
+      VITE_ENABLE_LEGACY_REQUESTER: "true"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

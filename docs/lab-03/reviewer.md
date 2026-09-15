@@ -4,11 +4,11 @@
 
 **Repository:** [Richyboy170/toktickit](https://github.com/Richyboy170/toktickit)
 
-**Peer-review group:** Tanakrit ([Tanakrit-triton](https://github.com/Tanakrit-triton)) and Suwiwat ([iceswift](https://github.com/iceswift)). The Lab 2 record in `02_Assignment/Lab_02_submission.md` contains their completed Lab 2 review history. No Lab 3 GitHub PR, approval, merge, or CI run is claimed in this local record because the current tree has not been pushed or reviewed remotely.
+**Peer-review group:** Tanakrit ([Tanakrit-triton](https://github.com/Tanakrit-triton)) and Suwiwat ([iceswift](https://github.com/iceswift)). The Lab 2 record in `02_Assignment/Lab_02_submission.md` contains their completed Lab 2 review history. Lab 3 PR #33 is open for their review; approval, merge, and CI results remain pending.
 
 ## 1. Lab 3 local review state
 
-The working tree is on the existing `lab2-staging` branch with the Lab 3 implementation present locally. The intended Lab 3 branch flow and CI workflow are documented in `README.md` and `.github/workflows/lab2-ci.yml`, now named **TokTickIT CI** and configured for `lab3-staging`. A Lab 3 staging branch, Issues, PR links, peer approval, and final `main` merge remain pending.
+The Lab 3 implementation is on `feature/lab3-implementation`, which contains the contract baseline commit before the implementation commit. The branch is published and opened as PR #33 into `lab3-staging`. The intended staged flow and CI workflow are documented in `README.md` and `.github/workflows/lab2-ci.yml`, now named **TokTickIT CI**. Peer approval, issue completion, merge into `lab3-staging`, and the final `main` PR remain pending.
 
 A read-only final review was performed by the Codex review agent on 15 September 2026. The author addressed the concrete findings in the shared tree:
 
@@ -34,15 +34,15 @@ A read-only final review was performed by the Codex review agent on 15 September
 | Client tests and production build | Pass | 13 files, 41 tests; Vite build passed |
 | Full server/API, migration, seed, E2E, and responsive browser suite | Blocked | Requires PostgreSQL and browser run |
 | Screenshots and visual inspection | Pending | `artifacts/lab-03/screenshots/README.md` |
-| GitHub Issues, PR review, CI, and release to `main` | Pending | No remote Lab 3 evidence is claimed |
+| GitHub Issues, PR review, CI, and release to `main` | PR open; review pending | [PR #33](https://github.com/Richyboy170/toktickit/pull/33); issue and release evidence pending |
 
 ## 3. Peer approval and delivery
 
-Tanakrit and Suwiwat have not approved this Lab 3 working tree in the local record. Their real Lab 2 approvals are retained only as prior-sprint continuity evidence. A peer reviewer should repeat the checklist after a database-backed test run, browser capture, and GitHub PR review.
+Tanakrit and Suwiwat have not approved Lab 3 yet. Their real Lab 2 approvals are retained only as prior-sprint continuity evidence. A peer reviewer should repeat the checklist on [PR #33](https://github.com/Richyboy170/toktickit/pull/33), then record comments and approval after the database-backed test run, browser capture, and GitHub checks are available.
 
 | Evidence | Link or identifier | Result |
 |---|---|---|
-| Lab 3 contract PR | Pending - no remote PR claimed | Pending |
+| Lab 3 contract and implementation PR | https://github.com/Richyboy170/toktickit/pull/33 | Open; peer review pending |
 | Authentication/migration review | Pending | Pending |
 | Authorization and Requester regression review | Pending | Pending |
 | Staff Queue/Detail review | Pending | Pending |
@@ -52,4 +52,4 @@ Tanakrit and Suwiwat have not approved this Lab 3 working tree in the local reco
 
 ## 4. Final reviewer statement
 
-No peer approval, merge, final-main test run, or visual sign-off is claimed for Lab 3 in this local record. The implementation and local evidence are ready for that review once PostgreSQL and the remote workflow are available.
+No peer approval, merge, final-main test run, or visual sign-off is claimed for Lab 3 in this local record. PR #33 is the review target; database/browser evidence and the final `main` release remain pending.

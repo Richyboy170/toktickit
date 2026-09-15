@@ -1,6 +1,6 @@
 ﻿# Lab 3 REST API Contract
 
-**Status:** approved contract baseline prepared before implementation; implementation and evidence are pending. The base URL is `/api`. JSON uses UTF-8 unless a download is explicitly binary. Dates are ISO 8601 UTC strings and enum values are uppercase.
+**Status:** implemented locally against this approved baseline; final database, browser, and delivery evidence are pending. The base URL is `/api`. JSON uses UTF-8 unless a download is explicitly binary. Dates are ISO 8601 UTC strings and enum values are uppercase.
 
 ## 1. Conventions and authentication
 

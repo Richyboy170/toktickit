@@ -1,6 +1,6 @@
 ﻿# Lab 3 Zen Green UI Specification
 
-**Status:** approved contract baseline prepared before implementation; screenshots and visual inspection are pending. Lab 3 extends the Lab 2 visual language. The existing tokens, spacing scale, form conventions, responsive breakpoints, keyboard behavior, and Attachment presentation remain in force unless this document says otherwise.
+**Status:** implemented locally against this baseline; screenshots and final visual inspection results are pending. Lab 3 extends the Lab 2 visual language. The existing tokens, spacing scale, form conventions, responsive breakpoints, keyboard behavior, and Attachment presentation remain in force unless this document says otherwise.
 
 ## 1. Design tokens and shared components
 

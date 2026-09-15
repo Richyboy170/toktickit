@@ -1,6 +1,6 @@
 ﻿# Lab 3 Test Plan and Traceability
 
-**Status:** approved Test DD plan prepared with the Lab 3 contract before implementation. Final results will be recorded after implementation.
+**Status:** the Test DD plan was prepared with the Lab 3 contract before implementation. Local results below were updated on 15 September 2026. Database-backed API, migration, seed, and browser checks are blocked because PostgreSQL is unavailable at `localhost:5432`; no blocked check is marked Pass.
 
 ## 1. Test strategy
 

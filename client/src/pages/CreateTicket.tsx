@@ -11,6 +11,7 @@ import {
   getRelatedSystems,
   uploadAttachment,
 } from "../api.js";
+import { useAuth } from "../auth-context.js";
 import { validateSelectedFiles } from "../attachment-validation.js";
 import { useRequester } from "../requester-context.js";
 
@@ -29,7 +30,9 @@ function newSubmissionToken(): string {
 }
 
 export function CreateTicket() {
-  const { requester } = useRequester();
+  const { user } = useAuth();
+  const { requester: legacyRequester } = useRequester();
+  const requester = user?.role === "REQUESTER" ? user : legacyRequester;
   const [values, setValues] = useState<FormValues>(EMPTY_FORM);
   const [categories, setCategories] = useState<ReferenceItem[]>([]);
   const [systems, setSystems] = useState<ReferenceItem[]>([]);
@@ -103,12 +106,12 @@ export function CreateTicket() {
         description: values.description.trim(),
         submissionToken,
       };
-      const result = await createTicket(requester.id, input);
+      const result = await createTicket(user ? undefined : requester.id, input);
       setCreated(result.ticket);
 
       const failed: string[] = [];
       for (const file of files) {
-        try { await uploadAttachment(requester.id, result.ticket.id, file); }
+        try { await uploadAttachment(user ? undefined : requester.id, result.ticket.id, file); }
         catch { failed.push(file.name); }
       }
       setFailedUploads(failed);

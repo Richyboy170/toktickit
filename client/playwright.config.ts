@@ -28,7 +28,7 @@ export default defineConfig({
       command: "npm run e2e:serve",
       cwd: serverDirectory,
       url: "http://127.0.0.1:3000/api/health",
-      env: { DATABASE_URL: databaseUrl, PORT: "3000" },
+      env: { DATABASE_URL: databaseUrl, PORT: "3000", ENABLE_LEGACY_REQUESTER_CONTEXT: "true" },
       reuseExistingServer: false,
       timeout: 120_000,
     },
@@ -36,7 +36,9 @@ export default defineConfig({
       command: "npm run dev -- --host 127.0.0.1",
       cwd: import.meta.dirname,
       url: "http://127.0.0.1:5173",
-      env: { VITE_API_URL: "http://127.0.0.1:3000" },
+      // Lab 2 compatibility is intentionally enabled only for the test
+      // server. Production builds do not set this flag.
+      env: { VITE_API_URL: "http://127.0.0.1:3000", VITE_ENABLE_LEGACY_REQUESTER: "true" },
       reuseExistingServer: false,
       timeout: 120_000,
     },

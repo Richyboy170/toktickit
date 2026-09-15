@@ -1,5 +1,5 @@
-// Prisma schema — datasource and generator are pre-wired.
-// Your DATABASE_URL lives in server/.env (copy it from .env.example).
+// TokTickIT data model. Lab 3 evolves the Lab 2 DevelopmentRequester table
+// into User while retaining integer IDs, Ticket ownership, and Attachments.
 
 generator client {
   provider = "prisma-client-js"
@@ -10,11 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ---------------------------------------------------------------------------
-// A supported IT request category, e.g. "Hardware".
-// `name` is @unique so the database itself refuses duplicates — that is what
-// makes the seed safe to run more than once (see prisma/seed.ts).
-// ---------------------------------------------------------------------------
 model Category {
   id        Int      @id @default(autoincrement())
   name      String   @unique @db.VarChar(100)
@@ -33,15 +28,33 @@ model RelatedSystem {
   tickets   Ticket[]
 }
 
-model DevelopmentRequester {
-  id                 Int          @id @default(autoincrement())
-  name               String       @db.VarChar(120)
-  email              String       @unique @db.VarChar(254)
-  isActive           Boolean      @default(true)
-  createdAt          DateTime     @default(now())
-  updatedAt          DateTime     @updatedAt
-  tickets            Ticket[]
-  removedAttachments Attachment[] @relation("AttachmentRemovedBy")
+enum UserRole {
+  REQUESTER
+  IT_STAFF
+  ADMINISTRATOR
+}
+
+model User {
+  id                 Int             @id @default(autoincrement())
+  name               String          @db.VarChar(120)
+  email              String          @unique @db.VarChar(254)
+  isActive           Boolean         @default(true)
+  role               UserRole        @default(REQUESTER)
+  // An empty default exists only for the Lab 2 compatibility delegate. All
+  // accounts created through Lab 3 APIs receive a real scrypt hash.
+  passwordHash       String          @default("") @db.VarChar(255)
+  mustChangePassword Boolean         @default(false)
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  requestedTickets   Ticket[]        @relation("RequesterTickets")
+  ownedTickets       Ticket[]        @relation("TicketOwners")
+  sessions           Session[]
+  comments           PublicComment[] @relation("CommentAuthors")
+  internalNotes      InternalNote[]  @relation("NoteAuthors")
+  removedAttachments Attachment[]    @relation("AttachmentRemovedBy")
+
+  @@index([role, isActive])
+  @@index([name])
 }
 
 enum RequestedPriority {
@@ -53,25 +66,42 @@ enum RequestedPriority {
 
 enum TicketStatus {
   NEW
+  OPEN
+  IN_PROGRESS
+  WAITING_FOR_REQUESTER
+  RESOLVED
+  CLOSED
+  REOPENED
+  CANCELLED
 }
 
 model Ticket {
-  id                Int                  @id @default(autoincrement())
-  ticketNumber      String               @unique @db.VarChar(30)
-  requesterId       Int
-  categoryId        Int
-  relatedSystemId   Int
-  summary           String               @db.VarChar(120)
-  description       String               @db.Text
-  requestedPriority RequestedPriority
-  currentStatus     TicketStatus         @default(NEW)
-  submissionToken   String               @db.Uuid
-  createdAt         DateTime             @default(now())
-  updatedAt         DateTime             @updatedAt
-  requester         DevelopmentRequester @relation(fields: [requesterId], references: [id], onDelete: Restrict)
-  category          Category             @relation(fields: [categoryId], references: [id], onDelete: Restrict)
-  relatedSystem     RelatedSystem        @relation(fields: [relatedSystemId], references: [id], onDelete: Restrict)
-  attachments       Attachment[]
+  id                             Int               @id @default(autoincrement())
+  ticketNumber                   String            @unique @db.VarChar(30)
+  requesterId                    Int
+  categoryId                     Int
+  relatedSystemId                Int
+  ownerId                        Int?
+  summary                        String            @db.VarChar(120)
+  description                    String            @db.Text
+  requestedPriority              RequestedPriority
+  itPriority                     RequestedPriority @default(MEDIUM)
+  currentStatus                  TicketStatus      @default(NEW)
+  requesterMarkedResolved        Boolean           @default(false)
+  requesterResolvedAt            DateTime?
+  // Canonical Lab 3 API field. The two legacy marker fields above remain as
+  // compatibility columns for early Lab 3 fixtures and are kept in sync.
+  requesterResolutionIndicatedAt DateTime?
+  submissionToken                String            @db.Uuid
+  createdAt                      DateTime          @default(now())
+  updatedAt                      DateTime          @updatedAt
+  requester                      User              @relation("RequesterTickets", fields: [requesterId], references: [id], onDelete: Restrict)
+  owner                          User?             @relation("TicketOwners", fields: [ownerId], references: [id], onDelete: SetNull)
+  category                       Category          @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  relatedSystem                  RelatedSystem     @relation(fields: [relatedSystemId], references: [id], onDelete: Restrict)
+  attachments                    Attachment[]
+  comments                       PublicComment[]
+  internalNotes                  InternalNote[]
 
   @@unique([requesterId, submissionToken])
   @@index([requesterId, updatedAt, id])
@@ -79,22 +109,64 @@ model Ticket {
   @@index([requesterId, relatedSystemId])
   @@index([requesterId, requestedPriority])
   @@index([requesterId, currentStatus])
+  @@index([currentStatus, itPriority, updatedAt])
+  @@index([ownerId, currentStatus])
 }
 
 model Attachment {
-  id                   Int                   @id @default(autoincrement())
+  id                   Int       @id @default(autoincrement())
   ticketId             Int
-  originalName         String                @db.VarChar(255)
-  mimeType             String                @db.VarChar(50)
+  originalName         String    @db.VarChar(255)
+  mimeType             String    @db.VarChar(50)
   sizeBytes            Int
   content              Bytes
-  uploadedAt           DateTime              @default(now())
+  uploadedAt           DateTime  @default(now())
   removedAt            DateTime?
-  removalReason        String?               @db.VarChar(200)
+  removalReason        String?   @db.VarChar(200)
   removedByRequesterId Int?
-  ticket               Ticket                @relation(fields: [ticketId], references: [id], onDelete: Cascade)
-  removedByRequester   DevelopmentRequester? @relation("AttachmentRemovedBy", fields: [removedByRequesterId], references: [id], onDelete: SetNull)
+  ticket               Ticket    @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  // The field name remains for Lab 2 response compatibility; it now points to
+  // the migrated User model.
+  removedByRequester   User?     @relation("AttachmentRemovedBy", fields: [removedByRequesterId], references: [id], onDelete: SetNull)
 
   @@index([ticketId, removedAt])
   @@index([removedByRequesterId])
+}
+
+model Session {
+  id        String   @id @default(cuid()) @db.VarChar(32)
+  tokenHash String   @unique @db.VarChar(64)
+  userId    Int
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model PublicComment {
+  id        Int      @id @default(autoincrement())
+  ticketId  Int
+  authorId  Int
+  content   String   @db.VarChar(2000)
+  createdAt DateTime @default(now())
+  ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  author    User     @relation("CommentAuthors", fields: [authorId], references: [id], onDelete: Restrict)
+
+  @@index([ticketId, createdAt, id])
+  @@index([authorId])
+}
+
+model InternalNote {
+  id        Int      @id @default(autoincrement())
+  ticketId  Int
+  authorId  Int
+  content   String   @db.VarChar(2000)
+  createdAt DateTime @default(now())
+  ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  author    User     @relation("NoteAuthors", fields: [authorId], references: [id], onDelete: Restrict)
+
+  @@index([ticketId, createdAt, id])
+  @@index([authorId])
 }

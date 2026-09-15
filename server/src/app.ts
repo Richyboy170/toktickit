@@ -1,8 +1,14 @@
-import express, { Request, Response } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import { getPrisma } from "./prisma.js";
+import { legacyRequesterContextEnabled, requireAuthenticatedUser } from "./auth-context.js";
+import { sendError } from "./http.js";
 import { ticketsRouter } from "./routes/tickets.js";
 import { attachmentsRouter } from "./routes/attachments.js";
+import { authRouter } from "./routes/auth.js";
+import { staffRouter } from "./routes/staff.js";
+import { messagesRouter } from "./routes/messages.js";
+import { adminRouter } from "./routes/admin.js";
 // getPrisma() is the lazy database handle. It is called INSIDE the route that
 // needs the DB, so importing this file never opens a connection by itself.
 
@@ -10,10 +16,47 @@ import { attachmentsRouter } from "./routes/attachments.js";
 // Supertest can import `app` without opening a port. Do not merge these files.
 export const app = express();
 
-app.use(cors());          // already wired: lets the Vite dev server call this API
+const configuredOrigins = (process.env.CLIENT_ORIGINS ?? process.env.CLIENT_ORIGIN ?? "http://localhost:5173,http://127.0.0.1:5173")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+const stateChangingMethods = new Set(["POST", "PUT", "PATCH", "DELETE"]);
+
+app.use(cors({
+  credentials: true,
+  origin: (origin, callback) => callback(null, !origin || configuredOrigins.includes(origin)),
+}));
 app.use(express.json());
+// express.json forwards malformed bodies to the next error handler. Convert
+// parser details into the same safe JSON error shape used by the API routes.
+app.use((error: unknown, _req: Request, res: Response, next: NextFunction) => {
+  const parserError = error as { type?: unknown; status?: unknown; message?: unknown };
+  const malformedJson = parserError?.type === "entity.parse.failed"
+    || (error instanceof SyntaxError && parserError?.status === 400);
+  if (malformedJson) {
+    return sendError(res, 400, "INVALID_JSON", "Request body must contain valid JSON.");
+  }
+  return next(error);
+});
+app.use((req, res, next) => {
+  const origin = req.header("Origin");
+  if (origin && stateChangingMethods.has(req.method) && !configuredOrigins.includes(origin)) {
+    return res.status(403).json({ error: { code: "CSRF_ORIGIN_REJECTED", message: "Request origin is not allowed." } });
+  }
+  return next();
+});
+app.use("/api/auth", authRouter);
+// Short aliases keep the REST surface friendly for the browser client and
+// older integration fixtures.
+app.use("/api", authRouter);
 app.use("/api/tickets", ticketsRouter);
 app.use("/api/attachments", attachmentsRouter);
+app.use("/api/tickets", messagesRouter);
+app.use("/api/staff/tickets", messagesRouter);
+app.use("/api/staff", staffRouter);
+app.use("/api/it", staffRouter);
+app.use("/api/admin", adminRouter);
+app.use("/api/administrator", adminRouter);
 
 // ---------------------------------------------------------------------------
 // Issue 2 — API health check
@@ -29,7 +72,11 @@ app.get("/api/health", (_req: Request, res: Response) => {
 // ---------------------------------------------------------------------------
 // Category list — the four supported request categories, read from PostgreSQL.
 // ---------------------------------------------------------------------------
-app.get("/api/categories", async (_req: Request, res: Response) => {
+app.get("/api/categories", async (req: Request, res: Response) => {
+  // Lab 2's unauthenticated reference-data fixtures remain available only in
+  // the explicitly enabled compatibility/test process. Normal deployments
+  // require a full authenticated session for reference data.
+  if (!legacyRequesterContextEnabled() && !(await requireAuthenticatedUser(req, res))) return;
   try {
     const categories = await getPrisma().category.findMany({
       where: { isActive: true },
@@ -46,7 +93,8 @@ app.get("/api/categories", async (_req: Request, res: Response) => {
   }
 });
 
-app.get("/api/related-systems", async (_req: Request, res: Response) => {
+app.get("/api/related-systems", async (req: Request, res: Response) => {
+  if (!legacyRequesterContextEnabled() && !(await requireAuthenticatedUser(req, res))) return;
   try {
     const systems = await getPrisma().relatedSystem.findMany({
       where: { isActive: true },
@@ -63,9 +111,12 @@ app.get("/api/related-systems", async (_req: Request, res: Response) => {
 });
 
 app.get("/api/development-requesters", async (_req: Request, res: Response) => {
+  if (!legacyRequesterContextEnabled()) {
+    return sendError(res, 404, "LEGACY_ROUTE_UNAVAILABLE", "This compatibility route is unavailable.");
+  }
   try {
-    const requesters = await getPrisma().developmentRequester.findMany({
-      where: { isActive: true },
+    const requesters = await getPrisma().user.findMany({
+      where: { isActive: true, role: "REQUESTER" },
       select: { id: true, name: true, email: true },
       orderBy: [{ name: "asc" }, { id: "asc" }],
     });
@@ -76,6 +127,15 @@ app.get("/api/development-requesters", async (_req: Request, res: Response) => {
       error: { code: "REQUESTERS_UNAVAILABLE", message: "Unable to load Development Requesters." },
     });
   }
+});
+
+// Keep unexpected failures in the API's safe error envelope. Route handlers
+// own their expected database/validation failures; this is the final guard for
+// parser, middleware, and unforeseen errors that reach Express.
+app.use((error: unknown, _req: Request, res: Response, next: NextFunction) => {
+  if (res.headersSent) return next(error);
+  console.error("Unhandled API error:", error);
+  return sendError(res, 500, "INTERNAL_ERROR", "An unexpected server error occurred.");
 });
 
 export default app;

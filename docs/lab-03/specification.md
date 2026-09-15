@@ -1,6 +1,6 @@
 ﻿# Lab 3 â€” Sprint 3 Engineering Contract
 
-**Status:** approved contract baseline prepared before implementation; implementation and evidence are pending. This contract extends the Lab 2 contract and is the source of truth for the Lab 3 increment.
+**Status:** implemented locally against this approved baseline; database, browser, and delivery evidence are pending.  This contract extends the Lab 2 contract and is the source of truth for the Lab 3 increment.
 
 ## 1. Sprint goal
 

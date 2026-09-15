@@ -9,6 +9,11 @@ export default defineConfig({
   // production build.
   define: {
     "import.meta.env.VITEST": JSON.stringify(process.env.VITEST === "true"),
+    // Playwright starts Vite as a child process with this flag in its
+    // environment. Keep the legacy Lab 2 fixture scoped to that test server.
+    "import.meta.env.VITE_ENABLE_LEGACY_REQUESTER": JSON.stringify(
+      process.env.VITE_ENABLE_LEGACY_REQUESTER === "true",
+    ),
   },
   // Bind IPv4 explicitly: on Windows, Vite's default "localhost" resolves to ::1
   // only, and Chrome then cannot open http://localhost:5173.

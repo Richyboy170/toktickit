@@ -14,8 +14,8 @@ import { useRequester, RequesterProvider } from "./requester-context.js";
 
 // The old selector is kept only for the Lab 2 regression tests. It is not a
 // production route and cannot be used to enter the authenticated application.
-const legacyRequesterTestMode = import.meta.env.VITE_ENABLE_LEGACY_REQUESTER === "true"
-  || import.meta.env.VITEST === "true";
+const legacyRequesterCompatibilityMode = import.meta.env.VITE_ENABLE_LEGACY_REQUESTER === "true";
+const legacyRequesterTestMode = legacyRequesterCompatibilityMode || import.meta.env.VITEST === "true";
 
 function homeForRole(role: string | undefined): string {
   return role === "IT_STAFF" ? "/staff/tickets" : role === "ADMINISTRATOR" ? "/users" : "/tickets";
@@ -25,6 +25,9 @@ function AuthenticatedFrame() {
   const { user } = useAuth();
   const { requester } = useRequester();
   const location = useLocation();
+  if (!user && legacyRequesterCompatibilityMode && !requester) {
+    return <Navigate to="/select-requester" replace />;
+  }
   if (!user && !(legacyRequesterTestMode && requester)) return <Navigate to="/login" replace state={{ from: location.pathname }} />;
   if (user && requiresPasswordChange(user)) return <Navigate to="/change-password" replace />;
   return <AppShell />;

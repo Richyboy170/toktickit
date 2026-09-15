@@ -34,7 +34,7 @@ A read-only final review was performed by the Codex review agent on 15 September
 | Client tests and production build | Pass | 13 files, 41 tests; Vite build passed |
 | Full server/API, migration, seed, E2E, and responsive browser suite | Blocked | Requires PostgreSQL and browser run |
 | Screenshots and visual inspection | Pending | `artifacts/lab-03/screenshots/README.md` |
-| GitHub Issues, PR review, CI, and release to `main` | PR open; review pending | [PR #33](https://github.com/Richyboy170/toktickit/pull/33); issue and release evidence pending |
+| GitHub Issues, PR review, CI, and release to `main` | Issues and PR open; review pending | Issues [#34](https://github.com/Richyboy170/toktickit/issues/34)-[#40](https://github.com/Richyboy170/toktickit/issues/40), [PR #33](https://github.com/Richyboy170/toktickit/pull/33); CI and release evidence pending |
 
 ## 3. Peer approval and delivery
 

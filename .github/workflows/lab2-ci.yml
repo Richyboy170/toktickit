@@ -90,6 +90,8 @@ jobs:
       - run: npm ci
         working-directory: client
       - run: npx playwright install --with-deps chromium
+      - name: Enable legacy Lab 2 fixture for browser tests
+        run: echo "VITE_ENABLE_LEGACY_REQUESTER=true" > client/.env.local
       - run: npm run test:e2e
       - uses: actions/upload-artifact@v4
         if: always()

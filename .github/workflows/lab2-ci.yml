@@ -54,10 +54,6 @@ jobs:
         working-directory: client
       - run: npm test
         working-directory: client
-        env:
-          # The Lab 2 selector tests are compatibility fixtures only; the
-          # production build below intentionally does not receive this flag.
-          VITE_ENABLE_LEGACY_REQUESTER: "true"
       - run: npm run build
         working-directory: client
       - run: npm audit

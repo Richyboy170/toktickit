@@ -14,8 +14,8 @@ import { useRequester, RequesterProvider } from "./requester-context.js";
 
 // The old selector is kept only for the Lab 2 regression tests. It is not a
 // production route and cannot be used to enter the authenticated application.
-const legacyRequesterTestMode = import.meta.env.MODE === "test"
-  || import.meta.env.VITE_ENABLE_LEGACY_REQUESTER === "true";
+const legacyRequesterTestMode = import.meta.env.VITE_ENABLE_LEGACY_REQUESTER === "true"
+  || import.meta.env.VITEST === "true";
 
 function homeForRole(role: string | undefined): string {
   return role === "IT_STAFF" ? "/staff/tickets" : role === "ADMINISTRATOR" ? "/users" : "/tickets";

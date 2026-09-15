@@ -27,7 +27,7 @@ The plan covers unit policy and workflow tests; Express/Supertest API and author
 | API-17 | API/security | Origin checks, malformed JSON, safe error envelope, missing resources, no stack leakage | `server/tests/lab-03/hardening.api.test.ts` | Pass |
 | UI-01 | Component | Login validation, busy/safe errors, role destinations, inactive account | `client/tests/lab-03/Login.test.tsx` | Pass |
 | UI-02 | Component | Mandatory and voluntary Change Password rules and continuation | `client/tests/lab-03/ChangePassword.test.tsx` | Pass |
-| UI-03 | Regression | Authenticated Requester screens, comments, resolution, and no selector | `client/tests/lab-03/RequesterRegression.test.tsx` | Pending (planned file not present) |
+| UI-03 | Regression | Authenticated Requester screens, comments, resolution, and no selector | `client/tests/lab-03/RequesterRegression.test.tsx` | Pass |
 | UI-04 | Component | Queue controls, data states, badges, pagination, and retry | `client/tests/lab-03/StaffTicketQueue.test.tsx` | Pass |
 | UI-05 | Component | Staff Detail assignment, priority, valid transitions, confirmation, notes, comments, files | `client/tests/lab-03/StaffTicketDetail.test.tsx` | Pass |
 | UI-06 | Component | Minimal User Management, validation, create/edit/reset, safety feedback | `client/tests/lab-03/UserManagement.test.tsx` | Pass |

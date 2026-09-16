@@ -107,6 +107,16 @@ async function staffUser(req: Request, res: Response) {
   return requireRole(req, res, [UserRole.IT_STAFF]);
 }
 
+export const STAFF_TICKET_DETAIL_READ_ROLES = [UserRole.IT_STAFF, UserRole.ADMINISTRATOR] as const;
+
+export function canReadStaffTicketDetail(role: UserRole): boolean {
+  return (STAFF_TICKET_DETAIL_READ_ROLES as readonly UserRole[]).includes(role);
+}
+
+async function staffTicketDetailReader(req: Request, res: Response) {
+  return requireRole(req, res, STAFF_TICKET_DETAIL_READ_ROLES);
+}
+
 async function priorityUser(req: Request, res: Response) {
   // The approved review explicitly permits Administrators to correct IT
   // Priority while keeping assignment and status operations Staff-only.
@@ -175,7 +185,7 @@ staffRouter.get("/users", async (req, res) => {
 });
 
 staffRouter.get("/tickets/:ticketId", async (req, res) => {
-  const user = await staffUser(req, res);
+  const user = await staffTicketDetailReader(req, res);
   if (!user) return;
   const ticketId = parseTicketId(req, res);
   if (!ticketId) return;

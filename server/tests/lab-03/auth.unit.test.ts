@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { hashPassword, passwordValidationMessage, verifyPassword } from "../../src/auth.js";
 import { SESSION_COOKIE, SESSION_TTL_MS, sessionCookie } from "../../src/auth-context.js";
+import { canReadStaffTicketDetail } from "../../src/routes/staff.js";
 import { canTransitionStatus, requiresActiveOwner, requiresStatusConfirmation } from "../../src/ticket-workflow.js";
 
 describe("password policy", () => {
@@ -51,5 +52,13 @@ describe("server sessions", () => {
     expect(cookie).toContain("HttpOnly");
     expect(cookie).toContain("SameSite=Lax");
     expect(cookie).toContain("Max-Age=28800");
+  });
+});
+
+describe("Staff Ticket Detail read policy", () => {
+  it("allows Administrators to read detail while keeping Requesters out", () => {
+    expect(canReadStaffTicketDetail("IT_STAFF")).toBe(true);
+    expect(canReadStaffTicketDetail("ADMINISTRATOR")).toBe(true);
+    expect(canReadStaffTicketDetail("REQUESTER")).toBe(false);
   });
 });

@@ -82,7 +82,7 @@ Normal application routes use the authenticated session cookie. The legacy `X-De
 | GET/POST/DELETE | `/api/tickets/:ticketId/attachments` | List, upload, or remove Attachments |
 | GET | `/api/attachments/:attachmentId/download` | Download a visible Attachment |
 | GET | `/api/staff/tickets` | IT Staff Queue with search/filter/sort/pagination |
-| GET | `/api/staff/tickets/:ticketId` | IT Staff Ticket Detail |
+| GET | `/api/staff/tickets/:ticketId` | IT Staff Ticket Detail; Administrator read-only inspection |
 | PATCH | `/api/staff/tickets/:ticketId/assignment` | Claim, assign, reassign, or unassign |
 | PATCH | `/api/staff/tickets/:ticketId/priority` | Change IT Priority |
 | PATCH | `/api/staff/tickets/:ticketId/status` | Apply a permitted status transition |

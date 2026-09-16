@@ -22,7 +22,7 @@ The plan covers unit policy and workflow tests; Express/Supertest API and author
 | API-05 | API/regression | Authenticated Requester create/list/detail and Attachment lifecycle | `server/tests/lab-03/requester-regression.api.test.ts` plus Lab 2 API suites | Blocked: PostgreSQL unavailable |
 | API-06/07 | API/security | Public Comments, resolution indication, Internal Notes visibility and append-only behavior | `server/tests/lab-03/comments-notes.api.test.ts` | Boundary Pass; database cases blocked |
 | API-08 | API | Staff Queue search, filters, sorting, pagination, empty/no-results/failure | `server/tests/lab-03/staff-queue.api.test.ts` | Boundary Pass; database cases blocked |
-| API-09/10/11/12 | API/security | Assignment, claim/reassign, IT Priority, status matrix, detail fields and Attachments | `server/tests/lab-03/staff-ticket-detail.api.test.ts` | Boundary Pass; database cases blocked |
+| API-09/10/11/12 | API/security | Assignment, claim/reassign, IT Priority, status matrix, detail fields and Attachments; Administrator read-only detail | `server/tests/lab-03/staff-ticket-detail.api.test.ts` | Boundary Pass; database cases blocked locally; Administrator route regression added |
 | API-13/14/15/16 | API/security | Administrator list/search/filter/create/edit/reset and safety rules | `server/tests/lab-03/users-admin.api.test.ts` | Boundary Pass; database cases blocked |
 | API-17 | API/security | Origin checks, malformed JSON, safe error envelope, missing resources, no stack leakage | `server/tests/lab-03/hardening.api.test.ts` | Pass |
 | UI-01 | Component | Login validation, busy/safe errors, role destinations, inactive account | `client/tests/lab-03/Login.test.tsx` | Pass |
@@ -35,7 +35,7 @@ The plan covers unit policy and workflow tests; Express/Supertest API and author
 | E2E-01 | Browser | Login, first-login change, role shell, logout, direct access after logout | `e2e/lab-03/authentication.spec.ts` | Pass: GitHub Actions run 35088493013 |
 | E2E-02 | Browser | Requester workflow, comments, resolution, Attachment ownership | `e2e/lab-03/requester-regression.spec.ts` | Blocked: PostgreSQL unavailable |
 | E2E-03 | Browser | Staff Queue and Detail workflow | `e2e/lab-03/staff-ticket-flow.spec.ts` | Pass: GitHub Actions run 35088493013 |
-| E2E-04 | Browser | Administrator User Management and next-login password change | `e2e/lab-03/user-administration.spec.ts` | Pass: GitHub Actions run 35088493013 |
+| E2E-04 | Browser | Administrator User Management, Staff Ticket Detail read, and next-login password change | `e2e/lab-03/user-administration.spec.ts` | Pass in the prior CI run; the new direct detail assertion awaits the next run |
 | E2E-05 | Responsive | Desktop/tablet/mobile clipping, overflow, and equivalent actions | `e2e/lab-03/responsive.spec.ts` | Blocked: PostgreSQL unavailable |
 | E2E-06 | Release | Safe failure and final release smoke path | `e2e/lab-03/release-readiness.spec.ts` | Blocked: PostgreSQL unavailable |
 | VIS-01 | Browser fixture capture | Authentication, Change Password, Requester, Staff Queue/Detail, Administrator screens at desktop/tablet/mobile widths; no horizontal overflow | `e2e/lab-03/visual-evidence.spec.ts` | Pass: local fixture run and GitHub Actions run 35088493013; 18 PNG captures uploaded |

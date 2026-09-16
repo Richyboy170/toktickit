@@ -17,3 +17,23 @@ test("Administrator can search users and open the minimalist create form", async
   await expect(page.getByRole("heading", { name: "Create User" })).toBeVisible();
   await expect(page.getByLabel("Initial password", { exact: true })).toBeVisible();
 });
+
+test("Administrator can inspect Staff Ticket Detail without Staff mutations", async ({ page }) => {
+  await page.goto("/login");
+  await page.getByLabel("Email address").fill(adminEmail);
+  await page.getByLabel("Password").fill(adminPassword);
+  await page.getByRole("button", { name: "Sign In" }).click();
+
+  const staffDetail = await page.request.get("/api/staff/tickets/1");
+  expect(staffDetail.status()).toBe(200);
+  const payload = await staffDetail.json();
+  expect(payload.ticket).toEqual(expect.objectContaining({ id: 1 }));
+
+  await page.goto("/admin/tickets/1");
+  await expect(page.getByRole("heading", { name: /TKT-/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Public Comments" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Internal Notes" })).toBeVisible();
+  await expect(page.getByLabel("IT Priority")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Claim Ticket" })).not.toBeVisible();
+  await expect(page.getByLabel("Current Status")).not.toBeVisible();
+});

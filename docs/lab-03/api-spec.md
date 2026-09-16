@@ -223,7 +223,7 @@ Requester owner only. Body is `{ "appearsResolved": true }`. The server records 
 
 ## 6. IT Staff Queue and Ticket operations
 
-Queue and Staff Detail routes in this section require an active `IT_STAFF` session. Assignment and status mutations are IT Staff-only. The IT Priority mutation is available to active IT Staff or Administrators because the handout explicitly permits both roles to change IT Priority. The read-only Internal Note retrieval route is also available to Administrators.
+The Queue route and Staff Detail mutation routes in this section require an active `IT_STAFF` session. The Staff Detail read route also accepts an active `ADMINISTRATOR` session for read-only inspection, including Public Comments and Internal Notes. Assignment and status mutations are IT Staff-only. The IT Priority mutation is available to active IT Staff or Administrators because the handout explicitly permits both roles to change IT Priority. The read-only Internal Note retrieval route is also available to Administrators.
 
 ### `GET /api/staff/tickets`
 
@@ -271,7 +271,7 @@ IT Staff only. Returns `200 UserSummary[]` for active `IT_STAFF` and `ADMINISTRA
 
 ### `GET /api/staff/tickets/:ticketId`
 
-IT Staff only. Returns `200 { "ticket": Ticket }` for any Ticket, including operational fields, active/removed Attachment metadata, Public Comments, and Internal Notes. A malformed ID is `400 INVALID_PATH`; a missing Ticket is `404 RESOURCE_NOT_FOUND`; a database failure is `500 TICKET_DETAIL_UNAVAILABLE`.
+IT Staff or Administrator. Returns `200 { "ticket": Ticket }` for any Ticket, including operational fields, active/removed Attachment metadata, Public Comments, and Internal Notes. Administrators receive the detail for read-only inspection; assignment, status, comment, and note mutations remain IT Staff-only. A malformed ID is `400 INVALID_PATH`; a missing Ticket is `404 RESOURCE_NOT_FOUND`; a database failure is `500 TICKET_DETAIL_UNAVAILABLE`.
 
 ### `POST /api/staff/tickets/:ticketId/claim`
 

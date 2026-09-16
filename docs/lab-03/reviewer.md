@@ -17,6 +17,7 @@ A read-only final review was performed by the Codex review agent on 15 September
 | Legacy requester header and selector could bypass authentication | Header, requester directory, and client selector are restricted to `ENABLE_LEGACY_REQUESTER_CONTEXT=true` or test mode; normal client builds use session identity. | Local code updated; peer re-review pending |
 | Role login could land on `/tickets`; full users could not change password | Role-safe return paths, default destinations, voluntary Change Password, and shell navigation were added. | Local code updated; peer re-review pending |
 | Staff status UI showed every status and always sent confirmation | UI now offers only valid next states and asks for confirmation for Cancel/Resolve/Close/Reopen; API default is `confirm=false`. | Local code updated; peer re-review pending |
+| Administrator detail route rendered a Staff Detail but its API read guard returned 403 | `GET /api/staff/tickets/:ticketId` now accepts IT Staff and Administrator readers; assignment, status, comment, and note mutations remain IT Staff-only. | Fix and regression tests added; peer re-review pending |
 | Legacy migration left empty credentials without a usable local initializer | `prisma:initialize-legacy-passwords` hashes a local temporary value after migration and preserves the first-login flag; setup docs describe it. | Local code updated; peer re-review pending |
 | Deactivating an owner left stale Ticket ownership | Administrator deactivation clears `ownerId` and revokes sessions in one transaction. | Local code updated; peer re-review pending |
 | Malformed JSON could receive an unsafe default response; tablet Queue was too wide | Express parser/final error middleware returns the safe envelope; Staff Queue uses cards at 768-991px. | Local code updated; peer re-review pending |
@@ -30,7 +31,7 @@ A read-only final review was performed by the Codex review agent on 15 September
 | Password/session design and role checks | Implemented; boundary tests pass | `server/src/auth.ts`, `auth-context.ts`, `server/tests/lab-03/` |
 | Migration, seed, and Lab 2 database regression | Not verified locally | PostgreSQL at `localhost:5432` was unavailable |
 | Requester, Staff, Administrator screens | Implemented; local React tests pass | `client/src/pages/`, `client/tests/lab-03/` |
-| Server Lab 3 boundary/unit tests | Pass | 8 files, 19 tests |
+| Server Lab 3 boundary/unit tests | Pass | 8 files, 20 tests |
 | Client tests and production build | Pass | 13 files, 41 tests; Vite build passed |
 | Full server/API, migration, seed, E2E, and responsive browser suite | CI Pass; local database run remains unavailable | GitHub Actions run [35088493013](https://github.com/Richyboy170/toktickit/actions/runs/35088493013) |
 | Screenshots and visual inspection | Fixture-backed UI capture and CI artifact pass; peer inspection pending | `artifacts/lab-03/screenshots/README.md`, `e2e/lab-03/visual-evidence.spec.ts`, [GitHub artifact](https://api.github.com/repos/Richyboy170/toktickit/actions/artifacts/10443272262/zip) |

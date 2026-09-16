@@ -43,7 +43,7 @@ describe("Lab 3 IT Staff Ticket Detail boundary", () => {
     expect(detail.status).toBe(200);
     expect(detail.body.ticket).toEqual(expect.objectContaining({ id: ticketId }));
     expect(detail.body.ticket.internalNotes).toEqual(expect.any(Array));
-    expect(detail.body.ticket.publicComments).toEqual(expect.any(Array));
+    expect(detail.body.ticket.comments).toEqual(expect.any(Array));
 
     const assignment = await request(app)
       .patch(`/api/staff/tickets/${ticketId}/assignment`)

@@ -49,7 +49,22 @@ describe("Lab 3 IT Staff Ticket Detail boundary", () => {
       .patch(`/api/staff/tickets/${ticketId}/assignment`)
       .set("Cookie", cookie)
       .send({ ownerId: null });
-    expect(assignment.status).toBe(403);
-    expect(assignment.body.error.code).toBe("FORBIDDEN");
+    const status = await request(app)
+      .patch(`/api/staff/tickets/${ticketId}/status`)
+      .set("Cookie", cookie)
+      .send({ status: "OPEN" });
+    const comment = await request(app)
+      .post(`/api/tickets/${ticketId}/comments`)
+      .set("Cookie", cookie)
+      .send({ body: "Administrator comment must be rejected." });
+    const note = await request(app)
+      .post(`/api/staff/tickets/${ticketId}/notes`)
+      .set("Cookie", cookie)
+      .send({ body: "Administrator note must be rejected." });
+
+    for (const mutation of [assignment, status, comment, note]) {
+      expect(mutation.status).toBe(403);
+      expect(mutation.body.error.code).toBe("FORBIDDEN");
+    }
   });
 });

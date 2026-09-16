@@ -1,10 +1,11 @@
 ﻿# Captured Lab 3 branch graph
 
-Generated: 2026-09-16 17:03 +07:00
+Generated: 2026-09-16 17:06:12 +07:00
 
 Command: git log --graph --decorate --oneline --all
 
-* 0d4c316 (HEAD -> feature/lab3-implementation) docs: add Lab 3 visual evidence and branch flow
+* 9472fbb (HEAD -> feature/lab3-implementation) docs: refresh Lab 3 branch graph
+* 0d4c316 docs: add Lab 3 visual evidence and branch flow
 * 02dca78 ci: scope legacy requester fixture to E2E
 * b4d3494 (origin/feature/lab3-implementation) test: isolate legacy requester mode to E2E
 * 5b22df7 test: preserve Lab 2 browser requester entry
@@ -78,8 +79,4 @@ Command: git log --graph --decorate --oneline --all
 | * \ \ \ \ \ \ \   3acaa2e Merge branch 'lab2-staging' into feature/14-requester-reference-data
 | |\ \ \ \ \ \ \ \  
 | |/ / / / / / / /  
-|/| | | | | | | |   
-* | | | | | | | |   fb81aa6 Merge pull request #21 from Richyboy170/docs/13-lab2-engineering-contract
-|\ \ \ \ \ \ \ \ \  
-| |_|_|_|_|_|_|_|/  
 |/| | | | | | | |   

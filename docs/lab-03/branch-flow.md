@@ -12,7 +12,7 @@ lab3-staging (bdd1265, published)
     +-- feature/lab3-implementation
           29e7ed5  docs: establish Lab 3 contract before implementation
           d4ca5cd  feat: implement Lab 3 authenticated ticket workflows
-          ...     tests/docs follow-up commits
+          ...     tests and evidence follow-up commits through 79af375
           |
           +-- PR #33 -> lab3-staging  [OPEN; peer review pending]
                                       |
@@ -31,7 +31,7 @@ accepted; no merge or approval is claimed in this record.
 | Step | Branch or PR | Current evidence | State |
 |---|---|---|---|
 | 1 | `lab3-staging` | `bdd1265` on the remote | Published baseline |
-| 2 | `feature/lab3-implementation` | `29e7ed5` precedes `d4ca5cd` | Published feature work; latest local evidence follow-up awaits push |
+| 2 | `feature/lab3-implementation` | `29e7ed5` precedes `d4ca5cd`; `79af375` is published | Published feature work; branch-tip CI run 35107807323 passed |
 | 3 | PR #33 | `feature/lab3-implementation` -> `lab3-staging` | Open for peer review |
 | 4 | `lab3-staging` -> `main` | Release PR is created after step 3 | Pending peer approval and merge |
 

@@ -51,7 +51,7 @@ test("Administrator can inspect Staff Ticket Detail without Staff mutations", as
   });
   expect(staffDetail.status()).toBe(200);
   const payload = await staffDetail.json();
-  expect(payload.ticket).toEqual(expect.objectContaining({ id: 1 }));
+  expect(payload.ticket).toEqual(expect.objectContaining({ id: Number(ticketId) }));
 
   await page.goto(`/admin/tickets/${ticketId}`);
   await expect(page.getByRole("heading", { name: /TKT-/ })).toBeVisible();

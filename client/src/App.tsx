@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { BrowserRouter, Link, Navigate, Outlet, Route, Routes, useLocation } from "react-router-dom";
 import { AuthProvider, requiresPasswordChange, useAuth } from "./auth-context.js";
 import { AppShell } from "./components/AppShell.js";
@@ -29,8 +30,10 @@ function AuthenticatedFrame() {
   const { user } = useAuth();
   const { requester } = useRequester();
   const location = useLocation();
+  const hadAuthenticatedUser = useRef(Boolean(user));
+  if (user) hadAuthenticatedUser.current = true;
   if (!user && legacyRequesterCompatibilityMode && !requester) {
-    return <Navigate to="/select-requester" replace />;
+    return <Navigate to={hadAuthenticatedUser.current ? "/login" : "/select-requester"} replace />;
   }
   if (!user && !(legacyRequesterTestMode && requester)) return <Navigate to="/login" replace state={{ from: location.pathname }} />;
   if (user && requiresPasswordChange(user)) return <Navigate to="/change-password" replace />;

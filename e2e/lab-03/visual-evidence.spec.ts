@@ -129,6 +129,10 @@ async function mockApi(page: Page) {
       return json(route, { user: match, mustChangePassword: match.mustChangePassword, requiresPasswordChange: match.mustChangePassword });
     }
     if (path === "/api/auth/logout" && method === "POST") {
+      // Keep the browser fixture close to the real network timing. After an
+      // authenticated logout, E2E mode must return to Login rather than the
+      // legacy Lab 2 selector while the protected route is still mounted.
+      await new Promise((resolveDelay) => setTimeout(resolveDelay, 50));
       currentUser = null;
       return route.fulfill({ status: 204, body: "" });
     }

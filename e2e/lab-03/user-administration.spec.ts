@@ -24,7 +24,7 @@ test("Administrator can inspect Staff Ticket Detail without Staff mutations", as
   await page.getByLabel("Password").fill(adminPassword);
   await page.getByRole("button", { name: "Sign In" }).click();
 
-  const staffDetail = await page.request.get("/api/staff/tickets/1");
+  const staffDetail = await page.request.get("http://127.0.0.1:3000/api/staff/tickets/1");
   expect(staffDetail.status()).toBe(200);
   const payload = await staffDetail.json();
   expect(payload.ticket).toEqual(expect.objectContaining({ id: 1 }));

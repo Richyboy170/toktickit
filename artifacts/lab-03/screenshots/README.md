@@ -3,9 +3,16 @@
 The images below were captured from the real React application with
 `npm run test:e2e:visual`. The capture uses deterministic HTTP fixtures for the
 API so the UI, role navigation, responsive layouts, and overflow checks can be
-reviewed while PostgreSQL is unavailable on this workstation. The normal
-database-backed acceptance suite remains separate and is still required before
-claiming integration completion.
+reviewed while PostgreSQL is unavailable on this workstation. The feature branch
+also passed the database-backed Playwright workflow and visual job in GitHub
+Actions run 35088493013; the combined evidence is available at:
+
+https://github.com/Richyboy170/toktickit/actions/runs/35088493013
+
+https://api.github.com/repos/Richyboy170/toktickit/actions/artifacts/10443272262/zip
+
+The local captures remain useful for direct visual inspection, while peer review
+and staged release approval are still required.
 
 Every screen was captured at desktop (`1280x900`), tablet (`820x1000`), and
 mobile (`390x844`) widths. The visual runner asserts that the document has no
@@ -37,8 +44,9 @@ horizontal overflow at each width.
 |---|---|---|---|
 | User Management | [PNG](user-management/user-management/desktop/screen.png) | [PNG](user-management/user-management/tablet/screen.png) | [PNG](user-management/user-management/mobile/screen.png) |
 
-These are UI inspection captures, not a substitute for the database-backed
-Requester, Staff, Administrator, migration, and release checks. The capture
-command and fixture source are retained in
+These committed images are UI inspection captures from the fixture run. The
+database-backed Requester, Staff, Administrator, migration, and release checks
+are represented by the passing CI run linked above. The capture command and
+fixture source are retained in
 [`client/playwright.visual.config.ts`](../../client/playwright.visual.config.ts)
 and [`e2e/lab-03/visual-evidence.spec.ts`](../../e2e/lab-03/visual-evidence.spec.ts).

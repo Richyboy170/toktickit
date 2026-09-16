@@ -1,6 +1,6 @@
 ﻿# Lab 3 Test Plan and Traceability
 
-**Status:** the Test DD plan was prepared with the Lab 3 contract before implementation. Local results below were updated on 16 September 2026. Database-backed API, migration, seed, and browser checks are blocked because PostgreSQL is unavailable at `localhost:5432`; no blocked check is marked Pass.
+**Status:** the Test DD plan was prepared with the Lab 3 contract before implementation. Local results below were updated on 16 September 2026. Database-backed checks are blocked locally because PostgreSQL is unavailable at `localhost:5432`, while GitHub Actions run [35088493013](https://github.com/Richyboy170/toktickit/actions/runs/35088493013) passed the configured server, client, and database-backed Playwright jobs on the feature branch.
 
 ## 1. Test strategy
 
@@ -32,13 +32,13 @@ The plan covers unit policy and workflow tests; Express/Supertest API and author
 | UI-05 | Component | Staff Detail assignment, priority, valid transitions, confirmation, notes, comments, files | `client/tests/lab-03/StaffTicketDetail.test.tsx` | Pass |
 | UI-06 | Component | Minimal User Management, validation, create/edit/reset, safety feedback | `client/tests/lab-03/UserManagement.test.tsx` | Pass |
 | UI-07 | Style/accessibility | Role navigation, labels, focus, text-backed badges, responsive structure | `client/tests/lab-03/ResponsiveStyle.test.tsx` plus Lab 2 structure tests | Pass for local client suite |
-| E2E-01 | Browser | Login, first-login change, role shell, logout, direct access after logout | `e2e/lab-03/authentication.spec.ts` | Blocked: PostgreSQL unavailable |
+| E2E-01 | Browser | Login, first-login change, role shell, logout, direct access after logout | `e2e/lab-03/authentication.spec.ts` | Pass: GitHub Actions run 35088493013 |
 | E2E-02 | Browser | Requester workflow, comments, resolution, Attachment ownership | `e2e/lab-03/requester-regression.spec.ts` | Blocked: PostgreSQL unavailable |
-| E2E-03 | Browser | Staff Queue and Detail workflow | `e2e/lab-03/staff-ticket-flow.spec.ts` | Blocked: PostgreSQL unavailable |
-| E2E-04 | Browser | Administrator User Management and next-login password change | `e2e/lab-03/user-administration.spec.ts` | Blocked: PostgreSQL unavailable |
+| E2E-03 | Browser | Staff Queue and Detail workflow | `e2e/lab-03/staff-ticket-flow.spec.ts` | Pass: GitHub Actions run 35088493013 |
+| E2E-04 | Browser | Administrator User Management and next-login password change | `e2e/lab-03/user-administration.spec.ts` | Pass: GitHub Actions run 35088493013 |
 | E2E-05 | Responsive | Desktop/tablet/mobile clipping, overflow, and equivalent actions | `e2e/lab-03/responsive.spec.ts` | Blocked: PostgreSQL unavailable |
 | E2E-06 | Release | Safe failure and final release smoke path | `e2e/lab-03/release-readiness.spec.ts` | Blocked: PostgreSQL unavailable |
-| VIS-01 | Browser fixture capture | Authentication, Change Password, Requester, Staff Queue/Detail, Administrator screens at desktop/tablet/mobile widths; no horizontal overflow | `e2e/lab-03/visual-evidence.spec.ts` | Pass: 1 test, 18 PNG captures; API fixture run |
+| VIS-01 | Browser fixture capture | Authentication, Change Password, Requester, Staff Queue/Detail, Administrator screens at desktop/tablet/mobile widths; no horizontal overflow | `e2e/lab-03/visual-evidence.spec.ts` | Pass: local fixture run and GitHub Actions run 35088493013; 18 PNG captures uploaded |
 
 The acceptance criteria in `specification.md` are traced to these groups: AC-01 to API/UI/E2E authentication, AC-02 to restricted password change, AC-03 and AC-08/12 to ownership, AC-04/14 to Internal Notes, AC-09/10 to migration and seed, AC-11/13/15 to Requester regression and comments, AC-16 to API/UI Queue, AC-18/19/20/21 to Staff Detail, AC-22 through AC-26 to User Management, AC-27 to safe errors, AC-28 to responsive/accessibility, AC-29 to migration and regression, and AC-30 to release evidence.
 
@@ -52,8 +52,8 @@ The acceptance criteria in `specification.md` are traced to these groups: AC-01 
 | Client build | `npm --prefix client run build` | Pass: Vite production bundle, 47 modules |
 | Client suite | `npm --prefix client test -- --reporter=dot` | Pass: 13 files, 41 tests |
 | Full server suite | `npm --prefix server test -- --reporter=dot` | Blocked: 6 suites fail at PostgreSQL `localhost:5432` (P1001); 12 files/26 tests completed, 19 skipped, one category assertion also cannot reach its database |
-| Database-backed Playwright/E2E | `npm run test:e2e` | Blocked: PostgreSQL is unavailable; no integration result is claimed |
+| Database-backed Playwright/E2E | `npm run test:e2e` | Local: Blocked by missing PostgreSQL; CI: Pass, 10 tests in GitHub Actions run 35088493013 |
 | UI visual evidence capture | `npm run test:e2e:visual` | Pass: 1 test, 18 PNG captures at 1280x900, 820x1000, and 390x844; API fixtures isolate the UI capture from PostgreSQL |
-| GitHub Actions, peer approval, final `main` run | Repository/remote evidence | Pending; no Lab 3 PR or CI run is claimed |
+| GitHub Actions, peer approval, final `main` run | Repository/remote evidence | CI Pass: run 35088493013; peer approval, staging merge, and final `main` run remain Pending |
 
-The local server run was executed with the required elevated subprocess permission for Vitest/esbuild. The PostgreSQL limitation is environmental and does not change the source, migration, or seed design; it must be resolved before claiming database or browser completion.
+The local server run was executed with the required elevated subprocess permission for Vitest/esbuild. The PostgreSQL limitation applies to this workstation's local run and does not change the source, migration, or seed design; the feature-branch CI result above supplies the database-backed evidence. A local database/browser result should still be rerun when PostgreSQL is available.

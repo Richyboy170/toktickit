@@ -1,6 +1,6 @@
 ﻿# Lab 3 Zen Green UI Specification
 
-**Status:** implemented locally against this baseline; fixture-backed screenshots are captured, while database-backed interaction and final peer visual inspection remain pending. Lab 3 extends the Lab 2 visual language. The existing tokens, spacing scale, form conventions, responsive breakpoints, keyboard behavior, and Attachment presentation remain in force unless this document says otherwise.
+**Status:** implemented against this baseline. Fixture-backed screenshots are committed, and the feature-branch GitHub Actions run [35088493013](https://github.com/Richyboy170/toktickit/actions/runs/35088493013) passed the database-backed browser workflow and visual capture; final peer visual inspection remains pending. Lab 3 extends the Lab 2 visual language. The existing tokens, spacing scale, form conventions, responsive breakpoints, keyboard behavior, and Attachment presentation remain in force unless this document says otherwise.
 
 ## 1. Design tokens and shared components
 
@@ -161,12 +161,15 @@ Use semantic landmarks, one page `h1`, logical heading order, explicit labels, `
 ## 9. Visual inspection checklist
 
 The automated fixture-backed capture was run on 16 September 2026 with
-`npm run test:e2e:visual`. Checked items below are visible in those captures;
-the remaining items still require the database-backed browser run or a human
-peer inspection.
+`npm run test:e2e:visual`. The same feature branch also passed the
+database-backed Playwright workflow and uploaded its evidence in GitHub
+Actions run [35088493013](https://github.com/Richyboy170/toktickit/actions/runs/35088493013)
+([download the artifact](https://api.github.com/repos/Richyboy170/toktickit/actions/artifacts/10443272262/zip)).
+Checked items below are visible in the committed captures or covered by the
+CI run; the remaining items still require a human peer inspection.
 
-- [ ] Login validation, busy, invalid, inactive, rate-limited, and API-failure states are readable. Initial login is captured; the other states remain pending.
-- [x] Mandatory Change Password fields and first-login warning are readable; error, busy, and success continuation still need the database-backed run.
+- [ ] Login validation, busy, invalid, inactive, rate-limited, and API-failure states are readable. Initial login is captured; peer inspection of the other states remains pending.
+- [x] Mandatory Change Password fields and first-login warning are readable; the database-backed first-login continuation passed in CI, with peer inspection remaining.
 - [x] Requester regression screen shows the authenticated Requester shell and no selector or Change Requester action.
 - [x] Staff Detail capture separates the Requester resolution indication, operational controls, Public Comments, Internal Notes, and Attachments.
 - [x] Staff Queue desktop table and tablet/mobile cards show equivalent essential fields, filters, badges, ownership, and pagination.
@@ -174,5 +177,5 @@ peer inspection.
 - [x] Admin User Management remains minimalist, responsive, and free of deletion/multi-role controls.
 - [x] Role names and role navigation are visible in the captured authenticated shells; direct API authorization remains covered by the server tests.
 - [ ] Editable, read-only, invalid, disabled, busy, success, forbidden, conflict, empty, and failure states all need peer inspection against the Zen Green tokens.
-- [ ] Keyboard focus, error association, dialog focus, clipping, and overlap need peer inspection; the capture runner did verify no horizontal overflow at all three widths.
+- [ ] Keyboard focus, error association, dialog focus, clipping, and overlap need peer inspection; the capture runner and CI visual job verified no horizontal overflow at all three widths.
 - [x] Screenshot links for authentication, Requester regression, Staff Queue, Staff Detail, and User Management are indexed under `artifacts/lab-03/screenshots/README.md`.

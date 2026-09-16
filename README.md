@@ -119,4 +119,4 @@ toktickit/
 
 ## Git and secrets
 
-`.env`, dependencies, builds, logs, and transient test reports are ignored. Only `.env.example` files with placeholder values are committed. Lab 3 feature branches target `lab3-staging` and are peer-reviewed before the release reaches `main`; the final report records genuine repository and verification evidence.
+`.env`, dependencies, builds, logs, and transient test reports are ignored. Only `.env.example` files with placeholder values are committed. Lab 3 feature branches target `lab3-staging` and are peer-reviewed before the release reaches `main`; the concrete branch sequence and current merge state are recorded in [`docs/lab-03/branch-flow.md`](docs/lab-03/branch-flow.md). The final report records genuine repository and verification evidence.

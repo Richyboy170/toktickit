@@ -14,7 +14,11 @@ import { useRequester, RequesterProvider } from "./requester-context.js";
 
 // The old selector is kept only for the Lab 2 regression tests. It is not a
 // production route and cannot be used to enter the authenticated application.
-const legacyRequesterCompatibilityMode = import.meta.env.VITE_ENABLE_LEGACY_REQUESTER === "true";
+// The compatibility selector is available only to the explicit E2E mode (or
+// when a test harness opts in). Checking MODE directly avoids relying on a
+// shell environment variable being forwarded through npm/Playwright.
+const legacyRequesterCompatibilityMode = import.meta.env.MODE === "e2e"
+  || import.meta.env.VITE_ENABLE_LEGACY_REQUESTER === "true";
 const legacyRequesterTestMode = legacyRequesterCompatibilityMode || import.meta.env.VITEST === "true";
 
 function homeForRole(role: string | undefined): string {

@@ -1,0 +1,85 @@
+﻿# Captured Lab 3 branch graph
+
+Generated: 2026-09-16 16:42 +07:00
+
+Command: git log --graph --decorate --oneline --all
+
+* 02dca78 (HEAD -> feature/lab3-implementation) ci: scope legacy requester fixture to E2E
+* b4d3494 (origin/feature/lab3-implementation) test: isolate legacy requester mode to E2E
+* 5b22df7 test: preserve Lab 2 browser requester entry
+* 3ef9ecb test: expose legacy requester flag to E2E Vite
+* 84f0ee0 test: stabilize E2E compatibility and admin selectors
+* 87f7a96 test: cover authenticated requester regression
+* 7064df4 ci: fix legacy compatibility tests and audit dependency
+* 29f54bf docs: link Lab 3 issues in review record
+* 780d257 docs: record Lab 3 pull request for peer review
+* d4ca5cd feat: implement Lab 3 authenticated ticket workflows
+* 29e7ed5 docs: establish Lab 3 contract before implementation
+| * a0a2060 (lab3-snapshot) feat: implement Lab 3 authenticated ticket workflows
+|/  
+| *   c7fcdf6 (origin/main, origin/HEAD) Merge pull request #31 from Richyboy170/lab2-staging
+| |\  
+| |/  
+|/|   
+* |   bdd1265 (origin/lab3-staging, origin/lab2-staging, lab3-staging) Merge pull request #32 from Richyboy170/docs/lab2-reviewer-correction
+|\ \  
+| * | b8c2529 (origin/docs/lab2-reviewer-correction, lab2-staging, docs/lab2-reviewer-correction) docs: correct final Lab 2 reviewer evidence
+|/ /  
+* |   5a60217 Merge pull request #30 from Richyboy170/docs/20-lab2-final-evidence
+|\ \  
+| | | * b3bae61 (docs/20-lab2-final-evidence) docs: correct final Lab 2 reviewer evidence
+| | |/  
+| |/|   
+| * | 420f5bb (origin/docs/20-lab2-final-evidence) docs: complete Lab 2 rubric evidence
+| |/  
+| *   806aa94 Merge pull request #29 from Richyboy170/lab2-staging
+| |\  
+| |/  
+|/|   
+* |   efb0630 Merge pull request #28 from Richyboy170/docs/20-lab2-review-evidence
+|\ \  
+| * \   017b1c1 Merge branch 'lab2-staging' into docs/20-lab2-review-evidence
+| |\ \  
+| |/ /  
+|/| |   
+* | |   a3ecb6d Merge pull request #27 from Richyboy170/test/19-e2e-responsive-readiness
+|\ \ \  
+| * \ \   41a3425 Merge branch 'lab2-staging' into test/19-e2e-responsive-readiness
+| |\ \ \  
+| |/ / /  
+|/| | |   
+* | | |   17b163c Merge pull request #26 from Richyboy170/feature/18-ticket-detail-attachments
+|\ \ \ \  
+| * \ \ \   db1a310 Merge branch 'lab2-staging' into feature/18-ticket-detail-attachments
+| |\ \ \ \  
+| |/ / / /  
+|/| | | |   
+* | | | |   ff77ede Merge pull request #25 from Richyboy170/feature/17-my-tickets
+|\ \ \ \ \  
+| * \ \ \ \   48c4a9d Merge branch 'lab2-staging' into feature/17-my-tickets
+| |\ \ \ \ \  
+| |/ / / / /  
+|/| | | | |   
+* | | | | |   9a0b8ea Merge pull request #24 from Richyboy170/feature/16-create-ticket
+|\ \ \ \ \ \  
+| * \ \ \ \ \   f712780 Merge branch 'lab2-staging' into feature/16-create-ticket
+| |\ \ \ \ \ \  
+| |/ / / / / /  
+|/| | | | | |   
+* | | | | | |   ba980fb Merge pull request #23 from Richyboy170/feature/15-requester-context-shell
+|\ \ \ \ \ \ \  
+| * \ \ \ \ \ \   24c593c Merge branch 'lab2-staging' into feature/15-requester-context-shell
+| |\ \ \ \ \ \ \  
+| |/ / / / / / /  
+|/| | | | | | |   
+* | | | | | | |   cbd2803 Merge pull request #22 from Richyboy170/feature/14-requester-reference-data
+|\ \ \ \ \ \ \ \  
+| * \ \ \ \ \ \ \   3acaa2e Merge branch 'lab2-staging' into feature/14-requester-reference-data
+| |\ \ \ \ \ \ \ \  
+| |/ / / / / / / /  
+|/| | | | | | | |   
+* | | | | | | | |   fb81aa6 Merge pull request #21 from Richyboy170/docs/13-lab2-engineering-contract
+|\ \ \ \ \ \ \ \ \  
+| |_|_|_|_|_|_|_|/  
+|/| | | | | | | |   
+| | * | | | | | | 038716b (feature/14-requester-reference-data) fix: standardize category reference-data errors

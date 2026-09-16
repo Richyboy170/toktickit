@@ -1,7 +1,44 @@
-﻿# Lab 3 screenshot evidence
+# Lab 3 screenshot evidence
 
-The Lab 3 screenshot directories are intentionally empty in this local run. Browser capture requires the seeded PostgreSQL test database, which was unavailable at `localhost:5432` on 15 September 2026. No generated image is presented as Lab 3 evidence.
+The images below were captured from the real React application with
+`npm run test:e2e:visual`. The capture uses deterministic HTTP fixtures for the
+API so the UI, role navigation, responsive layouts, and overflow checks can be
+reviewed while PostgreSQL is unavailable on this workstation. The normal
+database-backed acceptance suite remains separate and is still required before
+claiming integration completion.
 
-When the database is available, capture the Login, mandatory Change Password, Requester regression, Staff Queue, Staff Ticket Detail, Administrator User Management, and desktop/tablet/mobile states here. Keep the Playwright report and command output beside the images, and update `docs/lab-03/tests.md`, `ui-spec.md`, and `reviewer.md` with real links.
+Every screen was captured at desktop (`1280x900`), tablet (`820x1000`), and
+mobile (`390x844`) widths. The visual runner asserts that the document has no
+horizontal overflow at each width.
 
-The existing [Lab 2 screenshot index](../lab-02/screenshots/README.md) and `artifacts/lab-02/screenshots/` remain available as clearly labelled Zen Green and Requester continuity evidence. They do not demonstrate the new Lab 3 role screens.
+## Authentication
+
+| Screen | Desktop | Tablet | Mobile |
+|---|---|---|---|
+| Login | [PNG](authentication/login/desktop/screen.png) | [PNG](authentication/login/tablet/screen.png) | [PNG](authentication/login/mobile/screen.png) |
+| Required Change Password | [PNG](authentication/change-password-required/desktop/screen.png) | [PNG](authentication/change-password-required/tablet/screen.png) | [PNG](authentication/change-password-required/mobile/screen.png) |
+
+## Requester regression
+
+| Screen | Desktop | Tablet | Mobile |
+|---|---|---|---|
+| My Tickets | [PNG](requester-regression/my-tickets/desktop/screen.png) | [PNG](requester-regression/my-tickets/tablet/screen.png) | [PNG](requester-regression/my-tickets/mobile/screen.png) |
+
+## IT Staff
+
+| Screen | Desktop | Tablet | Mobile |
+|---|---|---|---|
+| Ticket Queue | [PNG](staff-queue/ticket-queue/desktop/screen.png) | [PNG](staff-queue/ticket-queue/tablet/screen.png) | [PNG](staff-queue/ticket-queue/mobile/screen.png) |
+| Ticket Detail | [PNG](staff-ticket-detail/ticket-detail/desktop/screen.png) | [PNG](staff-ticket-detail/ticket-detail/tablet/screen.png) | [PNG](staff-ticket-detail/ticket-detail/mobile/screen.png) |
+
+## Administrator
+
+| Screen | Desktop | Tablet | Mobile |
+|---|---|---|---|
+| User Management | [PNG](user-management/user-management/desktop/screen.png) | [PNG](user-management/user-management/tablet/screen.png) | [PNG](user-management/user-management/mobile/screen.png) |
+
+These are UI inspection captures, not a substitute for the database-backed
+Requester, Staff, Administrator, migration, and release checks. The capture
+command and fixture source are retained in
+[`client/playwright.visual.config.ts`](../../client/playwright.visual.config.ts)
+and [`e2e/lab-03/visual-evidence.spec.ts`](../../e2e/lab-03/visual-evidence.spec.ts).

@@ -20,7 +20,7 @@ A read-only final review was performed by the Codex review agent on 15 September
 | Legacy migration left empty credentials without a usable local initializer | `prisma:initialize-legacy-passwords` hashes a local temporary value after migration and preserves the first-login flag; setup docs describe it. | Local code updated; peer re-review pending |
 | Deactivating an owner left stale Ticket ownership | Administrator deactivation clears `ownerId` and revokes sessions in one transaction. | Local code updated; peer re-review pending |
 | Malformed JSON could receive an unsafe default response; tablet Queue was too wide | Express parser/final error middleware returns the safe envelope; Staff Queue uses cards at 768-991px. | Local code updated; peer re-review pending |
-| Submission evidence contained placeholders | Test, AI-use, reviewer, and screenshot records now distinguish Pass, Pending, and Blocked; no fabricated links or screenshots were added. | Local evidence updated; peer re-review pending |
+| Submission evidence contained placeholders | Test, AI-use, reviewer, and screenshot records distinguish Pass, Pending, and Blocked; the fixture-backed UI capture now supplies 18 linked PNGs without being presented as database evidence. | Local evidence updated; peer re-review pending |
 
 ## 2. Review checklist and evidence
 
@@ -33,7 +33,7 @@ A read-only final review was performed by the Codex review agent on 15 September
 | Server Lab 3 boundary/unit tests | Pass | 8 files, 19 tests |
 | Client tests and production build | Pass | 13 files, 41 tests; Vite build passed |
 | Full server/API, migration, seed, E2E, and responsive browser suite | Blocked | Requires PostgreSQL and browser run |
-| Screenshots and visual inspection | Pending | `artifacts/lab-03/screenshots/README.md` |
+| Screenshots and visual inspection | Fixture-backed UI capture pass; database-backed interaction and peer inspection pending | `artifacts/lab-03/screenshots/README.md`, `e2e/lab-03/visual-evidence.spec.ts` |
 | GitHub Issues, PR review, CI, and release to `main` | Issues and PR open; review pending | Issues [#34](https://github.com/Richyboy170/toktickit/issues/34)-[#40](https://github.com/Richyboy170/toktickit/issues/40), [PR #33](https://github.com/Richyboy170/toktickit/pull/33); CI and release evidence pending |
 
 ## 3. Peer approval and delivery

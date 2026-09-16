@@ -1,6 +1,6 @@
 ﻿# Lab 3 Zen Green UI Specification
 
-**Status:** implemented locally against this baseline; screenshots and final visual inspection results are pending. Lab 3 extends the Lab 2 visual language. The existing tokens, spacing scale, form conventions, responsive breakpoints, keyboard behavior, and Attachment presentation remain in force unless this document says otherwise.
+**Status:** implemented locally against this baseline; fixture-backed screenshots are captured, while database-backed interaction and final peer visual inspection remain pending. Lab 3 extends the Lab 2 visual language. The existing tokens, spacing scale, form conventions, responsive breakpoints, keyboard behavior, and Attachment presentation remain in force unless this document says otherwise.
 
 ## 1. Design tokens and shared components
 
@@ -160,16 +160,19 @@ Use semantic landmarks, one page `h1`, logical heading order, explicit labels, `
 
 ## 9. Visual inspection checklist
 
-These boxes are evidence placeholders to be checked after implementation and linked from the final submission:
+The automated fixture-backed capture was run on 16 September 2026 with
+`npm run test:e2e:visual`. Checked items below are visible in those captures;
+the remaining items still require the database-backed browser run or a human
+peer inspection.
 
-- [ ] Login initial, validation, busy, invalid, inactive, rate-limited, and API-failure states are readable.
-- [ ] Mandatory Change Password rules, errors, busy state, and success continuation are readable.
-- [ ] Requester regression screens contain no selector or Change Requester action and preserve Lab 2 behavior.
-- [ ] Requester Public Comments and resolution indication are clearly distinct from staff-only controls.
-- [ ] Staff Queue desktop table and tablet/mobile cards show equivalent essential fields and usable filters/pagination.
-- [ ] Staff Detail clearly separates read-only Ticket data, operational controls, Public Comments, Internal Notes, and Attachments.
-- [ ] Admin User Management remains minimalist, responsive, and free of deletion/multi-role controls.
-- [ ] Role name and role navigation are visible; unauthorized destinations/actions are absent while direct unauthorized calls are handled safely.
-- [ ] Editable, read-only, invalid, disabled, busy, success, forbidden, conflict, empty, and failure states meet the Zen Green tokens.
-- [ ] Keyboard focus, labels, error association, dialog focus, text-backed badges, clipping, overlap, and horizontal overflow pass inspection at desktop/tablet/mobile sizes.
-- [ ] Screenshot links for authentication, staff queue, staff detail, and user management are added under `artifacts/lab-03/screenshots/`: `<fill after capture>`.
+- [ ] Login validation, busy, invalid, inactive, rate-limited, and API-failure states are readable. Initial login is captured; the other states remain pending.
+- [x] Mandatory Change Password fields and first-login warning are readable; error, busy, and success continuation still need the database-backed run.
+- [x] Requester regression screen shows the authenticated Requester shell and no selector or Change Requester action.
+- [x] Staff Detail capture separates the Requester resolution indication, operational controls, Public Comments, Internal Notes, and Attachments.
+- [x] Staff Queue desktop table and tablet/mobile cards show equivalent essential fields, filters, badges, ownership, and pagination.
+- [x] Staff Detail clearly separates read-only Ticket data, operational controls, Public Comments, Internal Notes, and Attachments.
+- [x] Admin User Management remains minimalist, responsive, and free of deletion/multi-role controls.
+- [x] Role names and role navigation are visible in the captured authenticated shells; direct API authorization remains covered by the server tests.
+- [ ] Editable, read-only, invalid, disabled, busy, success, forbidden, conflict, empty, and failure states all need peer inspection against the Zen Green tokens.
+- [ ] Keyboard focus, error association, dialog focus, clipping, and overlap need peer inspection; the capture runner did verify no horizontal overflow at all three widths.
+- [x] Screenshot links for authentication, Requester regression, Staff Queue, Staff Detail, and User Management are indexed under `artifacts/lab-03/screenshots/README.md`.

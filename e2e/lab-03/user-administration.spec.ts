@@ -23,8 +23,16 @@ test("Administrator can inspect Staff Ticket Detail without Staff mutations", as
   await page.getByLabel("Email address").fill(adminEmail);
   await page.getByLabel("Password").fill(adminPassword);
   await page.getByRole("button", { name: "Sign In" }).click();
+  await expect(page.getByRole("heading", { name: "User Management" })).toBeVisible();
 
-  const staffDetail = await page.request.get("http://127.0.0.1:3000/api/staff/tickets/1");
+  // Forward the HTTP-only session cookie explicitly. This keeps the
+  // assertion stable if the browser and API use different loopback hostnames
+  // in CI.
+  const sessionCookie = (await page.context().cookies()).find((cookie) => cookie.name === "toktickit_session");
+  expect(sessionCookie).toBeDefined();
+  const staffDetail = await page.request.get("http://127.0.0.1:3000/api/staff/tickets/1", {
+    headers: { Cookie: `${sessionCookie!.name}=${sessionCookie!.value}` },
+  });
   expect(staffDetail.status()).toBe(200);
   const payload = await staffDetail.json();
   expect(payload.ticket).toEqual(expect.objectContaining({ id: 1 }));

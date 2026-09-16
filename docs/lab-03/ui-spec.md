@@ -1,6 +1,6 @@
 ﻿# Lab 3 Zen Green UI Specification
 
-**Status:** implemented against this baseline. Fixture-backed screenshots are committed, and the feature-branch GitHub Actions run [35088493013](https://github.com/Richyboy170/toktickit/actions/runs/35088493013) passed the database-backed browser workflow and visual capture; final peer visual inspection remains pending. Lab 3 extends the Lab 2 visual language. The existing tokens, spacing scale, form conventions, responsive breakpoints, keyboard behavior, and Attachment presentation remain in force unless this document says otherwise.
+**Status:** implemented against this baseline. Fixture-backed screenshots are committed, and the feature-branch GitHub Actions run [35106401012](https://github.com/Richyboy170/toktickit/actions/runs/35106401012) passed the database-backed browser workflow and visual capture; final peer visual inspection remains pending. Lab 3 extends the Lab 2 visual language. The existing tokens, spacing scale, form conventions, responsive breakpoints, keyboard behavior, and Attachment presentation remain in force unless this document says otherwise.
 
 ## 1. Design tokens and shared components
 
@@ -163,8 +163,8 @@ Use semantic landmarks, one page `h1`, logical heading order, explicit labels, `
 The automated fixture-backed capture was run on 16 September 2026 with
 `npm run test:e2e:visual`. The same feature branch also passed the
 database-backed Playwright workflow and uploaded its evidence in GitHub
-Actions run [35088493013](https://github.com/Richyboy170/toktickit/actions/runs/35088493013)
-([download the artifact](https://api.github.com/repos/Richyboy170/toktickit/actions/artifacts/10443272262/zip)).
+Actions run [35106401012](https://github.com/Richyboy170/toktickit/actions/runs/35106401012)
+([download the artifact](https://api.github.com/repos/Richyboy170/toktickit/actions/artifacts/10450855693/zip)).
 Checked items below are visible in the committed captures or covered by the
 CI run; the remaining items still require a human peer inspection.
 

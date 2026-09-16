@@ -5,11 +5,11 @@ The images below were captured from the real React application with
 API so the UI, role navigation, responsive layouts, and overflow checks can be
 reviewed while PostgreSQL is unavailable on this workstation. The feature branch
 also passed the database-backed Playwright workflow and visual job in GitHub
-Actions run 35088493013; the combined evidence is available at:
+Actions run 35106401012; the combined evidence is available at:
 
-https://github.com/Richyboy170/toktickit/actions/runs/35088493013
+https://github.com/Richyboy170/toktickit/actions/runs/35106401012
 
-https://api.github.com/repos/Richyboy170/toktickit/actions/artifacts/10443272262/zip
+https://api.github.com/repos/Richyboy170/toktickit/actions/artifacts/10450855693/zip
 
 The local captures remain useful for direct visual inspection, while peer review
 and staged release approval are still required.

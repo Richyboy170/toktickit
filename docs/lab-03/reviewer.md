@@ -4,7 +4,7 @@
 
 **Repository:** [Richyboy170/toktickit](https://github.com/Richyboy170/toktickit)
 
-**Peer-review group:** Tanakrit ([Tanakrit-triton](https://github.com/Tanakrit-triton)) and Suwiwat ([iceswift](https://github.com/iceswift)). The Lab 2 record in `02_Assignment/Lab_02_submission.md` contains their completed Lab 2 review history. Lab 3 PR #33 is open for their review; GitHub Actions run [35088493013](https://github.com/Richyboy170/toktickit/actions/runs/35088493013) passed, while approval and merge remain pending.
+**Peer-review group:** Tanakrit ([Tanakrit-triton](https://github.com/Tanakrit-triton)) and Suwiwat ([iceswift](https://github.com/iceswift)). The Lab 2 record in `02_Assignment/Lab_02_submission.md` contains their completed Lab 2 review history. Lab 3 PR #33 is open for their review; GitHub Actions run [35106401012](https://github.com/Richyboy170/toktickit/actions/runs/35106401012) passed, while approval and merge remain pending.
 
 ## 1. Lab 3 local review state
 
@@ -31,11 +31,11 @@ A read-only final review was performed by the Codex review agent on 15 September
 | Password/session design and role checks | Implemented; boundary tests pass | `server/src/auth.ts`, `auth-context.ts`, `server/tests/lab-03/` |
 | Migration, seed, and Lab 2 database regression | Not verified locally | PostgreSQL at `localhost:5432` was unavailable |
 | Requester, Staff, Administrator screens | Implemented; local React tests pass | `client/src/pages/`, `client/tests/lab-03/` |
-| Server Lab 3 boundary/unit tests | Pass | 8 files, 20 tests |
+| Server Lab 3 boundary/unit tests | Pass | 8 files, 21 tests |
 | Client tests and production build | Pass | 13 files, 41 tests; Vite build passed |
-| Full server/API, migration, seed, E2E, and responsive browser suite | CI Pass; local database run remains unavailable | GitHub Actions run [35088493013](https://github.com/Richyboy170/toktickit/actions/runs/35088493013) |
-| Screenshots and visual inspection | Fixture-backed UI capture and CI artifact pass; peer inspection pending | `artifacts/lab-03/screenshots/README.md`, `e2e/lab-03/visual-evidence.spec.ts`, [GitHub artifact](https://api.github.com/repos/Richyboy170/toktickit/actions/artifacts/10443272262/zip) |
-| GitHub Issues, PR review, CI, and release to `main` | Issues and PR open; CI pass; review/release pending | Issues [#34](https://github.com/Richyboy170/toktickit/issues/34)-[#40](https://github.com/Richyboy170/toktickit/issues/40), [PR #33](https://github.com/Richyboy170/toktickit/pull/33), [CI run 35088493013](https://github.com/Richyboy170/toktickit/actions/runs/35088493013) |
+| Full server/API, migration, seed, E2E, and responsive browser suite | CI Pass; local database run remains unavailable | GitHub Actions run [35106401012](https://github.com/Richyboy170/toktickit/actions/runs/35106401012) |
+| Screenshots and visual inspection | Fixture-backed UI capture and CI artifact pass; peer inspection pending | `artifacts/lab-03/screenshots/README.md`, `e2e/lab-03/visual-evidence.spec.ts`, [GitHub artifact](https://api.github.com/repos/Richyboy170/toktickit/actions/artifacts/10450855693/zip) |
+| GitHub Issues, PR review, CI, and release to `main` | Issues and PR open; CI pass; review/release pending | Issues [#34](https://github.com/Richyboy170/toktickit/issues/34)-[#40](https://github.com/Richyboy170/toktickit/issues/40), [PR #33](https://github.com/Richyboy170/toktickit/pull/33), [CI run 35106401012](https://github.com/Richyboy170/toktickit/actions/runs/35106401012) |
 
 ## 3. Peer approval and delivery
 
@@ -49,7 +49,7 @@ Tanakrit and Suwiwat have not approved Lab 3 yet. Their real Lab 2 approvals are
 | Staff Queue/Detail review | Pending | Pending |
 | Administrator User Management review | Pending | Pending |
 | E2E/visual/release review | Pending | Pending |
-| GitHub Actions E2E and screenshot artifact | https://github.com/Richyboy170/toktickit/actions/runs/35088493013 | Pass: server, client, E2E, visual capture, and artifact upload |
+| GitHub Actions E2E and screenshot artifact | https://github.com/Richyboy170/toktickit/actions/runs/35106401012 | Pass: server, client, E2E, visual capture, and artifact upload |
 | Merge to `main` and final CI | Pending | Pending |
 
 ## 4. Final reviewer statement

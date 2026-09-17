@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="360" viewBox="0 0 1100 360" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="400" viewBox="0 0 1100 400" role="img" aria-labelledby="title desc">
   <title id="title">TokTickIT Lab 3 staged branch flow</title>
-  <desc id="desc">The feature branch starts from lab3-staging, opens pull request 33 back to lab3-staging, then a pending release pull request carries the merged staging branch to main.</desc>
+  <desc id="desc">The Lab 3 feature branch was approved and merged into lab3-staging. Staging CI passed; a release to main remains pending.</desc>
   <style>
     .box { fill: #f4fbf6; stroke: #006b3f; stroke-width: 3; rx: 12; }
     .pending { fill: #fff8e8; stroke: #bd6900; stroke-width: 3; rx: 12; }
@@ -14,22 +14,24 @@
     <marker id="arrowPending" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#bd6900"/></marker>
   </defs>
   <text x="550" y="30" class="label">Lab 3 staged integration flow</text>
-  <rect x="35" y="80" width="220" height="100" class="box"/>
+  <rect x="35" y="80" width="220" height="110" class="box"/>
   <text x="145" y="120" class="label">lab3-staging</text>
-  <text x="145" y="150" class="detail">bdd1265 · published</text>
-  <rect x="315" y="80" width="260" height="100" class="box"/>
+  <text x="145" y="150" class="detail">593d6ba merged</text>
+  <text x="145" y="173" class="detail">CI 35171700694 PASS</text>
+  <rect x="315" y="80" width="260" height="110" class="box"/>
   <text x="445" y="115" class="label">feature/lab3-</text>
   <text x="445" y="140" class="label">implementation</text>
-  <text x="445" y="165" class="detail">29e7ed5 → d4ca5cd</text>
-  <path d="M255 130 H315" class="arrow"/>
-  <rect x="635" y="80" width="220" height="100" class="pending"/>
+  <text x="445" y="170" class="detail">29e7ed5 -&gt; d4ca5cd -&gt; 78313af</text>
+  <path d="M255 135 H315" class="arrow"/>
+  <rect x="635" y="80" width="220" height="110" class="box"/>
   <text x="745" y="120" class="label">PR #33</text>
-  <text x="745" y="150" class="detail">peer review pending</text>
-  <path d="M575 130 H635" class="arrow"/>
-  <path d="M745 180 V250 H145 V180" class="dashed"/>
-  <text x="445" y="242" class="detail">merge after approval</text>
-  <rect x="315" y="275" width="260" height="60" class="pending"/>
-  <text x="445" y="300" class="label">release PR → main</text>
-  <text x="445" y="322" class="detail">created after staging merge</text>
-  <path d="M145 180 V245 H315 V275" class="dashed"/>
+  <text x="745" y="150" class="detail">APPROVED by iceswift</text>
+  <text x="745" y="173" class="detail">MERGED 17 Sep 2026</text>
+  <path d="M575 135 H635" class="arrow"/>
+  <path d="M745 190 V255 H145 V190" class="arrow"/>
+  <text x="445" y="247" class="detail">merge into staging</text>
+  <rect x="315" y="300" width="260" height="70" class="pending"/>
+  <text x="445" y="328" class="label">release PR -&gt; main</text>
+  <text x="445" y="352" class="detail">PENDING; main c7fcdf6</text>
+  <path d="M145 255 V275 H315 V300" class="dashed"/>
 </svg>

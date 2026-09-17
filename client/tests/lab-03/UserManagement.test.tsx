@@ -18,6 +18,18 @@ beforeEach(() => {
 afterEach(() => vi.restoreAllMocks());
 
 describe("Administrator User Management", () => {
+  it("shows a safe list failure and retries without exposing backend details", async () => {
+    vi.mocked(api.listUsers)
+      .mockRejectedValueOnce(new Error("database detail"))
+      .mockResolvedValueOnce([requester]);
+    render(<App />);
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("Unable to load users.");
+    expect(screen.queryByText("database detail")).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Retry" }));
+    expect((await screen.findAllByText(requester.name)).length).toBeGreaterThan(0);
+  });
+
   it("lists account fields and opens the create-user form", async () => {
     render(<App />);
     expect(await screen.findByRole("heading", { name: "User Management" })).toBeInTheDocument();

@@ -1,57 +1,68 @@
-﻿# Lab 3 Peer Review and Delivery Record
+# Lab 3 Peer Review and Delivery Record
 
 **Author:** Patiharn Liangkobkit - 66070503489 - GitHub [@Richyboy170](https://github.com/Richyboy170)
 
 **Repository:** [Richyboy170/toktickit](https://github.com/Richyboy170/toktickit)
 
-**Peer-review group:** Tanakrit ([Tanakrit-triton](https://github.com/Tanakrit-triton)) and Suwiwat ([iceswift](https://github.com/iceswift)). The Lab 2 record in `02_Assignment/Lab_02_submission.md` contains their completed Lab 2 review history. Lab 3 PR #33 is open for their review; GitHub Actions run [35106401012](https://github.com/Richyboy170/toktickit/actions/runs/35106401012) passed, while approval and merge remain pending.
+**Peer-review group:** Tanakrit ([Tanakrit-triton](https://github.com/Tanakrit-triton)) and Suwiwat ([iceswift](https://github.com/iceswift)). Lab 3 PR [#33](https://github.com/Richyboy170/toktickit/pull/33) was approved by iceswift at feature commit 78313af684264c9eb46931dca42793407207d5a6 and merged into lab3-staging as 593d6ba49f442d8c46b6be01cde8fa09285ecf50 on 17 September 2026.
 
-## 1. Lab 3 local review state
+## 1. Lab 3 review and delivery state
 
-The Lab 3 implementation is on `feature/lab3-implementation`, which contains the contract baseline commit before the implementation commit. The branch is published and opened as PR #33 into `lab3-staging`. The intended staged flow and CI workflow are documented in `README.md` and `.github/workflows/lab2-ci.yml`, now named **TokTickIT CI**. The feature-branch CI run passed; peer approval, issue completion, merge into `lab3-staging`, and the final `main` PR remain pending.
+The Lab 3 implementation began on feature/lab3-implementation. The contract
+baseline commit 29e7ed5 precedes the implementation commit d4ca5cd. PR #33
+targeted lab3-staging; it received a changes-requested review, the
+Administrator Ticket Detail authorization issue was corrected, and the final
+feature tip was approved before merging.
 
-A read-only final review was performed by the Codex review agent on 15 September 2026. The author addressed the concrete findings in the shared tree:
+The merged staging commit passed [TokTickIT CI run
+35171700694](https://github.com/Richyboy170/toktickit/actions/runs/35171700694).
+The run passed the server, client, and e2e jobs and uploaded the
+[Playwright evidence artifact](https://api.github.com/repos/Richyboy170/toktickit/actions/artifacts/10476089966/zip).
 
-| Finding from local review | Response in this tree | Re-review state |
+The release to main has not happened yet. The current remote main commit is
+c7fcdf6e9f39e0fd4b8631f70553049e2dc11670, while lab3-staging is at
+593d6ba49f442d8c46b6be01cde8fa09285ecf50. Issues #34-#40 remain open and
+must be completed before final submission.
+
+## 2. Review findings and responses
+
+| Finding from peer review | Response in this tree | Final review state |
 |---|---|---|
-| Legacy requester header and selector could bypass authentication | Header, requester directory, and client selector are restricted to `ENABLE_LEGACY_REQUESTER_CONTEXT=true` or test mode; normal client builds use session identity. | Local code updated; peer re-review pending |
-| Role login could land on `/tickets`; full users could not change password | Role-safe return paths, default destinations, voluntary Change Password, and shell navigation were added. | Local code updated; peer re-review pending |
-| Staff status UI showed every status and always sent confirmation | UI now offers only valid next states and asks for confirmation for Cancel/Resolve/Close/Reopen; API default is `confirm=false`. | Local code updated; peer re-review pending |
-| Administrator detail route rendered a Staff Detail but its API read guard returned 403 | `GET /api/staff/tickets/:ticketId` now accepts IT Staff and Administrator readers; assignment, status, comment, and note mutations remain IT Staff-only. | Fix and regression tests added; peer re-review pending |
-| Legacy migration left empty credentials without a usable local initializer | `prisma:initialize-legacy-passwords` hashes a local temporary value after migration and preserves the first-login flag; setup docs describe it. | Local code updated; peer re-review pending |
-| Deactivating an owner left stale Ticket ownership | Administrator deactivation clears `ownerId` and revokes sessions in one transaction. | Local code updated; peer re-review pending |
-| Malformed JSON could receive an unsafe default response; tablet Queue was too wide | Express parser/final error middleware returns the safe envelope; Staff Queue uses cards at 768-991px. | Local code updated; peer re-review pending |
-| Submission evidence contained placeholders | Test, AI-use, reviewer, and screenshot records distinguish Pass, Pending, and Blocked; the fixture-backed UI capture now supplies 18 linked PNGs without being presented as database evidence. | Local evidence updated; peer re-review pending |
+| Administrator detail reads were rejected by the Staff-only guard | GET /api/staff/tickets/:ticketId now admits Administrators for read-only detail; assignment, status, comment, and note mutations remain IT Staff-only. | Addressed before approval |
+| Legacy requester header and selector could bypass authentication | Header, requester directory, and client selector are restricted to ENABLE_LEGACY_REQUESTER_CONTEXT=true or test mode; normal Lab 3 client flows use session identity. | Addressed before approval |
+| Role login could land on the wrong destination and full users could not change password voluntarily | Role-safe return paths, default destinations, voluntary Change Password, and shell navigation were added. | Addressed before approval |
+| Staff status UI showed every status and sent confirmation automatically | The UI now offers only valid next states and asks for confirmation for consequential transitions; the API defaults confirm=false. | Addressed before approval |
+| Legacy migration left empty credentials without a usable initializer | prisma:initialize-legacy-passwords hashes a local temporary value after migration and preserves the first-login flag. | Addressed before approval |
+| Deactivating an owner left stale Ticket ownership | Administrator deactivation clears ownerId and revokes sessions transactionally. | Addressed before approval |
+| Malformed JSON could receive an unsafe default response; tablet Queue was too wide | Safe final error middleware was added and the Queue switches to compact cards at tablet widths. | Addressed before approval |
 
-## 2. Review checklist and evidence
+## 3. Reviewer identity, comments, and approval
 
-| Area | Local status | Evidence |
+| Date (UTC) | Reviewer | Review state | Evidence and response |
+|---|---|---|---|
+| 2026-09-16 12:46 | Suwiwat / iceswift | Changes requested | P1: Administrator Ticket Detail was routed to a Staff screen but the API rejected Administrator reads. The fix was implemented in the follow-up commits and covered by API/E2E regression tests. |
+| 2026-09-17 01:42 | Suwiwat / iceswift | Approved | Approval was submitted on final feature commit 78313af684264c9eb46931dca42793407207d5a6. |
+| 2026-09-17 01:44 | GitHub | Merged | PR #33 merged into lab3-staging as 593d6ba49f442d8c46b6be01cde8fa09285ecf50. |
+
+## 4. Review checklist and evidence
+
+| Area | Status | Evidence |
 |---|---|---|
-| Contract files agree on roles, ownership, statuses, API, UI, and acceptance criteria | Implemented baseline | `docs/lab-03/specification.md`, `api-spec.md`, `ui-spec.md`, `tests.md` |
-| Password/session design and role checks | Implemented; boundary tests pass | `server/src/auth.ts`, `auth-context.ts`, `server/tests/lab-03/` |
-| Migration, seed, and Lab 2 database regression | Not verified locally | PostgreSQL at `localhost:5432` was unavailable |
-| Requester, Staff, Administrator screens | Implemented; local React tests pass | `client/src/pages/`, `client/tests/lab-03/` |
-| Server Lab 3 boundary/unit tests | Pass | 8 files, 21 tests |
-| Client tests and production build | Pass | 13 files, 41 tests; Vite build passed |
-| Full server/API, migration, seed, E2E, and responsive browser suite | CI Pass; local database run remains unavailable | GitHub Actions run [35106401012](https://github.com/Richyboy170/toktickit/actions/runs/35106401012) |
-| Screenshots and visual inspection | Fixture-backed UI capture and CI artifact pass; peer inspection pending | `artifacts/lab-03/screenshots/README.md`, `e2e/lab-03/visual-evidence.spec.ts`, [GitHub artifact](https://api.github.com/repos/Richyboy170/toktickit/actions/artifacts/10450855693/zip) |
-| GitHub Issues, PR review, CI, and release to `main` | Issues and PR open; CI pass; review/release pending | Issues [#34](https://github.com/Richyboy170/toktickit/issues/34)-[#40](https://github.com/Richyboy170/toktickit/issues/40), [PR #33](https://github.com/Richyboy170/toktickit/pull/33), [CI run 35106401012](https://github.com/Richyboy170/toktickit/actions/runs/35106401012) |
+| Contract files agree on roles, ownership, statuses, API, UI, and acceptance criteria | Pass on staging | specification.md, api-spec.md, ui-spec.md, and tests.md in the merged staging tree |
+| Password/session design and role checks | Pass in staging CI | server/src/auth.ts, auth-context.ts, and the Lab 3 server tests |
+| Migration, seed, and Lab 2 database regression | Pass in staging CI | Staging CI server job runs migration deploy, seed, full server tests, build, and audit |
+| Requester, Staff, and Administrator screens | Pass in staging CI | Client tests and Playwright e2e job |
+| Screenshots and visual capture | Pass for staged source; final-main revalidation pending | [Screenshot index](../../artifacts/lab-03/screenshots/README.md), [visual test](../../e2e/lab-03/visual-evidence.spec.ts), completed ui-spec.md checklist, and CI artifact |
+| Feature branch review and staged merge | Pass | [PR #33](https://github.com/Richyboy170/toktickit/pull/33), merge 593d6ba |
+| Staging CI | Pass | [Run 35171700694](https://github.com/Richyboy170/toktickit/actions/runs/35171700694) |
+| Issues #34-#40 | Pending | [GitHub Issues](https://github.com/Richyboy170/toktickit/issues) currently remain open |
+| Release to main and final-main CI | Pending | Current [main branch](https://github.com/Richyboy170/toktickit/tree/main) is still at the Lab 2 commit |
 
-## 3. Peer approval and delivery
+## 5. Final reviewer statement
 
-Tanakrit and Suwiwat have not approved Lab 3 yet. Their real Lab 2 approvals are retained only as prior-sprint continuity evidence. A peer reviewer should repeat the checklist on [PR #33](https://github.com/Richyboy170/toktickit/pull/33), then record comments and approval after the database-backed test run, browser capture, and GitHub checks are available.
-
-| Evidence | Link or identifier | Result |
-|---|---|---|
-| Lab 3 contract and implementation PR | https://github.com/Richyboy170/toktickit/pull/33 | Open; peer review pending |
-| Authentication/migration review | Pending | Pending |
-| Authorization and Requester regression review | Pending | Pending |
-| Staff Queue/Detail review | Pending | Pending |
-| Administrator User Management review | Pending | Pending |
-| E2E/visual/release review | Pending | Pending |
-| GitHub Actions E2E and screenshot artifact | https://github.com/Richyboy170/toktickit/actions/runs/35106401012 | Pass: server, client, E2E, visual capture, and artifact upload |
-| Merge to `main` and final CI | Pending | Pending |
-
-## 4. Final reviewer statement
-
-No peer approval, merge, final-main test run, or peer visual sign-off is claimed for Lab 3 in this local record. PR #33 is the review target; its feature-branch database/browser run and screenshot artifact passed, while the staged release remains pending.
+Peer review and the merge into lab3-staging are complete, and the merged
+staging CI workflow passed. The staged-source visual checklist is complete from
+the capture, component/API tests, and visual runner. The remaining delivery
+gates are closing the Lab 3 Issues, releasing lab3-staging to main, running
+CI on the resulting main commit, rerunning the checklist against that commit,
+and freezing the final PDF evidence.

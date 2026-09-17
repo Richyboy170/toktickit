@@ -24,6 +24,11 @@ evidence updates in commits from 0a07199 onward. Those additions pass locally bu
 part of the already-recorded staging merge; they should be included in the
 next staging/release integration review.
 
+Follow-up PR [#41](https://github.com/Richyboy170/toktickit/pull/41) now targets
+`lab3-staging` from `feature/lab3-implementation`. Its server, client, and e2e
+jobs passed in [CI run 35212325233](https://github.com/Richyboy170/toktickit/actions/runs/35212325233).
+Reviewer `iceswift` is requested; a new approval remains pending.
+
 The release to main has not happened yet. The current remote main commit is
 c7fcdf6e9f39e0fd4b8631f70553049e2dc11670, while lab3-staging is at
 593d6ba49f442d8c46b6be01cde8fa09285ecf50. Issues #34-#40 remain open and
@@ -60,6 +65,7 @@ must be completed before final submission.
 | Screenshots and visual capture | Pass for staged source; final-main revalidation pending | [Screenshot index](../../artifacts/lab-03/screenshots/README.md), [visual test](../../e2e/lab-03/visual-evidence.spec.ts), completed ui-spec.md checklist, and CI artifact |
 | Feature branch review and staged merge | Pass | [PR #33](https://github.com/Richyboy170/toktickit/pull/33), merge 593d6ba |
 | Staging CI | Pass | [Run 35171700694](https://github.com/Richyboy170/toktickit/actions/runs/35171700694) |
+| Follow-up review and CI | CI pass; approval pending | [PR #41](https://github.com/Richyboy170/toktickit/pull/41), [run 35212325233](https://github.com/Richyboy170/toktickit/actions/runs/35212325233), and [GitHub screenshot index](../../artifacts/lab-03/github/README.md) |
 | Issues #34-#40 | Pending | [GitHub Issues](https://github.com/Richyboy170/toktickit/issues) currently remain open |
 | Release to main and final-main CI | Pending | Current [main branch](https://github.com/Richyboy170/toktickit/tree/main) is still at the Lab 2 commit |
 

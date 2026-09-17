@@ -21,7 +21,8 @@
   <rect x="315" y="80" width="260" height="110" class="box"/>
   <text x="445" y="115" class="label">feature/lab3-</text>
   <text x="445" y="140" class="label">implementation</text>
-  <text x="445" y="170" class="detail">29e7ed5 -&gt; d4ca5cd -&gt; 78313af</text>
+  <text x="445" y="165" class="detail">29e7ed5 -&gt; d4ca5cd -&gt; 78313af</text>
+  <text x="445" y="184" class="detail">follow-up tip 5d361c6</text>
   <path d="M255 135 H315" class="arrow"/>
   <rect x="635" y="80" width="220" height="110" class="box"/>
   <text x="745" y="120" class="label">PR #33</text>

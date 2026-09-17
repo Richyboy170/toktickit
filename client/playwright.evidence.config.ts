@@ -20,7 +20,8 @@ export default defineConfig({
     command: "npm run dev -- --host 127.0.0.1",
     cwd: import.meta.dirname,
     url: "http://127.0.0.1:5173",
-    env: { VITE_API_URL: "http://127.0.0.1:3000" },
+    // This evidence project covers the Lab 2 regression path only.
+    env: { VITE_API_URL: "http://127.0.0.1:3000", VITE_ENABLE_LEGACY_REQUESTER: "true" },
     reuseExistingServer: false,
     timeout: 120_000,
   },

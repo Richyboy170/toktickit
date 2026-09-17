@@ -1,11 +1,13 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, UserRole } from "@prisma/client";
 import { Request, Response, Router } from "express";
 import multer from "multer";
+import { z } from "zod";
 import { activeFirst, attachmentMetadataSelect, serializeAttachment } from "../attachment-metadata.js";
 import { MAX_ATTACHMENT_BYTES, validateAttachment } from "../attachment-validation.js";
 import { sendError } from "../http.js";
 import { getPrisma } from "../prisma.js";
 import { requireActiveRequester } from "../requester-context.js";
+import { getSessionToken, requireAuthenticatedUser } from "../auth-context.js";
 import { generateTicketNumber } from "../ticket-number.js";
 import { createTicketSchema, ticketListQuerySchema, TicketListQuery, zodFieldErrors } from "../ticket-validation.js";
 
@@ -32,7 +34,8 @@ function receiveOneAttachment(req: Request, res: Response): Promise<void> {
 }
 
 const ticketInclude = {
-  requester: { select: { id: true, name: true, email: true } },
+  requester: { select: { id: true, name: true, email: true, role: true } },
+  owner: { select: { id: true, name: true, email: true, role: true } },
   category: { select: { id: true, name: true } },
   relatedSystem: { select: { id: true, name: true } },
 } satisfies Prisma.TicketInclude;
@@ -43,12 +46,17 @@ function serializeTicket(ticket: Prisma.TicketGetPayload<{ include: typeof ticke
     ticketNumber: ticket.ticketNumber,
     ticketDate: ticket.createdAt,
     requester: ticket.requester,
+    owner: ticket.owner,
     category: ticket.category,
     relatedSystem: ticket.relatedSystem,
     summary: ticket.summary,
     requestedPriority: ticket.requestedPriority,
+    itPriority: ticket.itPriority,
     description: ticket.description,
     currentStatus: ticket.currentStatus,
+    requesterMarkedResolved: ticket.requesterMarkedResolved,
+    requesterResolvedAt: ticket.requesterResolvedAt,
+    requesterResolutionIndicatedAt: ticket.requesterResolutionIndicatedAt ?? ticket.requesterResolvedAt,
     createdAt: ticket.createdAt,
     updatedAt: ticket.updatedAt,
   };
@@ -106,7 +114,9 @@ ticketsRouter.get("/", async (req, res) => {
         category: ticket.category,
         relatedSystem: ticket.relatedSystem,
         requestedPriority: ticket.requestedPriority,
+        itPriority: ticket.itPriority,
         currentStatus: ticket.currentStatus,
+        owner: ticket.owner,
         updatedAt: ticket.updatedAt,
       })),
       pagination: {
@@ -167,6 +177,7 @@ ticketsRouter.post("/", async (req, res) => {
           data: {
             ...parsed.data,
             requesterId,
+            itPriority: parsed.data.requestedPriority,
             ticketNumber: generateTicketNumber(),
           },
           include: ticketInclude,
@@ -194,39 +205,135 @@ ticketsRouter.post("/", async (req, res) => {
   }
 });
 
-ticketsRouter.get("/:ticketId", async (req, res) => {
+export async function getVisibleTicketDetail(req: Request, res: Response) {
   try {
-    const requesterId = await requireActiveRequester(req, res);
-    if (!requesterId) return;
+    const sessionToken = getSessionToken(req);
+    let requesterId: number | null = null;
+    let canReadAny = false;
+    if (sessionToken) {
+      const user = await requireAuthenticatedUser(req, res);
+      if (!user) return;
+      if (user.role === UserRole.REQUESTER) requesterId = user.id;
+      else if (user.role === UserRole.IT_STAFF || user.role === UserRole.ADMINISTRATOR) canReadAny = true;
+      else return sendError(res, 403, "FORBIDDEN", "You are not permitted to view this Ticket.");
+    } else {
+      requesterId = await requireActiveRequester(req, res);
+      if (!requesterId) return;
+    }
     const ticketId = pathId(req.params.ticketId);
     if (!ticketId) return sendError(res, 400, "INVALID_PATH", "Ticket ID must be a positive integer.");
 
     const ticket = await getPrisma().ticket.findFirst({
-      where: { id: ticketId, requesterId },
+      where: canReadAny ? { id: ticketId } : { id: ticketId, requesterId: requesterId! },
       include: {
         ...ticketInclude,
         attachments: { select: attachmentMetadataSelect, orderBy: [{ uploadedAt: "desc" }, { id: "desc" }] },
+        comments: {
+          include: { author: { select: { id: true, name: true, role: true } } },
+          orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+        },
+        ...(canReadAny ? {
+          internalNotes: {
+            include: { author: { select: { id: true, name: true, role: true } } },
+            orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+          },
+        } : {}),
       },
     });
     if (!ticket) return sendError(res, 404, "RESOURCE_NOT_FOUND", "Ticket not found.");
-    return res.status(200).json({
+    const payload = {
       ...serializeTicket(ticket),
       attachments: activeFirst(ticket.attachments).map(serializeAttachment),
-    });
+      comments: ticket.comments.map((comment) => ({
+        id: comment.id,
+        content: comment.content,
+        body: comment.content,
+        author: comment.author,
+        createdAt: comment.createdAt,
+      })),
+      ...(canReadAny ? {
+        internalNotes: (ticket as unknown as { internalNotes: Array<{ id: number; content: string; author: { id: number; name: string; role: UserRole }; createdAt: Date }> }).internalNotes.map((note) => ({ id: note.id, content: note.content, body: note.content, author: note.author, createdAt: note.createdAt })),
+      } : {}),
+    };
+    return res.status(200).json({ ticket: payload, ...payload, publicComments: payload.comments });
   } catch (error) {
     console.error("GET /api/tickets/:ticketId failed:", error);
     return sendError(res, 500, "TICKET_DETAIL_FAILED", "Unable to load the Ticket. Please try again.");
   }
+}
+
+ticketsRouter.get("/:ticketId", getVisibleTicketDetail);
+
+// A Requester can report that the issue appears resolved. This is deliberately
+// separate from the formal status workflow, which remains an IT Staff action.
+const resolutionIndicationSchema = z.object({
+  appearsResolved: z.literal(true),
 });
+
+for (const route of ["/:ticketId/resolution-indication", "/:ticketId/problem-appears-resolved", "/:ticketId/appears-resolved", "/:ticketId/requester-resolved"]) {
+  ticketsRouter.post(route, async (req, res) => {
+    try {
+      // Resolution indication is a Lab 3 authenticated action. Keep the
+      // temporary requester header confined to the Lab 2 Ticket/Attachment
+      // compatibility routes.
+      const user = await requireAuthenticatedUser(req, res);
+      if (!user) return;
+      if (user.role !== UserRole.REQUESTER) return sendError(res, 403, "FORBIDDEN", "Only Requesters can indicate resolution.");
+      const requesterId = user.id;
+      const ticketId = pathId(req.params.ticketId);
+      if (!ticketId) return sendError(res, 400, "INVALID_PATH", "Ticket ID must be a positive integer.");
+      const parsed = resolutionIndicationSchema.safeParse(req.body);
+      if (!parsed.success) return sendError(res, 400, "VALIDATION_ERROR", "Confirm that the problem appears resolved.", { appearsResolved: "Set appearsResolved to true." });
+      const owned = await getPrisma().ticket.findFirst({ where: { id: ticketId, requesterId }, select: { id: true, currentStatus: true, requesterResolutionIndicatedAt: true, requesterMarkedResolved: true, requesterResolvedAt: true } });
+      if (!owned) return sendError(res, 404, "RESOURCE_NOT_FOUND", "Ticket not found.");
+      if (owned.requesterResolutionIndicatedAt || owned.requesterMarkedResolved || owned.requesterResolvedAt) {
+        return sendError(res, 409, "RESOLUTION_ALREADY_INDICATED", "This Ticket was already marked as appearing resolved.");
+      }
+      if (["RESOLVED", "CLOSED", "CANCELLED"].includes(owned.currentStatus)) {
+        return sendError(res, 409, "RESOLUTION_NOT_AVAILABLE", "A terminal Ticket cannot receive a new resolution indication.");
+      }
+      const indicatedAt = new Date();
+      const ticket = await getPrisma().ticket.update({
+        where: { id: ticketId },
+        data: { requesterMarkedResolved: true, requesterResolvedAt: indicatedAt, requesterResolutionIndicatedAt: indicatedAt },
+        include: {
+          ...ticketInclude,
+          comments: { include: { author: { select: { id: true, name: true, role: true } } }, orderBy: [{ createdAt: "asc" }, { id: "asc" }] },
+          attachments: { select: attachmentMetadataSelect, orderBy: [{ uploadedAt: "desc" }, { id: "desc" }] },
+        },
+      });
+      const payload = {
+        ...serializeTicket(ticket),
+        attachments: activeFirst(ticket.attachments).map(serializeAttachment),
+        comments: ticket.comments.map((comment) => ({ id: comment.id, content: comment.content, body: comment.content, author: comment.author, createdAt: comment.createdAt })),
+      };
+      return res.status(200).json({ ticket: payload, ...payload, publicComments: payload.comments });
+    } catch (error) {
+      console.error("POST requester resolved marker failed:", error);
+      return sendError(res, 500, "TICKET_UPDATE_FAILED", "Unable to update the Ticket. Please try again.");
+    }
+  });
+}
 
 ticketsRouter.get("/:ticketId/attachments", async (req, res) => {
   try {
-    const requesterId = await requireActiveRequester(req, res);
-    if (!requesterId) return;
+    const sessionToken = getSessionToken(req);
+    let requesterId: number | null = null;
+    let canReadAny = false;
+    if (sessionToken) {
+      const user = await requireAuthenticatedUser(req, res);
+      if (!user) return;
+      if (user.role === UserRole.REQUESTER) requesterId = user.id;
+      else if (user.role === UserRole.IT_STAFF || user.role === UserRole.ADMINISTRATOR) canReadAny = true;
+      else return sendError(res, 403, "FORBIDDEN", "You are not permitted to view these Attachments.");
+    } else {
+      requesterId = await requireActiveRequester(req, res);
+      if (!requesterId) return;
+    }
     const ticketId = pathId(req.params.ticketId);
     if (!ticketId) return sendError(res, 400, "INVALID_PATH", "Ticket ID must be a positive integer.");
     const ticket = await getPrisma().ticket.findFirst({
-      where: { id: ticketId, requesterId },
+      where: canReadAny ? { id: ticketId } : { id: ticketId, requesterId: requesterId! },
       select: { attachments: { select: attachmentMetadataSelect, orderBy: [{ uploadedAt: "desc" }, { id: "desc" }] } },
     });
     if (!ticket) return sendError(res, 404, "RESOURCE_NOT_FOUND", "Ticket not found.");

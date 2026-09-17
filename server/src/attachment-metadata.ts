@@ -16,6 +16,7 @@ export const attachmentMetadataSelect = {
 export function serializeAttachment(attachment: AttachmentWithoutContent) {
   return {
     ...attachment,
+    removedByUserId: attachment.removedByRequesterId,
     available: attachment.removedAt === null,
   };
 }

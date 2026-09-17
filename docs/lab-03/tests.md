@@ -51,7 +51,7 @@ The acceptance criteria in `specification.md` are traced to these groups: AC-01 
 | Server Lab 3 boundary/unit suite | `npm --prefix server test -- tests/lab-03 --reporter=dot` | Local: 8 files passed, 21 tests passed, 2 skipped; one database-backed suite blocked by PostgreSQL. The staged merge CI completed its server job before the local follow-up unit file was added. |
 | Client build | `npm --prefix client run build` | Pass: Vite production bundle, 47 modules |
 | Client suite | `npm --prefix client test -- --reporter=dot` | Pass: 13 files, 48 tests |
-| Full server suite | `npm --prefix server test -- --reporter=dot` | Local database-backed cases remain blocked at PostgreSQL `localhost:5432`; staging CI run 35171700694 completed the full server job successfully |
+| Full server suite | `npm --prefix server test -- --reporter=dot` | Local: 7 files failed and 12 passed because PostgreSQL is unavailable; 1 test failed, 28 passed, and 21 skipped (50 total). Staging CI run 35171700694 completed the full server job successfully |
 | Database-backed Playwright/E2E | `npm run test:e2e` | Local: blocked by missing PostgreSQL; staging CI: pass in run 35171700694 |
 | UI visual evidence capture | `npm run test:e2e:visual` | Pass: 1 test, 18 PNG captures at 1280x900, 820x1000, and 390x844; API fixtures isolate the UI capture from PostgreSQL |
 | GitHub Actions, peer approval, final `main` run | Repository/remote evidence | PR #33 approved and merged into `lab3-staging`; staging CI run 35171700694 passed; final `main` release/CI remains pending |

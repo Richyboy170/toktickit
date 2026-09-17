@@ -13,7 +13,7 @@ separate pending delivery gate.
               d4ca5cd  feat: implement Lab 3 authenticated ticket workflows
               ...     tests and evidence follow-up commits
               78313af  final reviewed feature-branch tip
-              0a07199..6d7e521  follow-up tests and evidence updates (feature branch)
+              0a07199 onward  follow-up tests and evidence updates (feature branch)
               |
               +-- PR #33 -> lab3-staging  [APPROVED; MERGED]
                                           merge 593d6ba
@@ -31,7 +31,7 @@ final feature tip 78313af before the merge commit 593d6ba was created.
 | Step | Branch or PR | Current evidence | State |
 |---|---|---|---|
 | 1 | lab3-staging | bdd1265 baseline | Published baseline |
-| 2 | feature/lab3-implementation | 29e7ed5 precedes d4ca5cd; reviewed tip 78313af; current tip 6d7e521 | Feature work reviewed; follow-up evidence ahead of staging |
+| 2 | feature/lab3-implementation | 29e7ed5 precedes d4ca5cd; reviewed tip 78313af; follow-up commits from 0a07199 onward | Feature work reviewed; follow-up evidence ahead of staging |
 | 3 | PR #33 | feature/lab3-implementation -> lab3-staging | Approved and merged; merge 593d6ba |
 | 4 | Staging CI | [Run 35171700694](https://github.com/Richyboy170/toktickit/actions/runs/35171700694) | Server, client, and E2E jobs passed |
 | 5 | lab3-staging -> main | Current main: c7fcdf6 | Release PR and final-main CI pending |

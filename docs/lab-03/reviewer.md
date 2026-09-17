@@ -20,7 +20,7 @@ The run passed the server, client, and e2e jobs and uploaded the
 [Playwright evidence artifact](https://api.github.com/repos/Richyboy170/toktickit/actions/artifacts/10476089966/zip).
 
 After the approved merge, the feature branch received follow-up test and
-evidence updates in commits 0a07199 through 6d7e521. Those additions pass locally but are not
+evidence updates in commits from 0a07199 onward. Those additions pass locally but are not
 part of the already-recorded staging merge; they should be included in the
 next staging/release integration review.
 

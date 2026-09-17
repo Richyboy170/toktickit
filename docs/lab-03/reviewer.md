@@ -19,6 +19,11 @@ The merged staging commit passed [TokTickIT CI run
 The run passed the server, client, and e2e jobs and uploaded the
 [Playwright evidence artifact](https://api.github.com/repos/Richyboy170/toktickit/actions/artifacts/10476089966/zip).
 
+After the approved merge, the feature branch received follow-up test and
+evidence updates in commit 0a07199. Those additions pass locally but are not
+part of the already-recorded staging merge; they should be included in the
+next staging/release integration review.
+
 The release to main has not happened yet. The current remote main commit is
 c7fcdf6e9f39e0fd4b8631f70553049e2dc11670, while lab3-staging is at
 593d6ba49f442d8c46b6be01cde8fa09285ecf50. Issues #34-#40 remain open and

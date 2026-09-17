@@ -19,6 +19,32 @@ beforeEach(() => {
 afterEach(() => vi.restoreAllMocks());
 
 describe("IT Staff Ticket Queue", () => {
+  it("shows empty and no-results feedback while preserving filter controls", async () => {
+    const list = vi.spyOn(api, "listStaffTickets").mockResolvedValue({ items: [], pagination: { page: 1, pageSize: 10, totalItems: 0, totalPages: 0 } });
+    render(<App />);
+
+    expect(await screen.findByRole("heading", { name: "No Tickets in the Queue" })).toBeInTheDocument();
+    await userEvent.type(screen.getByLabelText("Search"), "campus");
+    await userEvent.click(screen.getByRole("button", { name: "Apply Filters" }));
+    expect(await screen.findByRole("heading", { name: "No matching Tickets" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Search")).toHaveValue("campus");
+    expect(list).toHaveBeenLastCalledWith(expect.objectContaining({ search: "campus", page: 1 }));
+  });
+
+  it("shows a safe failure and retries without losing the search value", async () => {
+    const list = vi.spyOn(api, "listStaffTickets")
+      .mockRejectedValueOnce(new Error("database detail"))
+      .mockResolvedValue({ items: [ticket], pagination: { page: 1, pageSize: 10, totalItems: 1, totalPages: 1 } });
+    render(<App />);
+
+    await screen.findByRole("alert");
+    await userEvent.type(screen.getByLabelText("Search"), "campus");
+    await userEvent.click(screen.getByRole("button", { name: "Retry" }));
+    expect((await screen.findAllByRole("link", { name: "Open Ticket" })).length).toBeGreaterThan(0);
+    expect(screen.getByLabelText("Search")).toHaveValue("campus");
+    expect(list).toHaveBeenCalledTimes(2);
+  });
+
   it("shows ownership, both priorities, status, and a detail action", async () => {
     vi.spyOn(api, "listStaffTickets").mockResolvedValue({ items: [ticket], pagination: { page: 1, pageSize: 10, totalItems: 1, totalPages: 1 } });
     render(<App />);

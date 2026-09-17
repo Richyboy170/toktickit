@@ -12,6 +12,47 @@ beforeEach(() => {
 afterEach(() => vi.restoreAllMocks());
 
 describe("Lab 3 authentication", () => {
+  it("shows field validation without calling the login API", async () => {
+    const login = vi.spyOn(api, "login");
+    render(<App />);
+
+    await userEvent.click(screen.getByRole("button", { name: /sign in|log in/i }));
+
+    expect(screen.getByText("Enter your email address.")).toBeInTheDocument();
+    expect(screen.getByText("Enter your password.")).toBeInTheDocument();
+    expect(login).not.toHaveBeenCalled();
+  });
+
+  it("disables the submit control while login is pending", async () => {
+    let resolveLogin: (value: api.LoginResponse) => void = () => undefined;
+    const pending = new Promise<api.LoginResponse>((resolve) => { resolveLogin = resolve; });
+    vi.spyOn(api, "login").mockReturnValue(pending);
+    render(<App />);
+
+    await userEvent.type(screen.getByLabelText(/email/i), "narin@example.edu");
+    await userEvent.type(screen.getByLabelText(/password/i), "valid-password1");
+    await userEvent.click(screen.getByRole("button", { name: /sign in|log in/i }));
+
+    expect(screen.getByRole("button", { name: /signing in/i })).toBeDisabled();
+    resolveLogin({ user: { id: 10, name: "Narin Staff", email: "narin@example.edu", role: "IT_STAFF", isActive: true, mustChangePassword: false }, mustChangePassword: false });
+    expect(await screen.findByRole("heading", { name: "Ticket Queue" })).toBeInTheDocument();
+  });
+
+  it.each([
+    [401, "INVALID_CREDENTIALS", "Invalid email or password."],
+    [403, "ACCOUNT_INACTIVE", "This account is inactive. Contact an Administrator."],
+  ] as const)("shows safe feedback for %s login failure", async (status, code, message) => {
+    vi.spyOn(api, "login").mockRejectedValue(new api.ApiError("unsafe backend detail", status, code));
+    render(<App />);
+
+    await userEvent.type(screen.getByLabelText(/email/i), "narin@example.edu");
+    await userEvent.type(screen.getByLabelText(/password/i), "valid-password1");
+    await userEvent.click(screen.getByRole("button", { name: /sign in|log in/i }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(message);
+    expect(screen.queryByText("unsafe backend detail")).not.toBeInTheDocument();
+  });
+
   it("submits credentials and displays the authenticated role", async () => {
     vi.spyOn(api, "getCurrentUser").mockResolvedValue(null);
     vi.spyOn(api, "login").mockResolvedValue({

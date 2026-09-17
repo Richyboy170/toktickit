@@ -1,6 +1,6 @@
 ﻿# Lab 3 â€” Sprint 3 Engineering Contract
 
-**Status:** implemented locally against this approved baseline; database, browser, and delivery evidence are pending.  This contract extends the Lab 2 contract and is the source of truth for the Lab 3 increment.
+**Status:** implemented against this approved baseline. PR #33 was approved and merged into `lab3-staging` at `593d6ba`; staged database/browser CI passed in run [35171700694](https://github.com/Richyboy170/toktickit/actions/runs/35171700694). Release to `main` and final-main verification remain pending. This contract extends the Lab 2 contract and is the source of truth for the Lab 3 increment.
 
 ## 1. Sprint goal
 

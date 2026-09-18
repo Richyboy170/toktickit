@@ -2,6 +2,19 @@
 
 **Status:** the Test DD plan was prepared with the Lab 3 contract before implementation. Approved release PR #42 merged the complete increment into `main` commit `161ddd8454c421df4701ad740414245bda68ebff`. Final-main [TokTickIT CI run 35311307446](https://github.com/Richyboy170/toktickit/actions/runs/35311307446) passed migration/seed, full server and client suites, builds, audits, database-backed Playwright, responsive visual capture, and artifact upload. Local Vitest results below were refreshed on 17 September 2026; local database-backed cases remain blocked only because PostgreSQL is unavailable at `localhost:5432`.
 
+## Final-main raw output
+
+The rubric requires passing output from `main`, not only a status badge. The
+[raw CI test-output index](../../artifacts/lab-03/ci/README.md) preserves the
+verbatim portions of the final-main run that executed each suite:
+
+- [Server: 19 test files and 50 tests passed](../../artifacts/lab-03/ci/final-main-server-test-output.txt)
+- [Client: 13 test files and 48 tests passed](../../artifacts/lab-03/ci/final-main-client-test-output.txt)
+- [Database-backed E2E: 11 tests passed; visual capture: 1 test passed](../../artifacts/lab-03/ci/final-main-e2e-test-output.txt)
+
+The links retain the original GitHub job timestamps and prefixes. The complete
+hosted logs and browser artifact remain available from run `35311307446`.
+
 ## 1. Test strategy
 
 The plan covers unit policy and workflow tests; Express/Supertest API and authorization tests; Prisma migration, seed, and Lab 2 regression tests; React component, style, responsive, and accessibility tests; and Playwright role and responsive flows. Tests use a database whose name contains `test` or `e2e` when PostgreSQL is available. The server compatibility header is enabled only in the test/e2e process; Lab 3 client screens use the authenticated cookie identity.

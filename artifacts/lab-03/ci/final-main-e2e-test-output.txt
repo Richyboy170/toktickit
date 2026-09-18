@@ -1,0 +1,46 @@
+e2e	UNKNOWN STEP	2026-09-18T05:35:49.5265764Z ##[group]Run npm run test:e2e
+e2e	UNKNOWN STEP	2026-09-18T05:35:49.5266130Z ^[[36;1mnpm run test:e2e^[[0m
+e2e	UNKNOWN STEP	2026-09-18T05:35:49.5297686Z shell: /usr/bin/bash -e {0}
+e2e	UNKNOWN STEP	2026-09-18T05:35:49.5297959Z env:
+e2e	UNKNOWN STEP	2026-09-18T05:35:49.5298456Z   E2E_DATABASE_URL: ***127.0.0.1:5432/toktickit_test?schema=public
+e2e	UNKNOWN STEP	2026-09-18T05:35:49.5298821Z   ENABLE_LEGACY_REQUESTER_CONTEXT: true
+e2e	UNKNOWN STEP	2026-09-18T05:35:49.5299095Z   VITE_ENABLE_LEGACY_REQUESTER: true
+e2e	UNKNOWN STEP	2026-09-18T05:35:49.5299352Z ##[endgroup]
+e2e	UNKNOWN STEP	2026-09-18T05:35:49.6364204Z
+e2e	UNKNOWN STEP	2026-09-18T05:35:49.6364879Z > toktickit-workspace@1.0.0 test:e2e
+e2e	UNKNOWN STEP	2026-09-18T05:35:49.6365933Z > playwright test --config=client/playwright.config.ts
+e2e	UNKNOWN STEP	2026-09-18T05:35:49.6366432Z
+e2e	UNKNOWN STEP	2026-09-18T05:35:53.9236598Z
+e2e	UNKNOWN STEP	2026-09-18T05:35:53.9254592Z Running 11 tests using 1 worker
+e2e	UNKNOWN STEP	2026-09-18T05:35:53.9254892Z
+e2e	UNKNOWN STEP	2026-09-18T05:35:57.6521684Z   ✓   1 [chromium] › e2e/lab-02/requester-ticket-flow.spec.ts:23:3 › Lab 2 requester Ticket workflow › creates, finds, opens, downloads, previews, removes, and ownership-protects a Ticket (3.0s)
+e2e	UNKNOWN STEP	2026-09-18T05:36:01.5157053Z   ✓   2 [chromium] › e2e/lab-02/requester-ticket-flow.spec.ts:80:3 › Lab 2 requester Ticket workflow › captures loading, failure, tablet, and mobile layouts without page overflow (3.9s)
+e2e	UNKNOWN STEP	2026-09-18T05:36:04.8536532Z   ✓   3 [chromium] › e2e/lab-02/rubric-evidence.spec.ts:49:3 › Lab 2 rubric evidence states › captures Requester loading, failure, empty, and active selection (3.3s)
+e2e	UNKNOWN STEP	2026-09-18T05:36:08.0668483Z   ✓   4 [chromium] › e2e/lab-02/rubric-evidence.spec.ts:74:3 › Lab 2 rubric evidence states › captures initial Create Ticket, files, submitting, and preserved failure (3.2s)
+e2e	UNKNOWN STEP	2026-09-18T05:36:09.5252829Z   ✓   5 [chromium] › e2e/lab-02/rubric-evidence.spec.ts:107:3 › Lab 2 rubric evidence states › captures My Tickets search, filters, sorting, pagination, and no results (1.4s)
+e2e	UNKNOWN STEP	2026-09-18T05:36:10.3959890Z   ✓   6 [chromium] › e2e/lab-02/rubric-evidence.spec.ts:140:3 › Lab 2 rubric evidence states › captures the initial empty My Tickets state (859ms)
+e2e	UNKNOWN STEP	2026-09-18T05:36:11.9583802Z   ✓   7 [chromium] › e2e/lab-03/authentication.spec.ts:6:1 › Requester can sign in, see the role shell, and lose access after logout (1.5s)
+e2e	UNKNOWN STEP	2026-09-18T05:36:13.0381666Z   ✓   8 [chromium] › e2e/lab-03/staff-ticket-flow.spec.ts:6:1 › IT Staff can open the queue and Ticket Detail workflow (1.1s)
+e2e	UNKNOWN STEP	2026-09-18T05:36:14.0276622Z   ✓   9 [chromium] › e2e/lab-03/user-administration.spec.ts:8:1 › Administrator can search users and open the minimalist create form (975ms)
+e2e	UNKNOWN STEP	2026-09-18T05:36:16.3140711Z   ✓  10 [chromium] › e2e/lab-03/user-administration.spec.ts:23:1 › Administrator can inspect Staff Ticket Detail without Staff mutations (2.3s)
+e2e	UNKNOWN STEP	2026-09-18T05:36:22.2750347Z   ✓  11 [chromium] › e2e/lab-03/visual-evidence.spec.ts:178:1 › captures Lab 3 role screens at desktop, tablet, and mobile widths (5.9s)
+e2e	UNKNOWN STEP	2026-09-18T05:36:22.3682818Z
+e2e	UNKNOWN STEP	2026-09-18T05:36:22.3689889Z   11 passed (32.0s)
+e2e	UNKNOWN STEP	2026-09-18T05:36:22.4261504Z ##[group]Run npm run test:e2e:visual
+e2e	UNKNOWN STEP	2026-09-18T05:36:22.4261846Z ^[[36;1mnpm run test:e2e:visual^[[0m
+e2e	UNKNOWN STEP	2026-09-18T05:36:22.4298204Z shell: /usr/bin/bash -e {0}
+e2e	UNKNOWN STEP	2026-09-18T05:36:22.4298457Z env:
+e2e	UNKNOWN STEP	2026-09-18T05:36:22.4299147Z   E2E_DATABASE_URL: ***127.0.0.1:5432/toktickit_test?schema=public
+e2e	UNKNOWN STEP	2026-09-18T05:36:22.4299541Z   ENABLE_LEGACY_REQUESTER_CONTEXT: true
+e2e	UNKNOWN STEP	2026-09-18T05:36:22.4299821Z   VITE_ENABLE_LEGACY_REQUESTER: true
+e2e	UNKNOWN STEP	2026-09-18T05:36:22.4300070Z ##[endgroup]
+e2e	UNKNOWN STEP	2026-09-18T05:36:22.5257732Z
+e2e	UNKNOWN STEP	2026-09-18T05:36:22.5258533Z > toktickit-workspace@1.0.0 test:e2e:visual
+e2e	UNKNOWN STEP	2026-09-18T05:36:22.5259823Z > playwright test --config=client/playwright.visual.config.ts
+e2e	UNKNOWN STEP	2026-09-18T05:36:22.5260331Z
+e2e	UNKNOWN STEP	2026-09-18T05:36:23.5526616Z
+e2e	UNKNOWN STEP	2026-09-18T05:36:23.5527432Z Running 1 test using 1 worker
+e2e	UNKNOWN STEP	2026-09-18T05:36:23.5528067Z
+e2e	UNKNOWN STEP	2026-09-18T05:36:41.1434958Z   ✓  1 [chromium] › e2e/lab-03/visual-evidence.spec.ts:178:1 › captures Lab 3 role screens at desktop, tablet, and mobile widths (10.2s)
+e2e	UNKNOWN STEP	2026-09-18T05:36:41.4340403Z
+e2e	UNKNOWN STEP	2026-09-18T05:36:41.4344750Z   1 passed (18.3s)

@@ -1,0 +1,40 @@
+server	UNKNOWN STEP	2026-09-18T05:34:39.4886664Z ##[group]Run npm test
+server	UNKNOWN STEP	2026-09-18T05:34:39.4886935Z ^[[36;1mnpm test^[[0m
+server	UNKNOWN STEP	2026-09-18T05:34:39.4923837Z shell: /usr/bin/bash -e {0}
+server	UNKNOWN STEP	2026-09-18T05:34:39.4924090Z env:
+server	UNKNOWN STEP	2026-09-18T05:34:39.4924759Z   DATABASE_URL: ***127.0.0.1:5432/toktickit_test?schema=public
+server	UNKNOWN STEP	2026-09-18T05:34:39.4925349Z   TEST_DATABASE_URL: ***127.0.0.1:5432/toktickit_test?schema=public
+server	UNKNOWN STEP	2026-09-18T05:34:39.4925714Z   ENABLE_LEGACY_REQUESTER_CONTEXT: true
+server	UNKNOWN STEP	2026-09-18T05:34:39.4925981Z ##[endgroup]
+server	UNKNOWN STEP	2026-09-18T05:34:39.5975603Z
+server	UNKNOWN STEP	2026-09-18T05:34:39.5976212Z > toktickit-server@1.0.0 test
+server	UNKNOWN STEP	2026-09-18T05:34:39.5976818Z > vitest run
+server	UNKNOWN STEP	2026-09-18T05:34:39.5977055Z
+server	UNKNOWN STEP	2026-09-18T05:34:39.9054513Z
+server	UNKNOWN STEP	2026-09-18T05:34:39.9062056Z ^[[1m^[[30m^[[46m RUN ^[[49m^[[39m^[[22m ^[[36mv4.1.11 ^[[39m^[[90m/home/runner/work/toktickit/toktickit/server^[[39m
+server	UNKNOWN STEP	2026-09-18T05:34:39.9063024Z
+server	UNKNOWN STEP	2026-09-18T05:34:40.6164330Z  ^[[32m✓^[[39m tests/lab-02/attachments.api.test.ts ^[[2m(^[[22m^[[2m5 tests^[[22m^[[2m)^[[22m^[[32m 246^[[2mms^[[22m^[[39m
+server	UNKNOWN STEP	2026-09-18T05:34:41.0338642Z  ^[[32m✓^[[39m tests/lab-02/my-tickets.api.test.ts ^[[2m(^[[22m^[[2m4 tests^[[22m^[[2m)^[[22m^[[32m 132^[[2mms^[[22m^[[39m
+server	UNKNOWN STEP	2026-09-18T05:34:41.4533559Z  ^[[32m✓^[[39m tests/lab-02/create-ticket.api.test.ts ^[[2m(^[[22m^[[2m4 tests^[[22m^[[2m)^[[22m^[[32m 134^[[2mms^[[22m^[[39m
+server	UNKNOWN STEP	2026-09-18T05:34:41.8562666Z  ^[[32m✓^[[39m tests/lab-02/ticket-detail.api.test.ts ^[[2m(^[[22m^[[2m3 tests^[[22m^[[2m)^[[22m^[[32m 116^[[2mms^[[22m^[[39m
+server	UNKNOWN STEP	2026-09-18T05:34:42.1951172Z  ^[[32m✓^[[39m tests/lab-03/auth.unit.test.ts ^[[2m(^[[22m^[[2m7 tests^[[22m^[[2m)^[[22m^[[32m 116^[[2mms^[[22m^[[39m
+server	UNKNOWN STEP	2026-09-18T05:34:42.5857218Z  ^[[32m✓^[[39m tests/lab-03/staff-ticket-detail.api.test.ts ^[[2m(^[[22m^[[2m2 tests^[[22m^[[2m)^[[22m^[[32m 105^[[2mms^[[22m^[[39m
+server	UNKNOWN STEP	2026-09-18T05:34:42.9009747Z  ^[[32m✓^[[39m tests/lab-03/hardening.api.test.ts ^[[2m(^[[22m^[[2m4 tests^[[22m^[[2m)^[[22m^[[32m 34^[[2mms^[[22m^[[39m
+server	UNKNOWN STEP	2026-09-18T05:34:43.2737023Z  ^[[32m✓^[[39m tests/lab-02/reference-data.api.test.ts ^[[2m(^[[22m^[[2m3 tests^[[22m^[[2m)^[[22m^[[32m 83^[[2mms^[[22m^[[39m
+server	UNKNOWN STEP	2026-09-18T05:34:43.4242752Z  ^[[32m✓^[[39m tests/lab-03/query-validation.unit.test.ts ^[[2m(^[[22m^[[2m2 tests^[[22m^[[2m)^[[22m^[[32m 8^[[2mms^[[22m^[[39m
+server	UNKNOWN STEP	2026-09-18T05:34:43.5762260Z  ^[[32m✓^[[39m tests/lab-02/attachments.unit.test.ts ^[[2m(^[[22m^[[2m3 tests^[[22m^[[2m)^[[22m^[[32m 7^[[2mms^[[22m^[[39m
+server	UNKNOWN STEP	2026-09-18T05:34:43.7198509Z  ^[[32m✓^[[39m tests/lab-02/validation.unit.test.ts ^[[2m(^[[22m^[[2m2 tests^[[22m^[[2m)^[[22m^[[32m 6^[[2mms^[[22m^[[39m
+server	UNKNOWN STEP	2026-09-18T05:34:44.0320070Z  ^[[32m✓^[[39m tests/lab-03/auth.api.test.ts ^[[2m(^[[22m^[[2m2 tests^[[22m^[[2m)^[[22m^[[32m 30^[[2mms^[[22m^[[39m
+server	UNKNOWN STEP	2026-09-18T05:34:44.3358488Z  ^[[32m✓^[[39m tests/lab-03/comments-notes.api.test.ts ^[[2m(^[[22m^[[2m2 tests^[[22m^[[2m)^[[22m^[[32m 24^[[2mms^[[22m^[[39m
+server	UNKNOWN STEP	2026-09-18T05:34:44.6387380Z  ^[[32m✓^[[39m tests/lab-03/authorization.api.test.ts ^[[2m(^[[22m^[[2m2 tests^[[22m^[[2m)^[[22m^[[32m 23^[[2mms^[[22m^[[39m
+server	UNKNOWN STEP	2026-09-18T05:34:44.9845001Z  ^[[32m✓^[[39m tests/lab-01/categories.test.ts ^[[2m(^[[22m^[[2m1 test^[[22m^[[2m)^[[22m^[[32m 61^[[2mms^[[22m^[[39m
+server	UNKNOWN STEP	2026-09-18T05:34:45.2874260Z  ^[[32m✓^[[39m tests/lab-01/health.test.ts ^[[2m(^[[22m^[[2m1 test^[[22m^[[2m)^[[22m^[[32m 20^[[2mms^[[22m^[[39m
+server	UNKNOWN STEP	2026-09-18T05:34:45.5885586Z  ^[[32m✓^[[39m tests/lab-03/staff-queue.api.test.ts ^[[2m(^[[22m^[[2m1 test^[[22m^[[2m)^[[22m^[[32m 21^[[2mms^[[22m^[[39m
+server	UNKNOWN STEP	2026-09-18T05:34:45.7264936Z  ^[[32m✓^[[39m tests/lab-02/ticket-number.unit.test.ts ^[[2m(^[[22m^[[2m1 test^[[22m^[[2m)^[[22m^[[32m 3^[[2mms^[[22m^[[39m
+server	UNKNOWN STEP	2026-09-18T05:34:46.0416528Z  ^[[32m✓^[[39m tests/lab-03/users-admin.api.test.ts ^[[2m(^[[22m^[[2m1 test^[[22m^[[2m)^[[22m^[[32m 21^[[2mms^[[22m^[[39m
+server	UNKNOWN STEP	2026-09-18T05:34:46.0445948Z
+server	UNKNOWN STEP	2026-09-18T05:34:46.0451255Z ^[[2m Test Files ^[[22m ^[[1m^[[32m19 passed^[[39m^[[22m^[[90m (19)^[[39m
+server	UNKNOWN STEP	2026-09-18T05:34:46.0452262Z ^[[2m      Tests ^[[22m ^[[1m^[[32m50 passed^[[39m^[[22m^[[90m (50)^[[39m
+server	UNKNOWN STEP	2026-09-18T05:34:46.0452991Z ^[[2m   Start at ^[[22m 05:34:39
+server	UNKNOWN STEP	2026-09-18T05:34:46.0454119Z ^[[2m   Duration ^[[22m 6.13s^[[2m (transform 244ms, setup 0ms, import 2.68s, tests 1.19s, environment 2ms)^[[22m
+server	UNKNOWN STEP	2026-09-18T05:34:46.0454911Z

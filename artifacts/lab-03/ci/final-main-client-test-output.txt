@@ -1,0 +1,46 @@
+client	UNKNOWN STEP	2026-09-18T05:34:13.3226604Z ##[group]Run npm test
+client	UNKNOWN STEP	2026-09-18T05:34:13.3226901Z ^[[36;1mnpm test^[[0m
+client	UNKNOWN STEP	2026-09-18T05:34:13.3265997Z shell: /usr/bin/bash -e {0}
+client	UNKNOWN STEP	2026-09-18T05:34:13.3266264Z ##[endgroup]
+client	UNKNOWN STEP	2026-09-18T05:34:13.4267551Z
+client	UNKNOWN STEP	2026-09-18T05:34:13.4268333Z > toktickit-client@1.0.0 test
+client	UNKNOWN STEP	2026-09-18T05:34:13.4268788Z > vitest run
+client	UNKNOWN STEP	2026-09-18T05:34:13.4268943Z
+client	UNKNOWN STEP	2026-09-18T05:34:13.7646155Z
+client	UNKNOWN STEP	2026-09-18T05:34:13.7650892Z ^[[1m^[[30m^[[46m RUN ^[[49m^[[39m^[[22m ^[[36mv4.1.11 ^[[39m^[[90m/home/runner/work/toktickit/toktickit/client^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:13.7651678Z
+client	UNKNOWN STEP	2026-09-18T05:34:16.0192024Z  ^[[32m✓^[[39m tests/lab-02/AttachmentSection.test.tsx ^[[2m(^[[22m^[[2m4 tests^[[22m^[[2m)^[[22m^[[33m 792^[[2mms^[[22m^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:16.0194341Z      ^[[33m^[[2m✓^[[22m^[[39m requires confirmation and a valid reason before soft removal ^[[33m 398^[[2mms^[[22m^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:17.1486187Z  ^[[32m✓^[[39m tests/lab-03/Login.test.tsx ^[[2m(^[[22m^[[2m9 tests^[[22m^[[2m)^[[22m^[[33m 1767^[[2mms^[[22m^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:17.1488679Z      ^[[33m^[[2m✓^[[22m^[[39m disables the submit control while login is pending ^[[33m 326^[[2mms^[[22m^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:17.5701302Z  ^[[32m✓^[[39m tests/lab-02/CreateTicket.test.tsx ^[[2m(^[[22m^[[2m5 tests^[[22m^[[2m)^[[22m^[[33m 2190^[[2mms^[[22m^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:17.5704242Z      ^[[33m^[[2m✓^[[22m^[[39m loads database references and displays generated fields as read-only ^[[33m 428^[[2mms^[[22m^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:17.5706550Z      ^[[33m^[[2m✓^[[22m^[[39m disables submission while busy and displays the backend Ticket Number ^[[33m 611^[[2mms^[[22m^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:17.5708704Z      ^[[33m^[[2m✓^[[22m^[[39m preserves entered values after a safe API failure ^[[33m 479^[[2mms^[[22m^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:17.5710674Z      ^[[33m^[[2m✓^[[22m^[[39m keeps valid files, rejects invalid files, and reports partial upload failure ^[[33m 441^[[2mms^[[22m^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:18.4534067Z  ^[[32m✓^[[39m tests/lab-03/StaffTicketQueue.test.tsx ^[[2m(^[[22m^[[2m4 tests^[[22m^[[2m)^[[22m^[[33m 1048^[[2mms^[[22m^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:18.4536634Z      ^[[33m^[[2m✓^[[22m^[[39m shows empty and no-results feedback while preserving filter controls ^[[33m 448^[[2mms^[[22m^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:19.3649296Z  ^[[32m✓^[[39m tests/lab-03/StaffTicketDetail.test.tsx ^[[2m(^[[22m^[[2m3 tests^[[22m^[[2m)^[[22m^[[33m 774^[[2mms^[[22m^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:19.3683050Z      ^[[33m^[[2m✓^[[22m^[[39m offers claim, IT Priority, status, Public Comments, Internal Notes, and Attachments ^[[33m 397^[[2mms^[[22m^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:19.9660401Z  ^[[32m✓^[[39m tests/lab-02/MyTickets.test.tsx ^[[2m(^[[22m^[[2m4 tests^[[22m^[[2m)^[[22m^[[33m 1080^[[2mms^[[22m^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:19.9703721Z      ^[[33m^[[2m✓^[[22m^[[39m shows only the returned requester-owned Tickets and detail links ^[[33m 417^[[2mms^[[22m^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:19.9724158Z      ^[[33m^[[2m✓^[[22m^[[39m applies search and reference filters through the list API ^[[33m 458^[[2mms^[[22m^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:20.3565635Z  ^[[32m✓^[[39m tests/lab-02/RequesterTicketDetail.test.tsx ^[[2m(^[[22m^[[2m3 tests^[[22m^[[2m)^[[22m^[[33m 440^[[2mms^[[22m^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:20.3567915Z      ^[[33m^[[2m✓^[[22m^[[39m loads an owned Ticket as read-only fields with active and removed Attachment states ^[[33m 323^[[2mms^[[22m^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:21.7420535Z  ^[[32m✓^[[39m tests/lab-03/RequesterRegression.test.tsx ^[[2m(^[[22m^[[2m4 tests^[[22m^[[2m)^[[22m^[[33m 878^[[2mms^[[22m^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:21.7426494Z      ^[[33m^[[2m✓^[[22m^[[39m does not expose a Change Requester action after authenticated login ^[[33m 322^[[2mms^[[22m^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:21.9369889Z  ^[[32m✓^[[39m tests/lab-03/AdministratorTicketDetail.test.tsx ^[[2m(^[[22m^[[2m2 tests^[[22m^[[2m)^[[22m^[[33m 501^[[2mms^[[22m^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:21.9429283Z      ^[[33m^[[2m✓^[[22m^[[39m keeps operational fields read-only while allowing IT Priority review ^[[33m 323^[[2mms^[[22m^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:22.1747983Z  ^[[32m✓^[[39m tests/lab-02/ResponsiveStyle.test.tsx ^[[2m(^[[22m^[[2m2 tests^[[22m^[[2m)^[[22m^[[33m 531^[[2mms^[[22m^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:22.1779682Z      ^[[33m^[[2m✓^[[22m^[[39m keeps equivalent essential Ticket information in desktop table and mobile card views ^[[33m 371^[[2mms^[[22m^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:23.7934403Z  ^[[32m✓^[[39m tests/lab-03/ChangePassword.test.tsx ^[[2m(^[[22m^[[2m2 tests^[[22m^[[2m)^[[22m^[[33m 732^[[2mms^[[22m^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:23.7936063Z      ^[[33m^[[2m✓^[[22m^[[39m requires the current password, password rules, and confirmation ^[[33m 430^[[2mms^[[22m^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:23.9919027Z  ^[[32m✓^[[39m tests/lab-03/UserManagement.test.tsx ^[[2m(^[[22m^[[2m3 tests^[[22m^[[2m)^[[22m^[[33m 702^[[2mms^[[22m^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:23.9920034Z      ^[[33m^[[2m✓^[[22m^[[39m shows a safe list failure and retries without exposing backend details ^[[33m 374^[[2mms^[[22m^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:24.0567498Z  ^[[32m✓^[[39m tests/lab-01/App.test.tsx ^[[2m(^[[22m^[[2m3 tests^[[22m^[[2m)^[[22m^[[33m 418^[[2mms^[[22m^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:24.0648196Z
+client	UNKNOWN STEP	2026-09-18T05:34:24.0669076Z ^[[2m Test Files ^[[22m ^[[1m^[[32m13 passed^[[39m^[[22m^[[90m (13)^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:24.0683354Z ^[[2m      Tests ^[[22m ^[[1m^[[32m48 passed^[[39m^[[22m^[[90m (48)^[[39m
+client	UNKNOWN STEP	2026-09-18T05:34:24.0691669Z ^[[2m   Start at ^[[22m 05:34:13
+client	UNKNOWN STEP	2026-09-18T05:34:24.0693339Z ^[[2m   Duration ^[[22m 10.29s^[[2m (transform 716ms, setup 879ms, import 3.45s, tests 11.85s, environment 11.94s)^[[22m
+client	UNKNOWN STEP	2026-09-18T05:34:24.0694995Z

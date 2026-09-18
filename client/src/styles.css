@@ -51,6 +51,7 @@ select { margin-bottom: 16px; }
 .page-heading { display: flex; justify-content: space-between; gap: 16px; }
 .page-heading h1 { margin-bottom: 4px; }
 .form-grid { display: grid; gap: 16px; }
+.form-grid--one { grid-template-columns: minmax(0, 1fr); }
 .form-grid--three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .section-gap { margin-top: 24px; }
 fieldset { min-width: 0; padding: 0; margin: 0; border: 0; }
@@ -126,3 +127,45 @@ textarea { min-height: 160px; resize: vertical; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 @media (max-width: 991px) { .form-grid--three { grid-template-columns: repeat(2, minmax(0, 1fr)); } .ticket-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); } .detail-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 767px) { .selection-page { padding: 12px; place-items: start center; } .selection-card { margin-top: 12px; padding: 22px 18px; } .app-header__inner { padding: 12px 0; flex-wrap: wrap; gap: 8px 18px; } .brand { width: 100%; } .main-nav { order: 3; width: 100%; min-height: 48px; } .main-nav a { flex: 1; padding: 8px; } .requester-chip { margin-left: 0; flex: 1; flex-wrap: wrap; } .page-container { margin-top: 20px; } .form-grid--three { grid-template-columns: 1fr; } .page-card { padding: 18px; } .page-heading { align-items: stretch; flex-direction: column; } .page-heading .button-link { width: 100%; } .action-row > * { flex: 1 1 100%; } .selected-files li { align-items: flex-start; flex-direction: column; } .ticket-filters { grid-template-columns: 1fr; } .filter-search, .filter-actions { grid-column: auto; } .filter-actions { align-items: stretch; flex-direction: column; } .ticket-table-wrap { display: none; } .ticket-cards { display: grid; gap: 12px; margin-top: 14px; } .pagination { flex-wrap: wrap; gap: 8px; } .detail-heading { align-items: flex-start; flex-direction: column; } .detail-grid { grid-template-columns: 1fr; } .detail-field--wide { grid-column: auto; } .attachment-heading, .attachment-row { align-items: stretch; flex-direction: column; } .attachment-heading .button-link { width: 100%; } .attachment-actions { flex-direction: column; } .attachment-actions .button { width: 100%; } .removal-dialog { padding: 18px; } }
+
+/* Lab 3 extensions reuse the Lab 2 Zen Green tokens and component rhythm. */
+.login-card { width: min(100%, 520px); }
+.login-help { margin: 20px 0 0; text-align: center; font-size: .9rem; }
+.section-gap-small { margin-top: 10px; }
+.staff-queue-table th, .staff-queue-table td { min-width: 100px; }
+.staff-queue-table th:nth-child(2), .staff-queue-table td:nth-child(2) { min-width: 190px; }
+.staff-queue-table th:nth-child(9), .staff-queue-table td:nth-child(9) { min-width: 120px; }
+.operation-panel, .conversation-panel, .user-form, .edit-user-panel, .reset-password-form { padding: 18px; border: 1px solid var(--border); border-radius: 8px; background: #fbfdfc; }
+.operation-panel h2, .conversation-panel h2, .user-form h2, .edit-user-panel h2 { margin-top: 0; color: var(--green-900); }
+.operation-panel .field { display: flex; flex-direction: column; align-items: stretch; }
+.operation-panel .field .button { align-self: start; }
+.conversation-section { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding-top: 24px; border-top: 1px solid var(--border); }
+.conversation-section > .field-error { grid-column: 1 / -1; }
+.comment-list { display: grid; gap: 10px; padding: 0; margin: 14px 0 20px; list-style: none; }
+.comment-list li { padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: white; }
+.comment-list p { margin: 8px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.comment-meta { display: flex; justify-content: space-between; gap: 8px; color: var(--muted); font-size: .85rem; }
+.comment-meta strong { color: var(--text); }
+.internal-notes-panel { border-color: #d69b3c; background: #fffaf0; }
+.internal-notes-panel h2 { color: #704300; }
+.badge--role { background: #e7efff; color: #264d91; }
+.badge--inactive { background: #e7e7e7; color: #4c4c4c; }
+.checkbox-field { display: flex; align-items: center; gap: 8px; align-self: end; }
+.checkbox-field input { width: auto; min-height: auto; }
+.user-filters { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.user-filters .filter-search { grid-column: span 2; }
+.user-filters .filter-actions { grid-column: span 2; }
+.user-table td, .user-table th { vertical-align: middle; }
+.ticket-resolution { padding: 18px; border-top: 1px solid var(--border); }
+.ticket-resolution h2 { margin-top: 0; color: var(--green-900); }
+@media (max-width: 767px) { .conversation-section { grid-template-columns: 1fr; } .user-filters { grid-template-columns: 1fr; } .user-filters .filter-search, .user-filters .filter-actions { grid-column: auto; } .operation-panel .field .button { width: 100%; } }
+
+/* The Staff Queue uses compact cards at tablet widths so its dense operations
+   remain readable without horizontal scrolling. */
+@media (min-width: 768px) and (max-width: 991px) {
+  .staff-queue-table { display: none; }
+  .staff-ticket-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
+  .staff-ticket-cards .ticket-card { padding: 12px; }
+  .staff-ticket-cards .ticket-card dl { gap: 6px; }
+  .staff-ticket-cards .ticket-card__action { margin-top: 10px; }
+}

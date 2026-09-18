@@ -1,9 +1,11 @@
 import { Router } from "express";
+import { UserRole } from "@prisma/client";
 import { z } from "zod";
 import { attachmentMetadataSelect, serializeAttachment } from "../attachment-metadata.js";
 import { sendError } from "../http.js";
 import { getPrisma } from "../prisma.js";
 import { requireActiveRequester } from "../requester-context.js";
+import { getSessionToken, requireAuthenticatedUser } from "../auth-context.js";
 import { zodFieldErrors } from "../ticket-validation.js";
 
 export const attachmentsRouter = Router();
@@ -27,13 +29,24 @@ function safeContentDisposition(name: string): string {
 
 attachmentsRouter.get("/:attachmentId/download", async (req, res) => {
   try {
-    const requesterId = await requireActiveRequester(req, res);
-    if (!requesterId) return;
+    const sessionToken = getSessionToken(req);
+    let requesterId: number | null = null;
+    let canReadAny = false;
+    if (sessionToken) {
+      const user = await requireAuthenticatedUser(req, res);
+      if (!user) return;
+      if (user.role === UserRole.REQUESTER) requesterId = user.id;
+      else if (user.role === UserRole.IT_STAFF || user.role === UserRole.ADMINISTRATOR) canReadAny = true;
+      else return sendError(res, 403, "FORBIDDEN", "You are not permitted to download this Attachment.");
+    } else {
+      requesterId = await requireActiveRequester(req, res);
+      if (!requesterId) return;
+    }
     const attachmentId = pathId(req.params.attachmentId);
     if (!attachmentId) return sendError(res, 400, "INVALID_PATH", "Attachment ID must be a positive integer.");
 
     const attachment = await getPrisma().attachment.findFirst({
-      where: { id: attachmentId, ticket: { requesterId } },
+      where: canReadAny ? { id: attachmentId } : { id: attachmentId, ticket: { requesterId: requesterId! } },
     });
     if (!attachment) return sendError(res, 404, "RESOURCE_NOT_FOUND", "Attachment not found.");
     if (attachment.removedAt) return sendError(res, 410, "ATTACHMENT_REMOVED", "This Attachment is no longer available.");

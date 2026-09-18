@@ -1,6 +1,6 @@
 ﻿# Lab 3 REST API Contract
 
-**Status:** implemented locally against this approved baseline; final database, browser, and delivery evidence are pending. The base URL is `/api`. JSON uses UTF-8 unless a download is explicitly binary. Dates are ISO 8601 UTC strings and enum values are uppercase.
+**Status:** implemented and released on `main` commit `161ddd8`. Final-main run [35311307446](https://github.com/Richyboy170/toktickit/actions/runs/35311307446) passed migration, seed, server, client, database-backed browser, and visual-evidence jobs. The base URL is `/api`. JSON uses UTF-8 unless a download is explicitly binary. Dates are ISO 8601 UTC strings and enum values are uppercase.
 
 ## 1. Conventions and authentication
 

@@ -1,6 +1,6 @@
 ﻿# Lab 3 Test Plan and Traceability
 
-**Status:** the Test DD plan was prepared with the Lab 3 contract before implementation. The merged `lab3-staging` commit `593d6ba49f442d8c46b6be01cde8fa09285ecf50` passed the complete [TokTickIT CI run 35171700694](https://github.com/Richyboy170/toktickit/actions/runs/35171700694), including migration/seed, server, client, and database-backed Playwright jobs. Local Vitest results below were refreshed on 17 September 2026 and include a follow-up query-validation unit file plus focused UI state assertions; local database-backed cases remain blocked because PostgreSQL is unavailable at `localhost:5432`.
+**Status:** the Test DD plan was prepared with the Lab 3 contract before implementation. Approved release PR #42 merged the complete increment into `main` commit `161ddd8454c421df4701ad740414245bda68ebff`. Final-main [TokTickIT CI run 35311307446](https://github.com/Richyboy170/toktickit/actions/runs/35311307446) passed migration/seed, full server and client suites, builds, audits, database-backed Playwright, responsive visual capture, and artifact upload. Local Vitest results below were refreshed on 17 September 2026; local database-backed cases remain blocked only because PostgreSQL is unavailable at `localhost:5432`.
 
 ## 1. Test strategy
 
@@ -32,12 +32,12 @@ The plan covers unit policy and workflow tests; Express/Supertest API and author
 | UI-05 | Component | Staff Detail assignment, priority, valid transitions, confirmation, notes, comments, files | `client/tests/lab-03/StaffTicketDetail.test.tsx` | Pass |
 | UI-06 | Component | Minimal User Management, validation, create/edit/reset, safety feedback | `client/tests/lab-03/UserManagement.test.tsx` | Pass: 3 tests |
 | UI-07 | Style/accessibility | Role navigation, labels, focus, text-backed badges, responsive structure | `client/tests/lab-02/ResponsiveStyle.test.tsx` plus Lab 2 structure tests | Pass for local client suite |
-| E2E-01 | Browser | Login, first-login change, role shell, logout, direct access after logout | `e2e/lab-03/authentication.spec.ts` | Pass: staging CI run 35171700694 |
+| E2E-01 | Browser | Login, first-login change, role shell, logout, direct access after logout | `e2e/lab-03/authentication.spec.ts` | Pass: final-main CI run 35311307446 |
 | E2E-02 | Browser/regression | Requester workflow and authenticated ownership continuity | `e2e/lab-02/requester-ticket-flow.spec.ts`, `e2e/lab-03/authentication.spec.ts`, and staged server regression | Pass in staging CI; the Lab 3-specific requester browser file is represented by the combined regression flow |
-| E2E-03 | Browser | Staff Queue and Detail workflow | `e2e/lab-03/staff-ticket-flow.spec.ts` | Pass: staging CI run 35171700694 |
-| E2E-04 | Browser | Administrator User Management, Staff Ticket Detail read, and next-login password change | `e2e/lab-03/user-administration.spec.ts` | Pass: staging CI run 35171700694; Administrator read and Staff-only mutation regression included |
+| E2E-03 | Browser | Staff Queue and Detail workflow | `e2e/lab-03/staff-ticket-flow.spec.ts` | Pass: final-main CI run 35311307446 |
+| E2E-04 | Browser | Administrator User Management, Staff Ticket Detail read, and next-login password change | `e2e/lab-03/user-administration.spec.ts` | Pass: final-main CI run 35311307446; Administrator read and Staff-only mutation regression included |
 | E2E-05 | Responsive | Desktop/tablet/mobile clipping, overflow, and equivalent actions | `e2e/lab-03/visual-evidence.spec.ts` | Pass for all three viewports in fixture capture and staging visual job; no horizontal overflow detected |
-| E2E-06 | Release | Safe failure and final release smoke path | Staging CI run 35171700694; final-main run is not yet available | Staging pass; final-main release evidence pending |
+| E2E-06 | Release | Safe failure and final release smoke path | Release PR #42 and final-main run 35311307446 | Pass on final `main` commit `161ddd8` |
 | VIS-01 | Browser fixture capture | Authentication, Change Password, Requester, Staff Queue/Detail, Administrator screens at desktop/tablet/mobile widths; no horizontal overflow | `e2e/lab-03/visual-evidence.spec.ts` | Pass: 18 PNG captures at 1280x900, 820x1000, and 390x844; staging visual job passed |
 
 The acceptance criteria in `specification.md` are traced to these groups: AC-01 to API/UI/E2E authentication, AC-02 to restricted password change, AC-03 and AC-08/12 to ownership, AC-04/14 to Internal Notes, AC-09/10 to migration and seed, AC-11/13/15 to Requester regression and comments, AC-16 to API/UI Queue, AC-18/19/20/21 to Staff Detail, AC-22 through AC-26 to User Management, AC-27 to safe errors, AC-28 to responsive/accessibility, AC-29 to migration and regression, and AC-30 to release evidence.
@@ -51,9 +51,9 @@ The acceptance criteria in `specification.md` are traced to these groups: AC-01 
 | Server Lab 3 boundary/unit suite | `npm --prefix server test -- tests/lab-03 --reporter=dot` | Local: 8 files passed, 21 tests passed, 2 skipped; one database-backed suite blocked by PostgreSQL. The staged merge CI completed its server job before the local follow-up unit file was added. |
 | Client build | `npm --prefix client run build` | Pass: Vite production bundle, 47 modules |
 | Client suite | `npm --prefix client test -- --reporter=dot` | Pass: 13 files, 48 tests |
-| Full server suite | `npm --prefix server test -- --reporter=dot` | Local: 7 files failed and 12 passed because PostgreSQL is unavailable; 1 test failed, 28 passed, and 21 skipped (50 total). Staging CI run 35171700694 completed the full server job successfully |
-| Database-backed Playwright/E2E | `npm run test:e2e` | Local: blocked by missing PostgreSQL; staging CI: pass in run 35171700694 |
+| Full server suite | `npm --prefix server test -- --reporter=dot` | Local: 7 files failed and 12 passed because PostgreSQL is unavailable; 1 test failed, 28 passed, and 21 skipped (50 total). Final-main CI run 35311307446 completed the full database-backed server job successfully |
+| Database-backed Playwright/E2E | `npm run test:e2e` | Local: blocked by missing PostgreSQL; final-main CI: pass in run 35311307446 |
 | UI visual evidence capture | `npm run test:e2e:visual` | Pass: 1 test, 18 PNG captures at 1280x900, 820x1000, and 390x844; API fixtures isolate the UI capture from PostgreSQL |
-| GitHub Actions, peer approval, final `main` run | Repository/remote evidence | PR #33 approved and merged into `lab3-staging`; staging CI run 35171700694 passed; final `main` release/CI remains pending |
+| GitHub Actions, peer approval, final `main` run | Repository/remote evidence | PRs #33, #41, and #42 approved; `main` commit `161ddd8`; final-main run 35311307446 passed; Issues #34-#40 closed |
 
-The local server and client runs were executed with elevated subprocess permission because Vitest/esbuild cannot spawn under the default sandbox. The PostgreSQL limitation applies to this workstation; the merged staging CI run supplies the database-backed migration, seed, server, client, and browser evidence for the staged source, while the follow-up local unit/UI assertions are recorded separately. A final-main run is still required after release.
+The local server and client runs were executed with elevated subprocess permission because Vitest/esbuild cannot spawn under the default sandbox. The PostgreSQL limitation applies only to this workstation; final-main CI run 35311307446 supplies the database-backed migration, seed, server, client, browser, visual-capture, and artifact evidence for the released source. The final artifact is [10533875135](https://api.github.com/repos/Richyboy170/toktickit/actions/artifacts/10533875135/zip).

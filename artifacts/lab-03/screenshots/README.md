@@ -3,18 +3,19 @@
 The images below were captured from the real React application with
 `npm run test:e2e:visual`. The capture uses deterministic HTTP fixtures for the
 API so the UI, role navigation, responsive layouts, and overflow checks can be
-reviewed while PostgreSQL is unavailable on this workstation. PR #33 was
-approved by `iceswift` and merged into `lab3-staging`. The staged commit passed
-the database-backed Playwright workflow, visual job, and artifact upload in
-GitHub Actions run 35171700694; the combined evidence is available at:
+reviewed while PostgreSQL is unavailable on this workstation. PR #42 was
+approved by `iceswift` and merged the completed staged increment into `main` as
+commit `161ddd8`. Final-main GitHub Actions run 35311307446 passed the
+database-backed Playwright workflow, visual job, and artifact upload; the
+combined evidence is available at:
 
-https://github.com/Richyboy170/toktickit/actions/runs/35171700694
+https://github.com/Richyboy170/toktickit/actions/runs/35311307446
 
-https://api.github.com/repos/Richyboy170/toktickit/actions/artifacts/10476089966/zip
+https://api.github.com/repos/Richyboy170/toktickit/actions/artifacts/10533875135/zip
 
-The local captures remain useful for direct visual inspection, while peer review
-for this increment is complete. Release to `main` and final-main revalidation
-are still required.
+The local captures remain useful for direct visual inspection. Peer review,
+release to `main`, final-main revalidation, and closure of Issues #34-#40 are
+complete.
 
 Every screen was captured at desktop (`1280x900`), tablet (`820x1000`), and
 mobile (`390x844`) widths. The visual runner asserts that the document has no
@@ -48,7 +49,7 @@ horizontal overflow at each width.
 
 These committed images are UI inspection captures from the fixture run. The
 database-backed Requester, Staff, Administrator, migration, and release checks
-are represented by the passing CI run linked above. The capture command and
+are represented by the passing final-main CI run linked above. The capture command and
 fixture source are retained in
 [`client/playwright.visual.config.ts`](../../client/playwright.visual.config.ts)
 and [`e2e/lab-03/visual-evidence.spec.ts`](../../e2e/lab-03/visual-evidence.spec.ts).

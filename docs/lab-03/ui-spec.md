@@ -1,6 +1,6 @@
 ﻿# Lab 3 Zen Green UI Specification
 
-**Status:** implemented and evidenced against this baseline. PR #33 was approved by `iceswift` and merged into `lab3-staging` at `593d6ba`; the staged TokTickIT CI run [35171700694](https://github.com/Richyboy170/toktickit/actions/runs/35171700694) passed the server, client, database-backed browser, visual-capture, and evidence-artifact jobs. The current `main` branch is still `c7fcdf6`, so release-branch and final-main visual sign-off remain delivery gates. Lab 3 extends the Lab 2 visual language. The existing tokens, spacing scale, form conventions, responsive breakpoints, keyboard behavior, and Attachment presentation remain in force unless this document says otherwise.
+**Status:** implemented, reviewed, and released on `main` commit `161ddd8`. Release PR #42 was approved by `iceswift`; final-main TokTickIT CI run [35311307446](https://github.com/Richyboy170/toktickit/actions/runs/35311307446) passed server, client, database-backed browser, visual capture, and evidence artifact upload. The final visual artifact is [10533875135](https://api.github.com/repos/Richyboy170/toktickit/actions/artifacts/10533875135/zip). Lab 3 extends the Lab 2 visual language. The existing tokens, spacing scale, form conventions, responsive breakpoints, keyboard behavior, and Attachment presentation remain in force unless this document says otherwise.
 
 ## 1. Design tokens and shared components
 
@@ -183,5 +183,6 @@ workflow are labelled as such rather than being presented as extra screenshots.
 - [x] Keyboard focus, error association, dialog focus, clipping, and overlap are covered by accessibility assertions and the visual runner; the runner verified no horizontal overflow at all three widths.
 - [x] Screenshot links for authentication, Requester regression, Staff Queue, Staff Detail, and User Management are indexed under `artifacts/lab-03/screenshots/README.md`.
 
-The final release gate is still separate: after `lab3-staging` is released to
-`main`, rerun this checklist against that immutable main commit.
+This checklist was revalidated by final-main run 35311307446 against immutable
+commit `161ddd8`; all server, client, database-backed browser, visual-capture,
+and artifact-upload jobs passed.

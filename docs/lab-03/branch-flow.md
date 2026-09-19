@@ -42,7 +42,7 @@ staged increment to `main` and closed all Sprint 3 Issues.
 | 5 | Final staging CI | [Run 35232939109](https://github.com/Richyboy170/toktickit/actions/runs/35232939109) | Server, client, E2E, visual capture, and artifact upload passed |
 | 6 | PR #42 | `lab3-staging` -> `main` | Approved and merged as `161ddd8` |
 | 7 | Final-main CI | [Run 35311307446](https://github.com/Richyboy170/toktickit/actions/runs/35311307446) | Server, client, E2E, visual capture, and artifact upload passed |
-| 8 | Issues #34-#40 | [Closed Issue list](https://github.com/Richyboy170/toktickit/issues?q=is%3Aissue%20state%3Aclosed%20%22%5BLab%203%5D%22) | All seven closed by release PR #42 |
+| 8 | Issues #34-#40 | [Closed Issue list](https://github.com/Richyboy170/toktickit/issues?q=is%3Aissue%20state%3Aclosed%20%22%5BLab%203%5D%22) and [Project #2 Done board](https://github.com/users/Richyboy170/projects/2/views/1) | All seven closed by release PR #42 and recorded as Done in the final Kanban |
 
 Remote references:
 
@@ -51,6 +51,7 @@ Remote references:
 - [PR #42](https://github.com/Richyboy170/toktickit/pull/42)
 - [final main commit 161ddd8](https://github.com/Richyboy170/toktickit/commit/161ddd8454c421df4701ad740414245bda68ebff)
 - [final-main CI run 35311307446](https://github.com/Richyboy170/toktickit/actions/runs/35311307446)
+- [Lab 3 Project Done-board screenshot](../../artifacts/lab-03/github/lab3-project-done.png)
 - [final GitHub screenshot evidence](../../artifacts/lab-03/github/README.md)
 
 ![Rendered Lab 3 branch flow](../../artifacts/lab-03/git/branch-flow.png)

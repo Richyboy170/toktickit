@@ -64,7 +64,7 @@ All Sprint 3 Issues #34-#40 closed when PR #42 merged.
 | Database-backed browser flows, responsive capture, and artifact | Pass on final main | [E2E job](https://github.com/Richyboy170/toktickit/actions/runs/35311307446/job/105493909898), [artifact](https://api.github.com/repos/Richyboy170/toktickit/actions/artifacts/10533875135/zip) |
 | Feature and follow-up peer review | Pass | [PR #33](https://github.com/Richyboy170/toktickit/pull/33) and [PR #41](https://github.com/Richyboy170/toktickit/pull/41) |
 | Staged integration and release review | Pass | [PR #42](https://github.com/Richyboy170/toktickit/pull/42), staging run 35232939109, main run 35311307446 |
-| Issues #34-#40 | Pass | [All seven closed](https://github.com/Richyboy170/toktickit/issues?q=is%3Aissue%20state%3Aclosed%20%22%5BLab%203%5D%22) |
+| Issues #34-#40 and final Kanban | Pass | [All seven closed](https://github.com/Richyboy170/toktickit/issues?q=is%3Aissue%20state%3Aclosed%20%22%5BLab%203%5D%22) and all seven are in the [Project #2 Done column](https://github.com/users/Richyboy170/projects/2/views/1) |
 | Final source | Pass | [`main` commit 161ddd8](https://github.com/Richyboy170/toktickit/commit/161ddd8454c421df4701ad740414245bda68ebff) |
 
 ## 5. Final reviewer statement

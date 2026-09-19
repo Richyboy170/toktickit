@@ -13,6 +13,7 @@ evidence.
 | `pr-42-approved-merged.png` | Approved release PR #42 merged `lab3-staging` into `main`; reviewer check and linked Issues are visible. |
 | `main-ci-success.png` | Final-main run `35311307446` succeeded with server, client, E2E, and one evidence artifact. |
 | `lab3-issues-closed.png` | Filtered GitHub Issue list shows zero open and seven closed Lab 3 Issues (#34-#40). |
+| `lab3-project-done.png` | GitHub Project board filtered to Lab 3: all seven Issues (#34-#40) appear in the Done column; no Lab 3 work appears in earlier columns. |
 | `main-branch-release.png` | Repository `main` shows release merge commit `161ddd8` and the final Lab 3 tree. |
 
 Final source pages:
@@ -21,8 +22,9 @@ Final source pages:
 - <https://github.com/Richyboy170/toktickit/commit/161ddd8454c421df4701ad740414245bda68ebff>
 - <https://github.com/Richyboy170/toktickit/actions/runs/35311307446>
 - <https://github.com/Richyboy170/toktickit/issues?q=is%3Aissue%20state%3Aclosed%20%22%5BLab%203%5D%22>
+- <https://github.com/users/Richyboy170/projects/2/views/1>
 - <https://github.com/Richyboy170/toktickit/tree/main>
 
 The GitHub API independently confirms PR #42 approval by `iceswift`, merge
-commit `161ddd8`, successful final-main jobs, artifact `10533875135`, and the
-closed state of Issues #34-#40.
+commit `161ddd8`, successful final-main jobs, artifact `10533875135`, the
+closed state of Issues #34-#40, and their Done state in Project #2.

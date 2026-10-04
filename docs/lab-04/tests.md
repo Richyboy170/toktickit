@@ -69,7 +69,7 @@ Migration and seed tests require isolated PostgreSQL test data. Run them twice f
 
 ## Local verification log (2026-10-04)
 
-These results are from the uncommitted working tree on `feature/lab4-action-model`; they are not final-release results.
+These results were run against the source now committed as `c1424ef` on `feature/lab4-action-model`; they are not final-release results.
 
 | Check | Result | Evidence/limitation |
 |---|---|---|

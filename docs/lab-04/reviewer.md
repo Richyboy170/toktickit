@@ -1,6 +1,15 @@
 # Lab 4 Peer Review Record
 
-**Status:** Not yet submitted for review. Populate from real GitHub activity only.
+**Status:** Feature branch pushed; implementation PR has not yet been created. Populate review fields from real GitHub activity only.
+
+## Ready for review
+
+- Branch: `feature/lab4-action-model`
+- Commit: `c1424ef` (`feat: add Lab 4 actions workflow and dashboards`)
+- Target: `lab4-staging`
+- Create PR: [compare feature branch with lab4-staging](https://github.com/Richyboy170/toktickit/compare/lab4-staging...feature/lab4-action-model?expand=1)
+- Local verification summary: `docs/lab-04/tests.md`
+- Limitation: GitHub CLI reports its saved token is invalid, so PR creation through the API is unavailable in this session. The compare link opens the prepared branch comparison; after the PR is created, add its real number and peer review records below.
 
 ## Reviewer
 

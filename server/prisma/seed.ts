@@ -88,13 +88,16 @@ async function main() {
     { number: "TKT-20260915-A7B8C9D0", requesterId: requesterC.id, categoryId: category.id, relatedSystemId: system.id, summary: "Account access restored", description: "The account is working after the identity verification check.", requestedPriority: "MEDIUM" as const, itPriority: "MEDIUM" as const, currentStatus: "CLOSED" as const, ownerId: administrator.id },
     { number: "TKT-20260915-B8C9D0E1", requesterId: requesterD.id, categoryId: category.id, relatedSystemId: system.id, summary: "Grade application reopened", description: "The grade submission application still shows an old validation message.", requestedPriority: "URGENT" as const, itPriority: "URGENT" as const, currentStatus: "REOPENED" as const, ownerId: staffB.id },
     { number: "TKT-20260915-C9D0E1F2", requesterId: requesterD.id, categoryId: category.id, relatedSystemId: system.id, summary: "Duplicate software request", description: "This duplicate request was cancelled after the original was confirmed.", requestedPriority: "LOW" as const, itPriority: "LOW" as const, currentStatus: "CANCELLED" as const, ownerId: null },
+    { number: "TKT-20261004-E2E00001", requesterId: requesterC.id, categoryId: category.id, relatedSystemId: system.id, summary: "Lab 4 resolution gate fixture", description: "A fresh Ticket used to verify the Action completion requirement.", requestedPriority: "MEDIUM" as const, itPriority: "MEDIUM" as const, currentStatus: "NEW" as const, ownerId: null },
   ];
+  const ticketIds = new Map<string, number>();
   for (const item of seededTickets) {
     const ticket = await prisma.ticket.upsert({
       where: { ticketNumber: item.number },
       update: { requesterId: item.requesterId, categoryId: item.categoryId, relatedSystemId: item.relatedSystemId, summary: item.summary, description: item.description, requestedPriority: item.requestedPriority, itPriority: item.itPriority, currentStatus: item.currentStatus, ownerId: item.ownerId },
       create: { ticketNumber: item.number, requesterId: item.requesterId, categoryId: item.categoryId, relatedSystemId: item.relatedSystemId, summary: item.summary, description: item.description, requestedPriority: item.requestedPriority, itPriority: item.itPriority, currentStatus: item.currentStatus, ownerId: item.ownerId, submissionToken: randomUUID() },
     });
+    ticketIds.set(item.number, ticket.id);
     if (await prisma.publicComment.count({ where: { ticketId: ticket.id } }) === 0) {
       await prisma.publicComment.create({ data: { ticketId: ticket.id, authorId: item.requesterId, content: "Thanks for looking into this issue." } });
     }
@@ -103,7 +106,42 @@ async function main() {
     }
   }
 
-  console.log(`Seeded ${CATEGORY_NAMES.length} categories, ${RELATED_SYSTEM_NAMES.length} related systems, ${REQUESTERS.length} Requesters, ${STAFF.length} IT Staff accounts, and ${ADMINISTRATORS.length} Administrator account.`);
+  const seededActions = [
+    { ticket: seededTickets[0].number, actionAt: "2026-09-15T03:15:00.000Z", description: "Checked battery health report", result: "Battery health is below the replacement threshold.", performer: staff.id, assignee: staffB.id, status: "COMPLETED" as const, followUpRequired: false, followUpNote: null, attachmentNotes: null },
+    { ticket: seededTickets[0].number, actionAt: "2026-09-15T04:15:00.000Z", description: "Prepare replacement battery", result: null, performer: staffB.id, assignee: staffB.id, status: "IN_PROGRESS" as const, followUpRequired: true, followUpNote: "Confirm the replacement part is available.", attachmentNotes: "Vendor quote is in the local lab evidence folder." },
+    { ticket: seededTickets[2].number, actionAt: "2026-09-16T02:00:00.000Z", description: "Review VPN connection logs", result: null, performer: staffB.id, assignee: staff.id, status: "PLANNED" as const, followUpRequired: false, followUpNote: null, attachmentNotes: null },
+    { ticket: seededTickets[3].number, actionAt: "2026-09-16T03:00:00.000Z", description: "Clear and restart printer queue", result: "Queue restarted; requester confirmation is pending.", performer: staffC.id, assignee: staffC.id, status: "IN_PROGRESS" as const, followUpRequired: true, followUpNote: "Ask the requester to confirm the next print job.", attachmentNotes: null },
+    { ticket: seededTickets[4].number, actionAt: "2026-09-17T01:00:00.000Z", description: "Restore mailbox attachment access", result: "Verified the attachment opens successfully.", performer: staff.id, assignee: staffB.id, status: "COMPLETED" as const, followUpRequired: false, followUpNote: null, attachmentNotes: null },
+    { ticket: seededTickets[4].number, actionAt: "2026-09-17T01:30:00.000Z", description: "Repeat duplicate mailbox check", result: "Cancelled after the first verification covered the issue.", performer: staffB.id, assignee: staff.id, status: "CANCELLED" as const, followUpRequired: false, followUpNote: null, attachmentNotes: null },
+    { ticket: seededTickets[5].number, actionAt: "2026-09-17T02:00:00.000Z", description: "Restore account access", result: "Confirmed successful sign-in after the credential reset.", performer: staff.id, assignee: staff.id, status: "COMPLETED" as const, followUpRequired: false, followUpNote: null, attachmentNotes: null },
+    { ticket: seededTickets[6].number, actionAt: "2026-09-18T01:00:00.000Z", description: "Recheck grade application validation", result: null, performer: staffB.id, assignee: staffC.id, status: "PLANNED" as const, followUpRequired: false, followUpNote: null, attachmentNotes: null },
+    { ticket: seededTickets[6].number, actionAt: "2026-09-18T01:30:00.000Z", description: "Cancel outdated grade validation check", result: "Cancelled because the application owner supplied a current test case.", performer: staffC.id, assignee: staffB.id, status: "CANCELLED" as const, followUpRequired: false, followUpNote: null, attachmentNotes: null },
+    { ticket: seededTickets[7].number, actionAt: "2026-09-18T02:00:00.000Z", description: "Document duplicate software request", result: "Cancelled after confirming the duplicate Ticket.", performer: staff.id, assignee: staffB.id, status: "CANCELLED" as const, followUpRequired: false, followUpNote: null, attachmentNotes: null },
+  ];
+  for (const item of seededActions) {
+    const ticketId = ticketIds.get(item.ticket)!;
+    const actionAt = new Date(item.actionAt);
+    const existing = await prisma.actionTaken.findFirst({
+      where: { ticketId, actionAt, description: item.description },
+      select: { id: true },
+    });
+    const data = {
+      ticketId,
+      actionAt,
+      description: item.description,
+      result: item.result,
+      performedByUserId: item.performer,
+      assigneeUserId: item.assignee,
+      status: item.status,
+      followUpRequired: item.followUpRequired,
+      followUpNote: item.followUpNote,
+      attachmentNotes: item.attachmentNotes,
+    };
+    if (existing) await prisma.actionTaken.update({ where: { id: existing.id }, data });
+    else await prisma.actionTaken.create({ data });
+  }
+
+  console.log(`Seeded ${CATEGORY_NAMES.length} categories, ${RELATED_SYSTEM_NAMES.length} related systems, ${REQUESTERS.length} Requesters, ${STAFF.length} IT Staff accounts, ${ADMINISTRATORS.length} Administrator account, and ${seededActions.length} repeatable Actions.`);
 }
 
 main()

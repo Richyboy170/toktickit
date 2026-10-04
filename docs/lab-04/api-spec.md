@@ -1,6 +1,6 @@
 # Lab 4 API Specification
 
-**Status:** Contract baseline; implementation pending. This extends `api-spec.md` from Lab 3. Existing auth, Ticket, Attachment, comment, note, queue, and Admin endpoints retain their contracts unless stated below.
+**Status:** Approved contract baseline; implementation is present on `feature/lab4-action-model`; database-backed API verification is pending. This extends `api-spec.md` from Lab 3. Existing auth, Ticket, Attachment, comment, note, queue, and Admin endpoints retain their contracts unless stated below.
 
 ## Conventions
 

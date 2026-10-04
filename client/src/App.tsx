@@ -11,6 +11,8 @@ import { TicketDetailPage } from "./pages/TicketDetail.js";
 import { StaffTicketDetail } from "./pages/StaffTicketDetail.js";
 import { StaffTicketQueue } from "./pages/StaffTicketQueue.js";
 import { UserManagement } from "./pages/UserManagement.js";
+import { RequesterDashboard } from "./pages/RequesterDashboard.js";
+import { StaffDashboard } from "./pages/StaffDashboard.js";
 import { useRequester, RequesterProvider } from "./requester-context.js";
 
 // The old selector is kept only for the Lab 2 regression tests. It is not a
@@ -23,7 +25,12 @@ const legacyRequesterCompatibilityMode = import.meta.env.MODE === "e2e"
 const legacyRequesterTestMode = legacyRequesterCompatibilityMode || import.meta.env.VITEST === "true";
 
 function homeForRole(role: string | undefined): string {
-  return role === "IT_STAFF" ? "/staff/tickets" : role === "ADMINISTRATOR" ? "/users" : "/tickets";
+  return role === "IT_STAFF" || role === "ADMINISTRATOR" || role === "REQUESTER" ? "/dashboard" : "/login";
+}
+
+function RoleDashboard() {
+  const { user } = useAuth();
+  return user?.role === "IT_STAFF" || user?.role === "ADMINISTRATOR" ? <StaffDashboard /> : <RequesterDashboard />;
 }
 
 function AuthenticatedFrame() {
@@ -82,6 +89,7 @@ export default function App() {
             <Route path="/change-password" element={<ChangePassword />} />
             <Route path="/select-requester" element={legacyRequesterTestMode ? <LegacySelection /> : <Navigate to="/login" replace />} />
             <Route element={<AuthenticatedFrame />}>
+              <Route path="/dashboard" element={<RoleDashboard />} />
               <Route element={<RoleGate roles={["REQUESTER"]} />}>
                 <Route path="/tickets" element={<MyTickets />} />
                 <Route path="/tickets/new" element={<CreateTicket />} />
@@ -89,7 +97,7 @@ export default function App() {
               <Route element={<RoleGate roles={["REQUESTER", "IT_STAFF", "ADMINISTRATOR"]} />}>
                 <Route path="/tickets/:ticketId" element={<TicketDetailRouter />} />
               </Route>
-              <Route element={<RoleGate roles={["IT_STAFF"]} />}>
+              <Route element={<RoleGate roles={["IT_STAFF", "ADMINISTRATOR"]} />}>
                 <Route path="/staff/tickets" element={<StaffTicketQueue />} />
                 <Route path="/ticket-queue" element={<StaffTicketQueue />} />
               </Route>

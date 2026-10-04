@@ -1,6 +1,6 @@
 # Lab 4 UI Specification
 
-**Status:** Contract baseline; implementation pending. Uses the existing TokTickIT Zen Green tokens, shared components, authenticated shell, and responsive conventions.
+**Status:** Approved contract baseline; implementation is present on `feature/lab4-action-model`; visual and responsive evidence is pending. Uses the existing TokTickIT Zen Green tokens, shared components, authenticated shell, and responsive conventions.
 
 ## Navigation and roles
 

@@ -16,6 +16,7 @@ beforeEach(() => {
   vi.spyOn(api, "getAssignableStaff").mockResolvedValue([staff]);
   vi.spyOn(api, "getPublicComments").mockResolvedValue([]);
   vi.spyOn(api, "getInternalNotes").mockResolvedValue([]);
+  vi.spyOn(api, "getTicketActions").mockResolvedValue({ actions: [] });
 });
 
 afterEach(() => vi.restoreAllMocks());
@@ -42,6 +43,7 @@ describe("IT Staff Ticket Detail", () => {
   it("offers only valid next statuses and confirms consequential transitions", async () => {
     const update = vi.spyOn(api, "updateTicketStatus").mockResolvedValue({ ...ticket, currentStatus: "CANCELLED" });
     const confirm = vi.spyOn(window, "confirm").mockReturnValue(false);
+    const prompt = vi.spyOn(window, "prompt").mockReturnValue("Duplicate request");
     render(<App />);
 
     const select = await screen.findByLabelText("Current Status");
@@ -58,6 +60,7 @@ describe("IT Staff Ticket Detail", () => {
     confirm.mockReturnValue(true);
     await userEvent.selectOptions(select, "CANCELLED");
     await userEvent.click(screen.getByRole("button", { name: "Save Status" }));
-    await waitFor(() => expect(update).toHaveBeenCalledWith(41, "CANCELLED", true));
+    await waitFor(() => expect(update).toHaveBeenCalledWith(41, "CANCELLED", ticket.updatedAt, true, "Duplicate request"));
+    expect(prompt).toHaveBeenCalledWith("Reason for cancelling this Ticket (required):");
   });
 });

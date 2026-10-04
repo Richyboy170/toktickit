@@ -2,9 +2,9 @@ name: TokTickIT CI
 
 on:
   pull_request:
-    branches: [lab2-staging, lab3-staging, main]
+    branches: [lab2-staging, lab3-staging, lab4-staging, main]
   push:
-    branches: [lab2-staging, lab3-staging, main]
+    branches: [lab2-staging, lab3-staging, lab4-staging, main]
 
 jobs:
   server:
@@ -103,5 +103,6 @@ jobs:
           path: |
             artifacts/lab-02/screenshots
             artifacts/lab-03/screenshots
+            artifacts/lab-04/screenshots
             playwright-report
             test-results

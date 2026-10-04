@@ -1,6 +1,6 @@
 # Lab 4 Test-Driven Development and Traceability
 
-**Status:** Planned before Lab 4 implementation. `Planned` means the implementation/test has not yet been verified. Update each row from actual output on the final released commit; never infer Pass from the existence of a file or CI badge.
+**Status:** Authored as the approved Test DD before implementation. `Planned` means the row has not been verified on the final released commit. Preliminary local checks are recorded below; they do not replace final staging/main CI evidence.
 
 ## Strategy
 
@@ -67,6 +67,22 @@ npm run test:evidence
 
 Migration and seed tests require isolated PostgreSQL test data. Run them twice from the Lab 3 schema snapshot and confirm non-seed rows survive. Capture exact output and commit SHA in `artifacts/lab-04/ci/`; do not commit credentials or DB dumps.
 
-## Final status ledger
+## Local verification log (2026-10-04)
 
-All rows currently **Planned**. Replace status with `Pass`, `Fail`, or `Blocked` only with dated output/CI evidence and exact commit. Explain skip/block reason; a later green run does not erase the earlier limitation.
+These results are from the uncommitted working tree on `feature/lab4-action-model`; they are not final-release results.
+
+| Check | Result | Evidence/limitation |
+|---|---|---|
+| Server TypeScript build | Pass | `npm run build` in `server/` exited 0. |
+| Server focused unit tests | Pass | `npx vitest run tests/lab-04/action-validation.unit.test.ts tests/lab-04/ticket-workflow.unit.test.ts tests/lab-03/query-validation.unit.test.ts --reporter=dot`: 3 files, 18 tests passed. |
+| Client TypeScript check | Pass | `npx tsc --noEmit` in `client/` exited 0. |
+| Focused client regression and Lab 4 component tests | Pass | `npx vitest run tests/lab-04 tests/lab-02/MyTickets.test.tsx tests/lab-02/RequesterTicketDetail.test.tsx tests/lab-03/AdministratorTicketDetail.test.tsx tests/lab-03/StaffTicketDetail.test.tsx tests/lab-03/StaffTicketQueue.test.tsx --reporter=dot`: 8 files, 23 tests passed. |
+| Client production build | Pass | `npm run build` in `client/` exited 0; Vite emitted production assets. |
+| Full client suite | Pass | `npx vitest run --reporter=dot` in `client/`: 16 files, 55 tests passed. |
+| Prisma validation | Pass | `npx prisma validate --schema prisma/schema.prisma` exited 0. |
+| Prisma generation | Pass | `npx prisma generate` exited 0 and generated Prisma Client v5.22.0. |
+| PostgreSQL migration/API tests/E2E | Blocked | No PostgreSQL service is listening on `localhost:5432`; `prisma migrate deploy` returned P1001. No database-backed or browser E2E result is claimed. |
+| Peer review, staging CI, release CI, visual/accessibility evidence | Pending | Must be populated from actual PR/CI/screenshots before final PDF. |
+| Playwright discovery | Pass | `npx playwright test --config=client/playwright.config.ts --list`: 15 tests in 9 files discovered; this does not execute browser flows. |
+
+The traceability matrix above remains **Planned** as a final-release status ledger. Update every row against the exact released SHA and link the corresponding output; explain skips/blocks rather than inferring a pass from file existence.

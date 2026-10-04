@@ -56,6 +56,17 @@ describe("My Tickets", () => {
     expect(await screen.findByRole("heading", { name: "No matching Tickets" })).toBeInTheDocument();
   });
 
+  it("initializes the open group from a dashboard link and preserves it across pages", async () => {
+    window.history.replaceState({}, "", "/tickets?statusGroup=open");
+    const list = vi.spyOn(api, "listTickets").mockResolvedValue(response([item], 1, 2));
+    render(<App />);
+    await screen.findAllByRole("link", { name: item.ticketNumber });
+    expect(list).toHaveBeenCalledWith(1, expect.objectContaining({ statusGroup: "open", page: 1 }));
+    expect(screen.getByLabelText("Status")).toHaveValue("OPEN_GROUP");
+    await userEvent.click(screen.getByRole("button", { name: "Next" }));
+    await waitFor(() => expect(list).toHaveBeenLastCalledWith(1, expect.objectContaining({ statusGroup: "open", page: 2 })));
+  });
+
   it("offers retry after a safe load failure", async () => {
     const list = vi.spyOn(api, "listTickets").mockRejectedValueOnce(new Error("offline")).mockResolvedValueOnce(response([item]));
     render(<App />);

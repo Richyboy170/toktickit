@@ -11,6 +11,8 @@ test("Administrator can search users and open the minimalist create form", async
   await page.getByLabel("Password").fill(adminPassword);
   await page.getByRole("button", { name: "Sign In" }).click();
 
+  await expect(page.getByRole("heading", { name: "Staff Dashboard" })).toBeVisible();
+  await page.getByRole("link", { name: "User Management" }).click();
   await expect(page.getByRole("heading", { name: "User Management" })).toBeVisible();
   await page.getByLabel("Search users").fill("Staff");
   await page.getByRole("button", { name: "Apply Filters" }).click();
@@ -28,6 +30,8 @@ test("Administrator can inspect Staff Ticket Detail without Staff mutations", as
   await page.getByLabel("Email address").fill(staffEmail);
   await page.getByLabel("Password").fill(staffPassword);
   await page.getByRole("button", { name: "Sign In" }).click();
+  await expect(page.getByRole("heading", { name: "Staff Dashboard" })).toBeVisible();
+  await page.getByRole("link", { name: "Ticket Queue" }).click();
   await expect(page.getByRole("heading", { name: "Ticket Queue" })).toBeVisible();
   const ticketPath = await page.getByRole("link", { name: "Open Ticket" }).first().getAttribute("href");
   const ticketId = ticketPath?.match(/\/(\d+)$/)?.[1];
@@ -39,6 +43,8 @@ test("Administrator can inspect Staff Ticket Detail without Staff mutations", as
   await page.getByLabel("Email address").fill(adminEmail);
   await page.getByLabel("Password").fill(adminPassword);
   await page.getByRole("button", { name: "Sign In" }).click();
+  await expect(page.getByRole("heading", { name: "Staff Dashboard" })).toBeVisible();
+  await page.getByRole("link", { name: "User Management" }).click();
   await expect(page.getByRole("heading", { name: "User Management" })).toBeVisible();
 
   // Forward the HTTP-only session cookie explicitly. This keeps the

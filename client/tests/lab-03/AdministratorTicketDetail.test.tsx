@@ -34,6 +34,7 @@ beforeEach(() => {
   vi.spyOn(api, "getAssignableStaff").mockResolvedValue([]);
   vi.spyOn(api, "getPublicComments").mockResolvedValue([]);
   vi.spyOn(api, "getInternalNotes").mockResolvedValue([]);
+  vi.spyOn(api, "getTicketActions").mockResolvedValue({ actions: [] });
   vi.spyOn(api, "updateTicketPriority").mockResolvedValue(ticket);
 });
 

@@ -1,5 +1,5 @@
 import { FormEvent, useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { ReferenceItem, RequestedPriority, SortOrder, StaffTicketListParams, StaffTicketListResponse, StaffTicketSort, TicketStatus, getCategories, getRelatedSystems, listStaffTickets } from "../api.js";
 
 interface QueueFilters {
@@ -8,14 +8,17 @@ interface QueueFilters {
   relatedSystemId: string;
   requestedPriority: RequestedPriority | "";
   itPriority: RequestedPriority | "";
+  priorityGroup: "" | "high-or-urgent";
   status: TicketStatus | "";
+  statusGroup: "" | "open";
+  ownerId: string;
   assignment: "" | "assigned" | "unassigned";
   sort: StaffTicketSort;
   order: SortOrder;
   pageSize: 10 | 20 | 50;
 }
 
-const DEFAULT_FILTERS: QueueFilters = { search: "", categoryId: "", relatedSystemId: "", requestedPriority: "", itPriority: "", status: "", assignment: "", sort: "updatedAt", order: "desc", pageSize: 10 };
+const DEFAULT_FILTERS: QueueFilters = { search: "", categoryId: "", relatedSystemId: "", requestedPriority: "", itPriority: "", priorityGroup: "", status: "", statusGroup: "", ownerId: "", assignment: "", sort: "updatedAt", order: "desc", pageSize: 10 };
 const STATUSES: TicketStatus[] = ["NEW", "OPEN", "IN_PROGRESS", "WAITING_FOR_REQUESTER", "RESOLVED", "CLOSED", "REOPENED", "CANCELLED"];
 const PRIORITIES: RequestedPriority[] = ["LOW", "MEDIUM", "HIGH", "URGENT"];
 
@@ -26,13 +29,33 @@ function toParams(filters: QueueFilters, page: number): StaffTicketListParams {
     relatedSystemId: filters.relatedSystemId ? Number(filters.relatedSystemId) : undefined,
     requestedPriority: filters.requestedPriority || undefined,
     itPriority: filters.itPriority || undefined,
+    priorityGroup: filters.priorityGroup || undefined,
     status: filters.status || undefined,
+    statusGroup: filters.statusGroup || undefined,
+    ...(filters.ownerId ? { ownerId: filters.ownerId === "unassigned" ? "unassigned" : Number(filters.ownerId) } : {}),
     assignment: filters.assignment || undefined,
     ...(filters.assignment === "unassigned" ? { unassigned: true } : {}),
     sort: filters.sort,
     order: filters.order,
     page,
     pageSize: filters.pageSize,
+  };
+}
+
+function initialFilters(params: URLSearchParams): QueueFilters {
+  const statuses: TicketStatus[] = ["NEW", "OPEN", "IN_PROGRESS", "WAITING_FOR_REQUESTER", "RESOLVED", "CLOSED", "REOPENED", "CANCELLED"];
+  const priorities: RequestedPriority[] = ["LOW", "MEDIUM", "HIGH", "URGENT"];
+  const status = params.get("status") ?? "";
+  const itPriority = params.get("itPriority") ?? "";
+  const ownerId = params.get("ownerId") ?? "";
+  return {
+    ...DEFAULT_FILTERS,
+    status: statuses.includes(status as TicketStatus) ? status as TicketStatus : "",
+    statusGroup: params.get("statusGroup") === "open" && !status ? "open" : "",
+    itPriority: priorities.includes(itPriority as RequestedPriority) ? itPriority as RequestedPriority : "",
+    priorityGroup: params.get("priorityGroup") === "high-or-urgent" && !itPriority ? "high-or-urgent" : "",
+    assignment: params.get("assignment") === "unassigned" || ownerId === "unassigned" ? "unassigned" : params.get("assignment") === "assigned" ? "assigned" : "",
+    ownerId,
   };
 }
 
@@ -51,8 +74,9 @@ function ownerOf(ticket: StaffTicketListResponse["items"][number]): string {
 }
 
 export function StaffTicketQueue() {
-  const [draft, setDraft] = useState<QueueFilters>(DEFAULT_FILTERS);
-  const [applied, setApplied] = useState<QueueFilters>(DEFAULT_FILTERS);
+  const [searchParams] = useSearchParams();
+  const [draft, setDraft] = useState<QueueFilters>(() => initialFilters(searchParams));
+  const [applied, setApplied] = useState<QueueFilters>(() => initialFilters(searchParams));
   const [page, setPage] = useState(1);
   const [categories, setCategories] = useState<ReferenceItem[]>([]);
   const [systems, setSystems] = useState<ReferenceItem[]>([]);
@@ -91,7 +115,7 @@ export function StaffTicketQueue() {
   }
 
   const items = result?.items ?? [];
-  const hasFilter = Boolean(applied.search.trim() || applied.categoryId || applied.relatedSystemId || applied.requestedPriority || applied.itPriority || applied.status || applied.assignment);
+  const hasFilter = Boolean(applied.search.trim() || applied.categoryId || applied.relatedSystemId || applied.requestedPriority || applied.itPriority || applied.priorityGroup || applied.status || applied.statusGroup || applied.assignment || applied.ownerId);
   return <section className="page-card" aria-labelledby="ticket-queue-title">
     <div className="page-heading"><div><p className="eyebrow">IT Staff workspace</p><h1 id="ticket-queue-title">Ticket Queue</h1><p className="muted">Find, prioritize, and take ownership of support work.</p></div></div>
     <form className="ticket-filters section-gap staff-queue-filters" onSubmit={submit} aria-label="Filter Ticket Queue">
@@ -99,8 +123,9 @@ export function StaffTicketQueue() {
       <Select id="queue-category" label="Category" value={draft.categoryId} onChange={(value) => update("categoryId", value)} options={categories} />
       <Select id="queue-system" label="Related System" value={draft.relatedSystemId} onChange={(value) => update("relatedSystemId", value)} options={systems} />
       <PrioritySelect id="queue-requested-priority" label="Requested Priority" value={draft.requestedPriority} onChange={(value) => update("requestedPriority", value)} />
-      <PrioritySelect id="queue-it-priority" label="IT Priority" value={draft.itPriority} onChange={(value) => update("itPriority", value)} />
-      <div><label htmlFor="queue-status">Status</label><select id="queue-status" value={draft.status} onChange={(event) => update("status", event.target.value as QueueFilters["status"])}><option value="">All statuses</option>{STATUSES.map((status) => <option key={status} value={status}>{label(status)}</option>)}</select></div>
+      <PrioritySelect id="queue-it-priority" label="IT Priority" value={draft.priorityGroup ? "" : draft.itPriority} onChange={(value) => setDraft({ ...draft, itPriority: value, priorityGroup: "" })} />
+      <div><label htmlFor="queue-priority-group">Priority group</label><select id="queue-priority-group" value={draft.priorityGroup} onChange={(event) => setDraft({ ...draft, priorityGroup: event.target.value as QueueFilters["priorityGroup"], itPriority: "" })}><option value="">Any priority</option><option value="high-or-urgent">High or Urgent</option></select></div>
+      <div><label htmlFor="queue-status">Status</label><select id="queue-status" value={draft.statusGroup ? "OPEN_GROUP" : draft.status} onChange={(event) => setDraft({ ...draft, status: event.target.value === "OPEN_GROUP" ? "" : event.target.value as QueueFilters["status"], statusGroup: event.target.value === "OPEN_GROUP" ? "open" : "" })}><option value="">All statuses</option><option value="OPEN_GROUP">All open statuses</option>{STATUSES.map((status) => <option key={status} value={status}>{label(status)}</option>)}</select></div>
       <div><label htmlFor="queue-assignment">Ownership</label><select id="queue-assignment" value={draft.assignment} onChange={(event) => update("assignment", event.target.value as QueueFilters["assignment"])}><option value="">All Tickets</option><option value="assigned">Assigned</option><option value="unassigned">Unassigned</option></select></div>
       <div><label htmlFor="queue-sort">Sort by</label><select id="queue-sort" value={draft.sort} onChange={(event) => update("sort", event.target.value as StaffTicketSort)}><option value="updatedAt">Last updated</option><option value="createdAt">Created date</option><option value="ticketNumber">Ticket number</option><option value="summary">Summary</option><option value="itPriority">IT Priority</option><option value="currentStatus">Status</option></select></div>
       <div><label htmlFor="queue-order">Order</label><select id="queue-order" value={draft.order} onChange={(event) => update("order", event.target.value as SortOrder)}><option value="desc">Descending</option><option value="asc">Ascending</option></select></div>

@@ -10,7 +10,7 @@ test("IT Staff can open the queue and Ticket Detail workflow", async ({ page }) 
   await page.getByRole("button", { name: "Sign In" }).click();
 
   await expect(page.getByRole("heading", { name: "Staff Dashboard" })).toBeVisible();
-  await page.getByRole("link", { name: "Ticket Queue" }).click();
+  await page.getByRole("link", { name: "Ticket Queue", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Ticket Queue" })).toBeVisible();
   const openTicket = page.getByRole("link", { name: "Open Ticket" }).first();
   await expect(openTicket).toBeVisible();

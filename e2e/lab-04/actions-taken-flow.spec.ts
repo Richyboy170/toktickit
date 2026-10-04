@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 
 const staffEmail = process.env.LAB3_STAFF_EMAIL ?? "krit.staff@example.edu";
 const staffPassword = process.env.LAB3_STAFF_PASSWORD ?? "StaffLocal123!";
+const ticketNumber = "TKT-20261004-E2E00002";
 
 test("IT Staff can record, start, and complete an Action on a Ticket", async ({ page }) => {
   await page.goto("/login");
@@ -9,9 +10,11 @@ test("IT Staff can record, start, and complete an Action on a Ticket", async ({ 
   await page.getByLabel("Password").fill(staffPassword);
   await page.getByRole("button", { name: "Sign In" }).click();
   await expect(page.getByRole("heading", { name: "Staff Dashboard" })).toBeVisible();
-  await page.getByRole("link", { name: "Ticket Queue" }).click();
+  await page.getByRole("link", { name: "Ticket Queue", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Ticket Queue" })).toBeVisible();
-  await page.getByRole("link", { name: "Open Ticket" }).first().click();
+  await page.getByLabel("Search").fill(ticketNumber);
+  await page.getByRole("button", { name: "Apply Filters" }).click();
+  await page.getByRole("link", { name: new RegExp(ticketNumber) }).click();
   await expect(page.getByRole("heading", { name: "Actions Taken" })).toBeVisible();
 
   await page.getByLabel("Description").fill("Lab 4 E2E: verify the network cable");

@@ -5,7 +5,7 @@ import { requiresPasswordChange, useAuth } from "../auth-context.js";
 import { SystemCheck } from "../components/SystemCheck.js";
 
 function homeForRole(role: string | undefined): string {
-  return role === "IT_STAFF" ? "/staff/tickets" : role === "ADMINISTRATOR" ? "/users" : "/tickets";
+  return role === "IT_STAFF" || role === "ADMINISTRATOR" || role === "REQUESTER" ? "/dashboard" : "/login";
 }
 
 function allowedReturnPath(role: string | undefined, path: unknown): string | undefined {

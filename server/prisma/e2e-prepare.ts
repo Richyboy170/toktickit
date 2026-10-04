@@ -15,12 +15,15 @@ try {
     select: { id: true },
   });
   const deleted = await prisma.ticket.deleteMany({ where: { requesterId: { in: requesters.map((item) => item.id) } } });
-  const workflowFixture = await prisma.ticket.findUnique({ where: { ticketNumber: "TKT-20261004-E2E00001" }, select: { id: true } });
-  if (workflowFixture) {
-    await prisma.actionTaken.deleteMany({ where: { ticketId: workflowFixture.id } });
-    await prisma.ticket.update({ where: { id: workflowFixture.id }, data: { currentStatus: "NEW", ownerId: null, cancellationReason: null } });
+  const workflowFixtures = await prisma.ticket.findMany({
+    where: { ticketNumber: { in: ["TKT-20261004-E2E00001", "TKT-20261004-E2E00002"] } },
+    select: { id: true },
+  });
+  for (const fixture of workflowFixtures) {
+    await prisma.actionTaken.deleteMany({ where: { ticketId: fixture.id } });
+    await prisma.ticket.update({ where: { id: fixture.id }, data: { currentStatus: "NEW", ownerId: null, cancellationReason: null } });
   }
-  console.log(`Prepared ${databaseName}: removed ${deleted.count} prior E2E Tickets and reset the Lab 4 workflow fixture.`);
+  console.log(`Prepared ${databaseName}: removed ${deleted.count} prior E2E Tickets and reset ${workflowFixtures.length} Lab 4 workflow fixtures.`);
 } finally {
   await prisma.$disconnect();
 }

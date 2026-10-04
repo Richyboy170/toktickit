@@ -44,6 +44,6 @@ describe("mandatory password change", () => {
     await userEvent.click(screen.getByRole("button", { name: "Save New Password" }));
 
     expect(change).toHaveBeenCalledWith({ currentPassword: "old-password1", newPassword: "new-password1", confirmPassword: "new-password1" });
-    await waitFor(() => expect(window.location.pathname).toBe("/tickets"));
+    await waitFor(() => expect(window.location.pathname).toBe("/dashboard"));
   });
 });

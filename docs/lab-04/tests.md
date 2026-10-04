@@ -44,7 +44,7 @@ This mapping records test files that exist. It does not claim separate performan
 | Visual evidence | Pass | `npm run test:e2e:visual`: 1 visual-capture test passed after Lab 4 captures were added. |
 | Dependency audits | Pass | Root, server, and client `npm audit` each reported zero vulnerabilities after the `undici` update. |
 
-On the current Windows workspace, a fresh `npm test` attempt could not start Vitest because Vite's config bundler failed with `spawn EPERM`. The successful remote PR CI runs above are the current full-suite evidence; the failed local startup is an environment limitation, not a passing test result.
+On the current Windows workspace, sandboxed Vitest startup initially failed with `spawn EPERM`. An elevated retry ran but the server API tests could not reach PostgreSQL at `localhost:5432`; 14 server files passed, nine failed, and 27 tests were skipped due to unavailable database setup (one Categories API test returned 500). Separately, the client suite passed all 16 files/55 tests, `npm run build` passed for both packages, and root `npm audit` reported zero vulnerabilities. The successful remote PR CI runs above provide the full PostgreSQL-backed suite evidence; the local DB limitation is not a passing test result.
 
 ## Remaining release checks
 

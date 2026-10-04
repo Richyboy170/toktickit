@@ -93,7 +93,7 @@ jobs:
       - name: Enable legacy Lab 2 fixture for browser tests
         run: echo "VITE_ENABLE_LEGACY_REQUESTER=true" > client/.env.local
       - run: npm run test:e2e
-      - name: Capture Lab 3 visual evidence
+      - name: Capture Lab 3 and Lab 4 visual evidence
         if: always()
         run: npm run test:e2e:visual
       - uses: actions/upload-artifact@v4

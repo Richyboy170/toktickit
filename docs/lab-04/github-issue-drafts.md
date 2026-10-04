@@ -1,6 +1,6 @@
 # Lab 4 GitHub Issue Drafts
 
-Create these Issues in the existing TokTickIT GitHub Project before feature implementation. Apply the repository's existing Kanban status and a `Lab 4` label. Add dependencies/Development links after GitHub assigns issue numbers. Do not close an Issue until every checkbox and its linked PR are complete. Branches and PR destinations follow `Engineering_Contract.md`.
+**Remote status:** These are prepared issue descriptions only. The GitHub Issues and Project cards were not created during implementation, so no issue numbers, labels, dependencies, or Done states are claimed. Create them in the existing TokTickIT Project when GitHub write access is available; link the already merged PRs where applicable. Their absence is an outstanding rubric gap.
 
 ## Issue 0 — [Lab 4] Contract and Test DD baseline
 

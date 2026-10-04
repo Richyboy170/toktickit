@@ -2,23 +2,22 @@
 
 ## Model and workflow
 
-This Lab 4 contract and planning work was completed with **OpenAI Codex (GPT-6)**. Use the AI as a specification assistant to identify decisions and traceability gaps, then as a coding assistant only after this contract and its Test DD are approved. The student remains responsible for reviewing requirements, validating generated changes, peer review, and the final submission.
+AI assistance in this work used OpenAI Codex (GPT-6) for requirements planning, implementation support, CI failure diagnosis, and documentation. The student remains responsible for understanding the design, reviewing the code and evidence, and writing the personal reflection below.
 
-The selected excerpts below are taken from the actual assignment conversation; they are not invented run results. Continue adding representative prompts when implementation work begins so the final record reflects the actual AI-assisted work.
+## Selected prompts from the actual work
 
-## Selected key prompts
+1. The user asked to read `SE+Lab+4.pdf` and create an engineering contract for the assignment folder.
+2. The user asked for work breakdown, issue definitions, branch and pull request flow, and final deliverables needed for the rubric.
+3. The user asked when to commit and open a pull request.
+4. The user approved the contract and authorized implementation to begin.
+5. The user asked for a peer review link and authorized us to create the pull request.
+6. The user pasted a server test failure where a Requester could read another user's Ticket and asked to continue the Lab 4 work.
+7. The user pasted a client dashboard test failure involving the accessible name for a status link.
+8. The user pasted the CI `npm audit` output reporting vulnerable `undici` versions and an available fix.
+9. The user confirmed the feature PR was merged and instructed us to continue.
 
-1. “could you read … `SE+Lab+4.pdf`”
-2. “create engineering contract consist of what this … `04_Assignment` going to do”
-3. “what issue should be made and the branches, pull requests, issue, etc.”
-4. “how it should be done in github to get the full marks in the criteria”
-5. “show the correct final deliverables of the pdf file”
-6. “after you create that engineering contract I want you to do the work too”
-7. “tell me when you want me to do the commit and pull request”
-8. “sure approve! … if not you can start the work”
-9. “you do that for me and send me the link to send to my peer for the peer review”
-10. “continue”
+These prompts are summarized faithfully rather than presented as verbatim quotations. The full conversation is available as the source record.
 
 ## My Reflection
 
-**Student to complete before submission:** In your own words, describe which specification decisions or test cases AI helped you notice, what you changed or rejected after reviewing the suggestions, and how you verified the coding-agent output. Include one concrete example from the final implementation. Do not submit this placeholder as a completed personal reflection.
+**Student to complete before submission.** In your own words, describe which specification decisions or test cases AI helped you notice, what you changed or rejected after reviewing the suggestions, and how you verified the coding-agent output. Include one concrete example from the final implementation. Do not submit this placeholder as a completed personal reflection.

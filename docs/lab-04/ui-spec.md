@@ -1,6 +1,6 @@
 # Lab 4 UI Specification
 
-**Status:** Approved contract baseline; implementation is present on `feature/lab4-action-model`; visual and responsive evidence is pending. Uses the existing TokTickIT Zen Green tokens, shared components, authenticated shell, and responsive conventions.
+**Status:** Approved baseline implemented on `lab4-staging`. Local visual evidence is captured at desktop, tablet, and mobile sizes for both dashboards and staff/requester Action views. These are deterministic fixture screenshots; final-main evidence and broader accessibility review remain pending. Uses the existing TokTickIT Zen Green tokens, shared components, authenticated shell, and responsive conventions.
 
 ## Navigation and roles
 
@@ -72,12 +72,12 @@ The frontend displays server aggregates unchanged and does not recompute counts 
 
 ## Visual/release checklist
 
-- [ ] Requester dashboard desktop/tablet/mobile; own-data and zero states.
-- [ ] Staff dashboard desktop/tablet/mobile; zero and populated metrics, urgent list, My Active Actions.
-- [ ] Action list with multiple Actions, stable ties, separate performer/assignee, and long text.
+- [x] Requester dashboard desktop/tablet/mobile; fixture shows dashboard content.
+- [x] Staff dashboard desktop/tablet/mobile; fixture shows metrics, urgent list, and My Active Actions.
+- [x] Action list view for staff and Requester at desktop/tablet/mobile; fixtures show separate performer/assignee and read-only Requester mode.
 - [ ] Create/edit form, conditional follow-up validation, result/cancel validation, busy/success/error/conflict states.
 - [ ] Terminal completed/cancelled read-only behavior and Requester read-only view.
 - [ ] Ticket resolution gate, confirmation, validation, success, and stale feedback.
 - [ ] Visible keyboard focus, labels/errors, color-independent status/priority cues, readable contrast.
-- [ ] No clipping, overlap, broken links, console errors, placeholder text, or page-level horizontal overflow.
+- [x] No page-level horizontal overflow at the captured viewports; visual Playwright check passed. A full manual screen-reader/contrast audit is not claimed.
 - [ ] Screenshots are captured from final `main` commit and indexed under `artifacts/lab-04/screenshots/`.

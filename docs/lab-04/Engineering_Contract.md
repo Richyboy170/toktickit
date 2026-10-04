@@ -1,6 +1,6 @@
 # TokTickIT Lab 4 Engineering Contract
 
-**Status:** Approved contract baseline; contract PR #45 merged to `lab4-staging` at `08e92e6`. Implementation is in progress on `feature/lab4-action-model`.
+**Status:** Approved contract PR #45 and implementation PR #46 are merged to `lab4-staging`; the post-merge CI passed. Release/PDF work remains.
 **Brief:** `SE+Lab+4.pdf` (course handout supplied outside this application repository)
 **Application:** `dev/toktickit`
 **Assumption:** Continue the Lab 3 repository, Zen Green design system, peer review process, `lab4-staging` branch, and existing GitHub Project/Kanban. Issue and PR numbers are assigned when created; this contract does not claim remote actions have happened.

@@ -12,6 +12,7 @@ const ticket: api.TicketDetail = { id: 41, ticketNumber: "TKT-20260820-A1B2C3D4"
 beforeEach(() => {
   sessionStorage.setItem("toktickit.developmentRequester", JSON.stringify(requester));
   window.history.replaceState({}, "", "/tickets/41");
+  vi.spyOn(api, "getTicketActions").mockResolvedValue({ actions: [] });
 });
 
 afterEach(() => vi.restoreAllMocks());

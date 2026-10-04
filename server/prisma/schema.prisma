@@ -52,6 +52,8 @@ model User {
   comments           PublicComment[] @relation("CommentAuthors")
   internalNotes      InternalNote[]  @relation("NoteAuthors")
   removedAttachments Attachment[]    @relation("AttachmentRemovedBy")
+  actionsPerformed  ActionTaken[]    @relation("ActionPerformers")
+  actionsAssigned   ActionTaken[]    @relation("ActionAssignees")
 
   @@index([role, isActive])
   @@index([name])
@@ -87,6 +89,7 @@ model Ticket {
   requestedPriority              RequestedPriority
   itPriority                     RequestedPriority @default(MEDIUM)
   currentStatus                  TicketStatus      @default(NEW)
+  cancellationReason             String?           @db.VarChar(1000)
   requesterMarkedResolved        Boolean           @default(false)
   requesterResolvedAt            DateTime?
   // Canonical Lab 3 API field. The two legacy marker fields above remain as
@@ -102,6 +105,7 @@ model Ticket {
   attachments                    Attachment[]
   comments                       PublicComment[]
   internalNotes                  InternalNote[]
+  actions                        ActionTaken[]
 
   @@unique([requesterId, submissionToken])
   @@index([requesterId, updatedAt, id])
@@ -169,4 +173,33 @@ model InternalNote {
 
   @@index([ticketId, createdAt, id])
   @@index([authorId])
+}
+
+enum ActionTakenStatus {
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model ActionTaken {
+  id                 Int               @id @default(autoincrement())
+  ticketId           Int
+  actionAt           DateTime
+  description        String            @db.VarChar(4000)
+  result             String?           @db.VarChar(4000)
+  performedByUserId  Int
+  assigneeUserId     Int
+  status             ActionTakenStatus @default(PLANNED)
+  followUpRequired   Boolean           @default(false)
+  followUpNote       String?           @db.VarChar(2000)
+  attachmentNotes    String?           @db.VarChar(1000)
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  ticket             Ticket            @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  performedBy        User              @relation("ActionPerformers", fields: [performedByUserId], references: [id], onDelete: Restrict)
+  assignee           User              @relation("ActionAssignees", fields: [assigneeUserId], references: [id], onDelete: Restrict)
+
+  @@index([ticketId, actionAt, id])
+  @@index([assigneeUserId, status, actionAt])
 }

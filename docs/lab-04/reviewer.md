@@ -1,6 +1,16 @@
 # Lab 4 Peer Review Record
 
-**Status:** Not yet submitted for review. Populate from real GitHub activity only.
+**Status:** Feature PR CI feedback received; fixes are being prepared for rerun. Populate review fields from real GitHub activity only.
+
+## Ready for review
+
+- Branch: `feature/lab4-action-model`
+- Commit: `c1424ef` (`feat: add Lab 4 actions workflow and dashboards`)
+- Target: `lab4-staging`
+- PR number/URL: Pending recording from GitHub; the compare link is available if the PR still needs to be opened.
+- Create PR if needed: [compare feature branch with lab4-staging](https://github.com/Richyboy170/toktickit/compare/lab4-staging...feature/lab4-action-model?expand=1)
+- Local verification summary: `docs/lab-04/tests.md`
+- Limitation: GitHub CLI reports its saved token is invalid, so I cannot retrieve the PR URL or review threads through the API in this session. Record those from the GitHub page before submission.
 
 ## Reviewer
 

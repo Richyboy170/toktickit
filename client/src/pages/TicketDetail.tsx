@@ -15,6 +15,7 @@ import {
 import { useAuth } from "../auth-context.js";
 import { validateSelectedFiles } from "../attachment-validation.js";
 import { useRequester } from "../requester-context.js";
+import { ActionsTaken } from "../components/ActionsTaken.js";
 
 function displayDate(value: string): string {
   return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
@@ -68,6 +69,7 @@ export function TicketDetailPage() {
         <DetailField label="Description" value={ticket.description} wide multiline />
       </dl>
       {user?.role === "REQUESTER" && <RequesterResolution ticket={ticket} onChanged={() => load(true)} />}
+      <ActionsTaken ticketId={ticket.id} canManage={user?.role === "IT_STAFF" || user?.role === "ADMINISTRATOR"} currentUserId={user?.id} />
       {user?.role === "REQUESTER" && <PublicComments ticketId={ticket.id} initialComments={ticket.publicComments ?? ticket.comments ?? []} />}
       <AttachmentSection requesterId={user ? undefined : requester.id} ticketId={ticket.id} attachments={ticket.attachments} onChanged={() => load(true)} />
     </section>

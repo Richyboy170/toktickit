@@ -35,7 +35,7 @@ describe("Lab 3 authentication", () => {
 
     expect(screen.getByRole("button", { name: /signing in/i })).toBeDisabled();
     resolveLogin({ user: { id: 10, name: "Narin Staff", email: "narin@example.edu", role: "IT_STAFF", isActive: true, mustChangePassword: false }, mustChangePassword: false });
-    expect(await screen.findByRole("heading", { name: "Ticket Queue" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Staff Dashboard" })).toBeInTheDocument();
   });
 
   it.each([
@@ -65,7 +65,7 @@ describe("Lab 3 authentication", () => {
     await userEvent.type(screen.getByLabelText(/password/i), "initial-password");
     await userEvent.click(screen.getByRole("button", { name: /sign in|log in/i }));
 
-    expect(await screen.findByRole("heading", { name: "Ticket Queue" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Staff Dashboard" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /logout/i })).toBeInTheDocument();
     expect(screen.queryByText(/change requester/i)).not.toBeInTheDocument();
   });
@@ -85,9 +85,9 @@ describe("Lab 3 authentication", () => {
   });
 
   it.each([
-    ["REQUESTER", "/tickets"],
-    ["IT_STAFF", "/staff/tickets"],
-    ["ADMINISTRATOR", "/users"],
+    ["REQUESTER", "/dashboard"],
+    ["IT_STAFF", "/dashboard"],
+    ["ADMINISTRATOR", "/dashboard"],
   ] as const)("uses the %s role workspace after login", async (role, expectedPath) => {
     vi.spyOn(api, "getCurrentUser").mockResolvedValue(null);
     vi.spyOn(api, "login").mockResolvedValue({
@@ -101,5 +101,6 @@ describe("Lab 3 authentication", () => {
     await userEvent.click(screen.getByRole("button", { name: /sign in|log in/i }));
 
     await waitFor(() => expect(window.location.pathname).toBe(expectedPath));
+    expect(await screen.findByRole("heading", { name: role === "REQUESTER" ? "Requester Dashboard" : "Staff Dashboard" })).toBeInTheDocument();
   });
 });

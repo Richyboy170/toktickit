@@ -16,6 +16,8 @@ The selected excerpts below are taken from the actual assignment conversation; t
 6. “after you create that engineering contract I want you to do the work too”
 7. “tell me when you want me to do the commit and pull request”
 8. “sure approve! … if not you can start the work”
+9. “you do that for me and send me the link to send to my peer for the peer review”
+10. “continue”
 
 ## My Reflection
 

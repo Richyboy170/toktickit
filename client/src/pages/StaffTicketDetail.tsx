@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { addInternalNote, addPublicComment, ApiError, AuthUser, claimTicket, getAdminTicket, getAssignableStaff, getInternalNotes, getPublicComments, getStaffTicket, InternalNote, PublicComment, StaffTicketDetail as TicketType, StaffUser, TicketStatus, updateTicketPriority, updateTicketStatus, assignTicket, RequestedPriority } from "../api.js";
 import { useAuth } from "../auth-context.js";
 import { AttachmentSection } from "./TicketDetail.js";
+import { ActionsTaken } from "../components/ActionsTaken.js";
 
 const NEXT_STATUSES: Record<TicketStatus, TicketStatus[]> = {
   NEW: ["OPEN", "CANCELLED"],
@@ -67,10 +68,6 @@ export function StaffTicketDetail() {
     } catch (error) {
       setState(error instanceof ApiError && error.status === 404 ? "not-found" : "error");
     }
-    if (user?.role === "ADMINISTRATOR") {
-      setStaff([]);
-      return;
-    }
     try {
       setStaff(await getAssignableStaff());
     } catch {
@@ -123,7 +120,9 @@ export function StaffTicketDetail() {
       setStatus(loadedTicket.currentStatus);
       return;
     }
-    void runSave("status", () => updateTicketStatus(loadedTicket.id, status, needsConfirmation), "Ticket status updated.");
+    const cancellationReason = status === "CANCELLED" ? window.prompt("Reason for cancelling this Ticket (required):")?.trim() : undefined;
+    if (status === "CANCELLED" && !cancellationReason) { setMessage({ kind: "error", text: "Enter a cancellation reason." }); return; }
+    void runSave("status", () => updateTicketStatus(loadedTicket.id, status, loadedTicket.updatedAt, needsConfirmation, cancellationReason), "Ticket status updated.");
   }
   return <section className="page-card staff-ticket-detail" aria-labelledby="staff-ticket-detail-title">
     <Link className="back-link" to={isAdministrator ? "/users" : "/staff/tickets"}>&larr; Back to {isAdministrator ? "User Management" : "Ticket Queue"}</Link>
@@ -141,9 +140,11 @@ export function StaffTicketDetail() {
       <DetailField label="Last Updated" value={displayDate(ticket.updatedAt)} />
       <DetailField label="Ticket Summary" value={ticket.summary} wide />
       <DetailField label="Description" value={ticket.description} wide multiline />
+      {ticket.currentStatus === "CANCELLED" && ticket.cancellationReason && <DetailField label="Cancellation Reason" value={ticket.cancellationReason} wide multiline />}
     </dl>
     <section className="operation-panel section-gap" aria-labelledby="ticket-operations-title">
       <h2 id="ticket-operations-title">Ticket Operations</h2>
+      {validNextStatuses.includes("RESOLVED") && <p className="notice">To resolve this Ticket, assign an active owner, complete at least one Action, and complete every non-cancelled Action.</p>}
       <div className={`form-grid ${isAdministrator ? "form-grid--one" : "form-grid--three"}`}>
         {!isAdministrator && <div className="field"><label htmlFor="ticket-owner">Ticket Owner</label><select id="ticket-owner" value={selectedOwner} onChange={(event) => setSelectedOwner(event.target.value)}><option value="">Unassigned</option>{owner && !staff.some((item) => item.id === owner.id) && <option value={owner.id}>{owner.name}</option>}{staff.filter((item) => item.isActive !== false).map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select><button className="button button--secondary section-gap-small" type="button" disabled={Boolean(saving) || Boolean(owner && selectedOwner === String(owner.id))} onClick={() => void runSave("assign", () => assignTicket(ticket.id, selectedOwner ? Number(selectedOwner) : null), selectedOwner ? "Ticket reassigned." : "Ticket is now unassigned.")}>{saving === "assign" ? "Saving…" : owner ? "Reassign Ticket" : "Assign Ticket"}</button></div>}
         <div className="field"><label htmlFor="it-priority">IT Priority</label><select id="it-priority" value={itPriority} onChange={(event) => setItPriority(event.target.value as RequestedPriority)}>{PRIORITIES.map((priority) => <option key={priority} value={priority}>{label(priority)}</option>)}</select><button className="button button--secondary section-gap-small" type="button" disabled={Boolean(saving) || itPriority === (ticket.itPriority ?? ticket.requestedPriority)} onClick={() => void runSave("priority", () => updateTicketPriority(ticket.id, itPriority, user?.role), "IT Priority updated.")}>{saving === "priority" ? "Saving…" : "Save IT Priority"}</button></div>
@@ -152,6 +153,7 @@ export function StaffTicketDetail() {
       {!isAdministrator && !owner && <button className="button button--primary section-gap" type="button" disabled={Boolean(saving)} onClick={() => void runSave("claim", () => claimTicket(ticket.id), "Ticket claimed by you.")}>{saving === "claim" ? "Claiming…" : "Claim Ticket"}</button>}
       {Boolean(ticket.problemAppearsResolved ?? ticket.requesterResolved ?? ticket.requesterMarkedResolved ?? ticket.requesterResolutionIndicatedAt ?? ticket.requesterResolvedAt) && <p className="notice notice--warning section-gap" role="status">The Requester indicated that this problem appears resolved. IT Staff must still formally resolve or close the Ticket.</p>}
     </section>
+    <ActionsTaken ticketId={ticket.id} canManage currentUserId={user?.role === "IT_STAFF" ? user.id : undefined} />
     <StaffComments ticketId={ticket.id} initialComments={ticket.publicComments ?? ticket.comments ?? []} initialNotes={ticket.internalNotes ?? ticket.notes ?? []} currentUser={user} canPost={!isAdministrator} />
     <AttachmentSection requesterId={undefined} ticketId={ticket.id} attachments={ticket.attachments ?? []} onChanged={() => load()} readOnly />
   </section>;

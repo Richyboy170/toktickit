@@ -41,3 +41,9 @@ export function requiresStatusConfirmation(to: TicketStatus | string): boolean {
 export function requiresActiveOwner(to: TicketStatus | string): boolean {
   return to === TicketStatus.RESOLVED || to === TicketStatus.CLOSED;
 }
+
+export function canResolveTicket(ownerIsActive: boolean, actionStatuses: readonly string[]): boolean {
+  const hasCompletedAction = actionStatuses.some((status) => status === "COMPLETED");
+  const allRemainingActionsComplete = actionStatuses.every((status) => status === "COMPLETED" || status === "CANCELLED");
+  return ownerIsActive && hasCompletedAction && allRemainingActionsComplete;
+}

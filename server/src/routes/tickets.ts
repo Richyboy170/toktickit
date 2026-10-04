@@ -12,6 +12,7 @@ import { generateTicketNumber } from "../ticket-number.js";
 import { createTicketSchema, ticketListQuerySchema, TicketListQuery, zodFieldErrors } from "../ticket-validation.js";
 
 export const ticketsRouter = Router();
+const OPEN_STATUS_VALUES = ["NEW", "OPEN", "IN_PROGRESS", "WAITING_FOR_REQUESTER", "REOPENED"] as const;
 
 const attachmentUpload = multer({
   storage: multer.memoryStorage(),
@@ -54,6 +55,7 @@ function serializeTicket(ticket: Prisma.TicketGetPayload<{ include: typeof ticke
     itPriority: ticket.itPriority,
     description: ticket.description,
     currentStatus: ticket.currentStatus,
+    cancellationReason: ticket.cancellationReason,
     requesterMarkedResolved: ticket.requesterMarkedResolved,
     requesterResolvedAt: ticket.requesterResolvedAt,
     requesterResolutionIndicatedAt: ticket.requesterResolutionIndicatedAt ?? ticket.requesterResolvedAt,
@@ -85,7 +87,7 @@ ticketsRouter.get("/", async (req, res) => {
       ...(query.categoryId ? { categoryId: query.categoryId } : {}),
       ...(query.relatedSystemId ? { relatedSystemId: query.relatedSystemId } : {}),
       ...(query.requestedPriority ? { requestedPriority: query.requestedPriority } : {}),
-      ...(query.status ? { currentStatus: query.status } : {}),
+      ...(query.status ? { currentStatus: query.status } : query.statusGroup === "open" ? { currentStatus: { in: [...OPEN_STATUS_VALUES] } } : {}),
       ...(query.search ? {
         OR: [
           { ticketNumber: { contains: query.search, mode: "insensitive" } },
@@ -125,7 +127,7 @@ ticketsRouter.get("/", async (req, res) => {
         totalItems,
         totalPages: totalItems === 0 ? 0 : Math.ceil(totalItems / query.pageSize),
       },
-      query: { search: query.search, sort: query.sort, order: query.order },
+      query: { search: query.search, sort: query.sort, order: query.order, status: query.status, statusGroup: query.statusGroup },
     });
   } catch (error) {
     console.error("GET /api/tickets failed:", error);

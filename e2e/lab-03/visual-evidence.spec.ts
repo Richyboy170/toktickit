@@ -144,6 +144,19 @@ async function mockApi(page: Page) {
     if (path === "/api/categories") return json(route, [{ id: 1, name: "Hardware" }, { id: 2, name: "Software" }, { id: 3, name: "Network" }]);
     if (path === "/api/related-systems") return json(route, [{ id: 1, name: "Corporate Laptop" }, { id: 2, name: "Campus Wi-Fi" }, { id: 3, name: "Email" }]);
     if (path === "/api/development-requesters") return json(route, [{ id: 101, name: users.requester.name, email: users.requester.email }]);
+    if (path === "/api/requester/dashboard") return json(route, {
+      windowStart: "2026-09-08T00:00:00.000Z",
+      metrics: { openTickets: 1, waitingForMe: 0 },
+      recentlyUpdated: [ticketSummary],
+      recentlyResolved: [],
+    });
+    if (path === "/api/staff/dashboard") return json(route, {
+      windowStart: "2026-09-08T00:00:00.000Z",
+      metrics: { unassignedOpenTickets: 0, myOpenTickets: 1, highUrgentOpenTickets: 1, myActiveActions: 0 },
+      ticketsByStatus: { NEW: 0, OPEN: 0, IN_PROGRESS: 1, WAITING_FOR_REQUESTER: 0, RESOLVED: 0, CLOSED: 0, REOPENED: 0, CANCELLED: 0 },
+      urgentTickets: [ticketSummary],
+      myActiveActions: [],
+    });
     if (path === "/api/tickets" && method === "GET") return json(route, { items: [ticketSummary], pagination: { page: 1, pageSize: 10, totalItems: 1, totalPages: 1 }, query: { search: "", sort: "updatedAt", order: "desc" } });
     if (path === "/api/tickets/1" && method === "GET") return json(route, { ticket });
     if (path === "/api/tickets/1/comments" && method === "GET") return json(route, ticket.publicComments);
@@ -161,7 +174,17 @@ async function capture(page: Page, screen: string) {
   for (const viewport of viewports) {
     await page.setViewportSize({ width: viewport.width, height: viewport.height });
     await expect(page.locator("body")).toBeVisible();
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    const pageWidth = await page.evaluate(() => {
+      const overflow = [...document.querySelectorAll("body *")]
+        .map((element) => {
+          const rect = element.getBoundingClientRect();
+          return { tag: element.tagName, id: element.id, className: typeof element.className === "string" ? element.className : "", left: Math.round(rect.left), right: Math.round(rect.right), width: Math.round(rect.width), scrollWidth: element.scrollWidth };
+        })
+        .filter((element) => element.left < -1 || element.right > window.innerWidth + 1)
+        .slice(0, 12);
+      return { viewport: window.innerWidth, document: document.documentElement.scrollWidth, overflow };
+    });
+    expect(pageWidth.document, `Horizontal overflow details: ${JSON.stringify(pageWidth)}`).toBeLessThanOrEqual(pageWidth.viewport);
     const directory = resolve(artifacts, screen, viewport.name);
     mkdirSync(directory, { recursive: true });
     await page.screenshot({ path: resolve(directory, "screen.png"), fullPage: true });
@@ -197,12 +220,16 @@ test("captures Lab 3 role screens at desktop, tablet, and mobile widths", async 
   await page.getByRole("button", { name: "Sign out" }).click();
   await expect(page).toHaveURL(/\/login$/);
   await signIn(page, users.requester.email);
+  await expect(page.getByRole("heading", { name: "Requester Dashboard" })).toBeVisible();
+  await page.getByRole("link", { name: "My Tickets" }).click();
   await expect(page.getByRole("heading", { name: "My Tickets" })).toBeVisible();
   await capture(page, "requester-regression/my-tickets");
 
   await page.getByRole("button", { name: "Logout" }).click();
   await expect(page).toHaveURL(/\/login$/);
   await signIn(page, users.staff.email, "StaffLocal123!");
+  await expect(page.getByRole("heading", { name: "Staff Dashboard" })).toBeVisible();
+  await page.getByRole("link", { name: "Ticket Queue", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Ticket Queue" })).toBeVisible();
   await capture(page, "staff-queue/ticket-queue");
   await page.getByRole("link", { name: "Open Ticket" }).first().click();
@@ -212,6 +239,8 @@ test("captures Lab 3 role screens at desktop, tablet, and mobile widths", async 
   await page.getByRole("button", { name: "Logout" }).click();
   await expect(page).toHaveURL(/\/login$/);
   await signIn(page, users.admin.email, "AdminLocal123!");
+  await expect(page.getByRole("heading", { name: "Staff Dashboard" })).toBeVisible();
+  await page.getByRole("link", { name: "User Management" }).click();
   await expect(page.getByRole("heading", { name: "User Management" })).toBeVisible();
   await capture(page, "user-management/user-management");
 });

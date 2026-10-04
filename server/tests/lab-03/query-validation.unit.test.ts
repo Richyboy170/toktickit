@@ -25,4 +25,10 @@ describe("Ticket input and query validation", () => {
     if (result.success) return;
     expect(zodFieldErrors(result.error)).toEqual(expect.objectContaining({ status: expect.any(String), page: expect.any(String), pageSize: expect.any(String) }));
   });
+
+  it("accepts dashboard drill-down groups and rejects contradictory filters", () => {
+    expect(ticketListQuerySchema.safeParse({ statusGroup: "open" }).success).toBe(true);
+    expect(ticketListQuerySchema.safeParse({ status: "OPEN", statusGroup: "open" }).success).toBe(false);
+    expect(ticketListQuerySchema.safeParse({ statusGroup: "closed" }).success).toBe(false);
+  });
 });

@@ -5,13 +5,27 @@ import { requireRole } from "../auth-context.js";
 import { activeFirst, attachmentMetadataSelect, serializeAttachment } from "../attachment-metadata.js";
 import { sendError } from "../http.js";
 import { getPrisma } from "../prisma.js";
-import { canTransitionStatus, requiresActiveOwner, requiresStatusConfirmation } from "../ticket-workflow.js";
+import { canResolveTicket, canTransitionStatus, requiresActiveOwner, requiresStatusConfirmation } from "../ticket-workflow.js";
 import { zodFieldErrors } from "../ticket-validation.js";
 
 export const staffRouter = Router();
 
 const statusValues = ["NEW", "OPEN", "IN_PROGRESS", "WAITING_FOR_REQUESTER", "RESOLVED", "CLOSED", "REOPENED", "CANCELLED"] as const;
 const priorityValues = ["LOW", "MEDIUM", "HIGH", "URGENT"] as const;
+const OPEN_STATUS_VALUES = ["NEW", "OPEN", "IN_PROGRESS", "WAITING_FOR_REQUESTER", "REOPENED"] as const;
+const ticketStatusUpdateSchema = z.object({
+  status: z.enum(statusValues),
+  expectedUpdatedAt: z.string().datetime({ offset: true }),
+  confirm: z.boolean().optional(),
+  cancellationReason: z.string().trim().min(1).max(1000).optional(),
+}).strict().superRefine((value, context) => {
+  if (requiresStatusConfirmation(value.status) && value.confirm !== true) {
+    context.addIssue({ code: z.ZodIssueCode.custom, path: ["confirm"], message: "Confirmation is required for this status." });
+  }
+  if (value.status === "CANCELLED" && !value.cancellationReason) {
+    context.addIssue({ code: z.ZodIssueCode.custom, path: ["cancellationReason"], message: "Enter a cancellation reason." });
+  }
+});
 
 const queueQuerySchema = z.object({
   search: z.string().trim().max(120, "Search must be at most 120 characters.").optional().default(""),
@@ -19,7 +33,9 @@ const queueQuerySchema = z.object({
   relatedSystemId: z.preprocess((value) => (value === undefined || value === "" ? undefined : Number(value)), z.number().int().positive().optional()),
   requestedPriority: z.enum(priorityValues).optional(),
   itPriority: z.enum(priorityValues).optional(),
+  priorityGroup: z.enum(["high-or-urgent"]).optional(),
   status: z.enum(statusValues).optional(),
+  statusGroup: z.enum(["open"]).optional(),
   ownerId: z.union([
     z.literal("unassigned").transform(() => null),
     z.preprocess((value) => (value === undefined || value === "" ? undefined : Number(value)), z.number().int().positive().optional()),
@@ -30,6 +46,9 @@ const queueQuerySchema = z.object({
   order: z.enum(["asc", "desc"]).optional().default("desc"),
   page: z.preprocess((value) => (value === undefined || value === "" ? 1 : Number(value)), z.number().int().positive()),
   pageSize: z.preprocess((value) => (value === undefined || value === "" ? 20 : Number(value)), z.number().refine((value) => [10, 20, 50].includes(value), "Page size must be 10, 20, or 50.")),
+}).superRefine((query, context) => {
+  if (query.status && query.statusGroup) context.addIssue({ code: z.ZodIssueCode.custom, path: ["statusGroup"], message: "Choose a single status or a status group, not both." });
+  if (query.itPriority && query.priorityGroup) context.addIssue({ code: z.ZodIssueCode.custom, path: ["priorityGroup"], message: "Choose a single IT Priority or a priority group, not both." });
 });
 
 type QueueQuery = z.infer<typeof queueQuerySchema>;
@@ -88,6 +107,7 @@ function serializeTicket(ticket: Prisma.TicketGetPayload<{ include: typeof ticke
     requestedPriority: ticket.requestedPriority,
     itPriority: ticket.itPriority,
     currentStatus: ticket.currentStatus,
+    cancellationReason: ticket.cancellationReason,
     requesterMarkedResolved: ticket.requesterMarkedResolved,
     requesterResolvedAt: ticket.requesterResolvedAt,
     requesterResolutionIndicatedAt: ticket.requesterResolutionIndicatedAt ?? ticket.requesterResolvedAt,
@@ -108,6 +128,7 @@ async function staffUser(req: Request, res: Response) {
 }
 
 export const STAFF_TICKET_DETAIL_READ_ROLES = [UserRole.IT_STAFF, UserRole.ADMINISTRATOR] as const;
+const staffQueueReader = (req: Request, res: Response) => requireRole(req, res, STAFF_TICKET_DETAIL_READ_ROLES);
 
 export function canReadStaffTicketDetail(role: UserRole): boolean {
   return (STAFF_TICKET_DETAIL_READ_ROLES as readonly UserRole[]).includes(role);
@@ -124,7 +145,7 @@ async function priorityUser(req: Request, res: Response) {
 }
 
 staffRouter.get("/tickets", async (req, res) => {
-  const user = await staffUser(req, res);
+  const user = await staffQueueReader(req, res);
   if (!user) return;
   const parsed = queueQuerySchema.safeParse(req.query);
   if (!parsed.success) return sendError(res, 400, "INVALID_QUERY", "Please correct the Ticket Queue parameters.", zodFieldErrors(parsed.error));
@@ -133,8 +154,8 @@ staffRouter.get("/tickets", async (req, res) => {
     ...(query.categoryId ? { categoryId: query.categoryId } : {}),
     ...(query.relatedSystemId ? { relatedSystemId: query.relatedSystemId } : {}),
     ...(query.requestedPriority ? { requestedPriority: query.requestedPriority } : {}),
-    ...(query.itPriority ? { itPriority: query.itPriority } : {}),
-    ...(query.status ? { currentStatus: query.status } : {}),
+    ...(query.itPriority ? { itPriority: query.itPriority } : query.priorityGroup === "high-or-urgent" ? { itPriority: { in: ["HIGH", "URGENT"] } } : {}),
+    ...(query.status ? { currentStatus: query.status } : query.statusGroup === "open" ? { currentStatus: { in: [...OPEN_STATUS_VALUES] } } : {}),
     ...(query.ownerId === null || query.unassigned || query.assignment === "unassigned"
       ? { ownerId: null }
       : query.assignment === "assigned"
@@ -169,7 +190,7 @@ staffRouter.get("/tickets", async (req, res) => {
 });
 
 staffRouter.get("/users", async (req, res) => {
-  const user = await staffUser(req, res);
+  const user = await priorityUser(req, res);
   if (!user) return;
   try {
     const users = await getPrisma().user.findMany({
@@ -276,26 +297,44 @@ async function updateStatus(req: Request, res: Response) {
   if (!user) return;
   const ticketId = parseTicketId(req, res);
   if (!ticketId) return;
-  const body = req.body && typeof req.body === "object" ? req.body as Record<string, unknown> : {};
-  const status = normalizeStatus(body.status ?? body.currentStatus);
-  if (!status) return sendError(res, 400, "VALIDATION_ERROR", "Select a valid Ticket Status.", { status: "Select a valid Ticket Status." });
-  if (requiresStatusConfirmation(status) && body.confirm !== true) {
-    return sendError(res, 409, "STATUS_CONFIRMATION_REQUIRED", "Confirm this consequential Ticket status change.", { confirm: "Confirmation is required for this status." });
-  }
+  const parsed = ticketStatusUpdateSchema.safeParse(req.body);
+  if (!parsed.success) return sendError(res, 400, "VALIDATION_ERROR", "Please correct the Ticket status change.", zodFieldErrors(parsed.error));
+  const { status, expectedUpdatedAt, cancellationReason } = parsed.data;
   try {
-    const existing = await getPrisma().ticket.findUnique({
-      where: { id: ticketId },
-      select: { currentStatus: true, owner: { select: { id: true, isActive: true } } },
-    });
-    if (!existing) return sendError(res, 404, "RESOURCE_NOT_FOUND", "Ticket not found.");
-    if (existing.currentStatus === status) return sendError(res, 409, "STATUS_UNCHANGED", "Ticket status is already set to that value.");
-    if (!canTransitionStatus(existing.currentStatus, status, user.role)) return sendError(res, 409, "INVALID_STATUS_TRANSITION", "That Ticket status transition is not permitted.");
-    if (requiresActiveOwner(status) && (!existing.owner || !existing.owner.isActive)) {
-      return sendError(res, 409, "OWNER_REQUIRED", "An active Ticket Owner is required before resolving or closing the Ticket.");
-    }
-    const ticket = await getPrisma().ticket.update({ where: { id: ticketId }, data: { currentStatus: status }, include: ticketInclude });
-    return res.status(200).json({ ticket: serializeTicket(ticket) });
+    const outcome = await getPrisma().$transaction(async (tx) => {
+      const existing = await tx.ticket.findUnique({
+        where: { id: ticketId },
+        select: { id: true, currentStatus: true, updatedAt: true, owner: { select: { id: true, isActive: true } } },
+      });
+      if (!existing) return { kind: "missing" as const };
+      if (existing.updatedAt.getTime() !== new Date(expectedUpdatedAt).getTime()) return { kind: "stale" as const };
+      if (existing.currentStatus === status) return { kind: "unchanged" as const };
+      if (!canTransitionStatus(existing.currentStatus, status, user.role)) return { kind: "transition" as const };
+      if (requiresActiveOwner(status) && (!existing.owner || !existing.owner.isActive)) return { kind: "owner" as const };
+      if (status === TicketStatus.RESOLVED) {
+        const actionStatuses = await tx.actionTaken.findMany({ where: { ticketId }, select: { status: true } });
+        if (!canResolveTicket(Boolean(existing.owner?.isActive), actionStatuses.map((action) => action.status))) return { kind: "resolution" as const };
+      }
+      const update = await tx.ticket.updateMany({
+        where: { id: ticketId, currentStatus: existing.currentStatus, updatedAt: existing.updatedAt },
+        data: { currentStatus: status, ...(status === TicketStatus.CANCELLED ? { cancellationReason } : {}) },
+      });
+      if (update.count !== 1) return { kind: "stale" as const };
+      const ticket = await tx.ticket.findUniqueOrThrow({ where: { id: ticketId }, include: ticketInclude });
+      return { kind: "updated" as const, ticket };
+    }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable });
+
+    if (outcome.kind === "missing") return sendError(res, 404, "RESOURCE_NOT_FOUND", "Ticket not found.");
+    if (outcome.kind === "stale") return sendError(res, 409, "STALE_TICKET", "This Ticket changed since you loaded it. Refresh and reapply your update.");
+    if (outcome.kind === "unchanged") return sendError(res, 409, "STATUS_UNCHANGED", "Ticket status is already set to that value.");
+    if (outcome.kind === "transition") return sendError(res, 409, "INVALID_STATUS_TRANSITION", "That Ticket status transition is not permitted.");
+    if (outcome.kind === "owner") return sendError(res, 409, "OWNER_REQUIRED", "An active Ticket Owner is required before resolving or closing the Ticket.");
+    if (outcome.kind === "resolution") return sendError(res, 409, "RESOLUTION_REQUIREMENTS_NOT_MET", "Complete at least one Action and every non-cancelled Action before resolving this Ticket.");
+    return res.status(200).json({ ticket: serializeTicket(outcome.ticket) });
   } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2034") {
+      return sendError(res, 409, "STALE_TICKET", "This Ticket or its Actions changed while you were updating it. Refresh and reapply your update.");
+    }
     console.error("Ticket status update failed:", error);
     return sendError(res, 500, "TICKET_STATUS_UPDATE_FAILED", "Unable to update Ticket status.");
   }

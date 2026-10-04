@@ -32,7 +32,10 @@ export function StaffDashboard() {
   return <section className="page-card dashboard" aria-labelledby="staff-dashboard-title">
     <div className="page-heading"><div><p className="eyebrow">Operations workspace</p><h1 id="staff-dashboard-title">Staff Dashboard</h1><p className="muted">Ticket status, urgent work, and Actions assigned to you.</p></div><Link className="button button--primary button-link" to={queue}>Open Ticket Queue</Link></div>
     <div className="dashboard-metrics dashboard-metrics--four section-gap">{metrics.map((metric) => <Link className="dashboard-metric" key={metric.title} to={metric.href}><span>{metric.title}</span><strong>{metric.value}</strong><small>Open matching work</small></Link>)}</div>
-    <section className="section-gap" aria-labelledby="tickets-by-status-title"><h2 id="tickets-by-status-title">Tickets by Status</h2><div className="status-counts">{STATUS_ORDER.map((status) => <Link key={status} to={`${queue}?status=${status}`}><span>{label(status)}</span><strong>{data.ticketsByStatus[status]}</strong></Link>)}</div></section>
+    <section className="section-gap" aria-labelledby="tickets-by-status-title"><h2 id="tickets-by-status-title">Tickets by Status</h2><div className="status-counts">{STATUS_ORDER.map((status) => {
+      const count = data.ticketsByStatus[status];
+      return <Link key={status} to={`${queue}?status=${status}`} aria-label={`${label(status)}: ${count} ${count === 1 ? "ticket" : "tickets"}`}><span>{label(status)}</span><strong>{count}</strong></Link>;
+    })}</div></section>
     <div className="dashboard-columns section-gap">
       <section aria-labelledby="urgent-tickets-title"><h2 id="urgent-tickets-title">High and Urgent Open Tickets</h2>
         {data.urgentTickets.length ? <ul className="dashboard-list">{data.urgentTickets.map((ticket) => <li key={ticket.id}><Link to={`/staff/tickets/${ticket.id}`}><strong>{ticket.ticketNumber}</strong><span>{ticket.summary}</span></Link><span className={`badge badge--${ticket.itPriority?.toLowerCase()}`}>{ticket.itPriority}</span><small>{label(ticket.currentStatus)} · {displayDate(ticket.updatedAt)}</small></li>)}</ul> : <p className="empty-state">No open high or urgent Tickets.</p>}

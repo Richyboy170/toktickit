@@ -30,8 +30,8 @@ describe("Staff Dashboard", () => {
     expect(screen.getByRole("link", { name: /my open tickets/i })).toHaveAttribute("href", "/staff/tickets?ownerId=7&statusGroup=open");
     expect(screen.getByRole("link", { name: /high\/urgent open tickets/i })).toHaveAttribute("href", "/staff/tickets?priorityGroup=high-or-urgent&statusGroup=open");
     expect(screen.getByRole("link", { name: /my active actions/i })).toHaveAttribute("href", "/dashboard#my-active-actions");
-    expect(screen.getByRole("link", { name: /new 1/i })).toHaveAttribute("href", "/staff/tickets?status=NEW");
-    expect(screen.getByRole("link", { name: /cancelled 0/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /new: 1 ticket/i })).toHaveAttribute("href", "/staff/tickets?status=NEW");
+    expect(screen.getByRole("link", { name: /cancelled: 0 tickets/i })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /tkt-20261004-a1b2c3d4.*check the access point logs/i })).toHaveAttribute("href", "/staff/tickets/41#actions-taken");
   });
 });

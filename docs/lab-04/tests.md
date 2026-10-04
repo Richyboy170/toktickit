@@ -84,5 +84,6 @@ These results were run against the source now committed as `c1424ef` on `feature
 | PostgreSQL migration/API tests/E2E | Blocked | No PostgreSQL service is listening on `localhost:5432`; `prisma migrate deploy` returned P1001. No database-backed or browser E2E result is claimed. |
 | Peer review, staging CI, release CI, visual/accessibility evidence | Pending | Must be populated from actual PR/CI/screenshots before final PDF. |
 | Playwright discovery | Pass | `npx playwright test --config=client/playwright.config.ts --list`: 15 tests in 9 files discovered; this does not execute browser flows. |
+| Initial PR CI at `82cb4e3` | Fail; fixes pending rerun | One API test used the owner session for the supposedly cross-owner Ticket; the Staff status links' accessible names concatenated label and count (`New1`). The test now uses the other Requester's session, and the links now expose explicit status/count accessible names. |
 
 The traceability matrix above remains **Planned** as a final-release status ledger. Update every row against the exact released SHA and link the corresponding output; explain skips/blocks rather than inferring a pass from file existence.

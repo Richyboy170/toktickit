@@ -78,7 +78,9 @@ describe("Lab 4 Actions Taken API", () => {
     const owned = await request(app).get(`/api/tickets/${ticketId}/actions`).set("Cookie", requesterCookie);
     expect(owned.status).toBe(200);
     expect(owned.body.actions.some((action: { id: number }) => action.id === actionId)).toBe(true);
-    const hidden = await request(app).get(`/api/tickets/${otherTicketId}/actions`).set("Cookie", otherRequesterCookie);
+    const visibleToOtherOwner = await request(app).get(`/api/tickets/${otherTicketId}/actions`).set("Cookie", otherRequesterCookie);
+    expect(visibleToOtherOwner.status).toBe(200);
+    const hidden = await request(app).get(`/api/tickets/${otherTicketId}/actions`).set("Cookie", requesterCookie);
     expect(hidden.status).toBe(404);
     const denied = await request(app).post(`/api/tickets/${ticketId}/actions`).set("Cookie", requesterCookie).send({});
     expect(denied.status).toBe(403);

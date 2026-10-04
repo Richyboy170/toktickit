@@ -16,9 +16,11 @@ The feature PR's CI feedback identified a cross-owner API test that reused the o
 - [Post-merge Actions run 37191660316](https://github.com/Richyboy170/toktickit/actions/runs/37191660316) completed successfully for the staging merge.
 - Integrated staging commit: `45431b9b8769dc20a4c23c0595793c4c831ca769`.
 - A release PR from `lab4-staging` to `main`, its final review, and final-main CI are not recorded yet.
+- Nine Lab 4 issues were added retrospectively to the existing project: six completed issues are Done/closed; #56, #51, and #53 remain Started/open. The timing is recorded in `github-issue-drafts.md`.
+- [PR #47](https://github.com/Richyboy170/toktickit/pull/47) carries release evidence and this issue tracking into `main`; all three PR checks passed in [run 37202724379](https://github.com/Richyboy170/toktickit/actions/runs/37202724379). Peer review/merge and final-main CI remain pending.
 
 ## Remaining evidence
 
 - Capture a screenshot of the peer approval, review thread, merge commit, and successful Actions run for the final PDF.
 - Record the actual `main` merge SHA and successful final-main CI after release.
-- Record final Project/Kanban state only after the corresponding real Issues are closed and the board shows Done. Draft issue descriptions are in `github-issue-drafts.md`; those drafts are not GitHub Issues.
+- Capture the Project/Kanban, including the three remaining Started items, for the final PDF. Move the remaining issues to Done only after their acceptance work is complete.

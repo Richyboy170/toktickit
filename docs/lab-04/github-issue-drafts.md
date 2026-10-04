@@ -1,6 +1,18 @@
 # Lab 4 GitHub Issue Drafts
 
-**Remote status:** These are prepared issue descriptions only. The GitHub Issues and Project cards were not created during implementation, so no issue numbers, labels, dependencies, or Done states are claimed. Create them in the existing TokTickIT Project when GitHub write access is available; link the already merged PRs where applicable. Their absence is an outstanding rubric gap.
+**Remote status:** The Lab 4 issues below were created retrospectively on 2026-10-04 and added to the existing TokTickIT Individual Sprints project. This records the work and current state; it does not claim that issues existed before implementation.
+
+| Issue | GitHub record | Project state |
+|---|---|---|
+| 0 Contract and Test DD | [#48](https://github.com/Richyboy170/toktickit/issues/48) | Done / closed |
+| 1 Action data, migration, seed | [#56](https://github.com/Richyboy170/toktickit/issues/56) | Started / open; populated legacy-data verification remains |
+| 2 Action API and authorization | [#52](https://github.com/Richyboy170/toktickit/issues/52) | Done / closed |
+| 3 Ticket workflow and resolution gate | [#50](https://github.com/Richyboy170/toktickit/issues/50) | Done / closed |
+| 4 Staff dashboard | [#55](https://github.com/Richyboy170/toktickit/issues/55) | Done / closed |
+| 5 Requester dashboard | [#54](https://github.com/Richyboy170/toktickit/issues/54) | Done / closed |
+| 6 Actions Taken UI | [#49](https://github.com/Richyboy170/toktickit/issues/49) | Done / closed |
+| 7 Regression/accessibility/evidence | [#51](https://github.com/Richyboy170/toktickit/issues/51) | Started / open; final screenshots and broader accessibility review remain |
+| 8 Submission and release | [#53](https://github.com/Richyboy170/toktickit/issues/53) | Started / open; final release, PDF, and student reflection remain |
 
 ## Issue 0 — [Lab 4] Contract and Test DD baseline
 

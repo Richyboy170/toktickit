@@ -27,6 +27,12 @@ This mapping records test files that exist. It does not claim separate performan
 - Workflow run: [37191660316 — successful](https://github.com/Richyboy170/toktickit/actions/runs/37191660316)
 - Workflow executes PostgreSQL migration and seed, full server and client test suites, builds, dependency audits, Playwright E2E, and Lab 3 visual evidence.
 
+### Release-evidence PR CI
+
+- PR: [#47](https://github.com/Richyboy170/toktickit/pull/47)
+- Workflow run: [37202724379 — server, client, and E2E jobs passed](https://github.com/Richyboy170/toktickit/actions/runs/37202724379).
+- This verifies the release-prep branch, including the new Lab 4 visual captures. It is not final-main evidence because PR #47 is still open.
+
 ### Local verification on feature commit `6877630`
 
 | Check | Result | Evidence |
@@ -38,9 +44,11 @@ This mapping records test files that exist. It does not claim separate performan
 | Visual evidence | Pass | `npm run test:e2e:visual`: 1 visual-capture test passed after Lab 4 captures were added. |
 | Dependency audits | Pass | Root, server, and client `npm audit` each reported zero vulnerabilities after the `undici` update. |
 
+On the current Windows workspace, a fresh `npm test` attempt could not start Vitest because Vite's config bundler failed with `spawn EPERM`. The successful remote PR CI runs above are the current full-suite evidence; the failed local startup is an environment limitation, not a passing test result.
+
 ## Remaining release checks
 
 - Open and review the `lab4-staging` → `main` release PR; record merge SHA and green final-main workflow.
 - Capture final-main screenshots and review evidence for the PDF.
-- Confirm the actual GitHub Issues/Project board state. The prepared issue text is not a substitute for created GitHub Issues.
+- Complete issues [#56](https://github.com/Richyboy170/toktickit/issues/56), [#51](https://github.com/Richyboy170/toktickit/issues/51), and [#53](https://github.com/Richyboy170/toktickit/issues/53), then capture final Project/Kanban evidence.
 - Complete the populated pre-Lab-4 database preservation check if required by the course; the current CI deploys migrations and seeds a fresh test database.

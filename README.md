@@ -1,4 +1,4 @@
-﻿# TokTickIT — Lab 3 Users, Roles, and IT Ticketing
+# TokTickIT — Lab 3 Users, Roles, and IT Ticketing
 
 TokTickIT is a full-stack IT service desk course project. Lab 3 replaces the temporary Development Requester flow with real email/password authentication, role-based access, an IT Staff queue and ticket workflow, and a focused Administrator User Management screen. Lab 2 Requester ticket and attachment behavior remains available to authenticated Requesters.
 
@@ -90,6 +90,10 @@ Normal application routes use the authenticated session cookie. The legacy `X-De
 | GET/POST/PATCH | `/api/admin/users` | Administrator User Management |
 
 The complete request/response, validation, authorization, status, and safe-error contract is in [`docs/lab-03/api-spec.md`](docs/lab-03/api-spec.md). The engineering contract, test traceability, UI rules, review record, and AI reflection are in [`docs/lab-03/`](docs/lab-03/).
+
+## Lab 4 contract baseline
+
+The Lab 4 Actions Taken, Ticket workflow, dashboard, Test DD, and UI requirements are recorded in [`docs/lab-04/`](docs/lab-04/). The contract is the pre-implementation baseline; implementation, peer review, and final-main evidence remain pending until their actual PRs and checks exist. Proposed Issue scopes and copy-ready descriptions are in [`github-issue-drafts.md`](docs/lab-04/github-issue-drafts.md).
 
 ## Attachment safety and lifecycle
 

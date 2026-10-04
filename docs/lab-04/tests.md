@@ -82,6 +82,7 @@ These results were run against the source now committed as `c1424ef` on `feature
 | Prisma validation | Pass | `npx prisma validate --schema prisma/schema.prisma` exited 0. |
 | Prisma generation | Pass | `npx prisma generate` exited 0 and generated Prisma Client v5.22.0. |
 | PostgreSQL migration/API tests/E2E | Blocked | No PostgreSQL service is listening on `localhost:5432`; `prisma migrate deploy` returned P1001. No database-backed or browser E2E result is claimed. |
+| Client dependency audit | Pass | After updating transitive `undici` to 8.11.2, `npm audit` in `client/` and `server/` each reported 0 vulnerabilities. |
 | Peer review, staging CI, release CI, visual/accessibility evidence | Pending | Must be populated from actual PR/CI/screenshots before final PDF. |
 | Playwright discovery | Pass | `npx playwright test --config=client/playwright.config.ts --list`: 15 tests in 9 files discovered; this does not execute browser flows. |
 | Initial PR CI at `82cb4e3` | Fail; fixes pending rerun | One API test used the owner session for the supposedly cross-owner Ticket; the Staff status links' accessible names concatenated label and count (`New1`). The test now uses the other Requester's session, and the links now expose explicit status/count accessible names. |

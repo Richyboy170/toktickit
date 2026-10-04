@@ -12,7 +12,7 @@
 | 5 Requester dashboard | [#54](https://github.com/Richyboy170/toktickit/issues/54) | Done / closed |
 | 6 Actions Taken UI | [#49](https://github.com/Richyboy170/toktickit/issues/49) | Done / closed |
 | 7 Regression/accessibility/evidence | [#51](https://github.com/Richyboy170/toktickit/issues/51) | Started / open; final screenshots and broader accessibility review remain |
-| 8 Submission and release | [#53](https://github.com/Richyboy170/toktickit/issues/53) | Started / open; final release, PDF, and student reflection remain |
+| 8 Submission and release | [#53](https://github.com/Richyboy170/toktickit/issues/53) | PR Review / open; PR #47 checks pass, while final release, PDF, and student reflection remain |
 
 ## Issue 0 — [Lab 4] Contract and Test DD baseline
 

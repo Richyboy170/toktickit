@@ -33,6 +33,9 @@ jobs:
         with: { node-version: 24, cache: npm, cache-dependency-path: server/package-lock.json }
       - run: npm ci
         working-directory: server
+      - name: Verify Lab 4 migration preserves populated Lab 3 data
+        run: npm run test:migration-preservation
+        working-directory: server
       - run: npx prisma migrate deploy
         working-directory: server
       - run: npm run prisma:seed

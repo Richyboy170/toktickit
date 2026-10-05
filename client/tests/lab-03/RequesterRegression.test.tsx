@@ -40,7 +40,7 @@ describe("Lab 3 Requester regression", () => {
     await userEvent.type(screen.getByLabelText(/password/i), "valid-password1");
     await userEvent.click(screen.getByRole("button", { name: /sign in|log in/i }));
 
-    expect(await screen.findByRole("heading", { name: "My Tickets" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Requester Dashboard" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /change requester/i })).not.toBeInTheDocument();
   });
 
@@ -53,7 +53,7 @@ describe("Lab 3 Requester regression", () => {
     await userEvent.type(screen.getByLabelText(/password/i), "valid-password1");
     await userEvent.click(screen.getByRole("button", { name: /sign in|log in/i }));
 
-    expect(await screen.findByRole("heading", { name: "My Tickets" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Requester Dashboard" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /change requester/i })).not.toBeInTheDocument();
     expect(screen.queryByText(/testing as/i)).not.toBeInTheDocument();
   });

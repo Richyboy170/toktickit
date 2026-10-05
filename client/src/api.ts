@@ -17,6 +17,7 @@ export interface ReferenceItem {
 }
 
 export type UserRole = "REQUESTER" | "IT_STAFF" | "ADMINISTRATOR";
+export type ActionStatus = "PLANNED" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
 
 export interface AuthUser {
   id: number;
@@ -191,6 +192,7 @@ export interface Ticket {
   requestedPriority: RequestedPriority;
   description: string;
   currentStatus: TicketStatus;
+  cancellationReason?: string | null;
   createdAt: string;
   updatedAt: string;
   itPriority?: RequestedPriority;
@@ -222,6 +224,48 @@ export interface TicketDetail extends Ticket {
   comments?: PublicComment[];
   internalNotes?: InternalNote[];
   notes?: InternalNote[];
+  actions?: ActionTaken[];
+}
+
+export interface ActionTaken {
+  id: number;
+  ticketId: number;
+  actionAt: string;
+  description: string;
+  result: string | null;
+  performedBy: Pick<StaffUser, "id" | "name">;
+  assignee: Pick<StaffUser, "id" | "name">;
+  status: ActionStatus;
+  followUpRequired: boolean;
+  followUpNote: string | null;
+  attachmentNotes: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ActionInput {
+  actionAt: string;
+  description: string;
+  result?: string | null;
+  assigneeUserId: number;
+  followUpRequired: boolean;
+  followUpNote?: string | null;
+  attachmentNotes?: string | null;
+}
+
+export interface RequesterDashboardData {
+  windowStart: string;
+  metrics: { openTickets: number; waitingForMe: number };
+  recentlyUpdated: Array<Pick<TicketSummary, "id" | "ticketNumber" | "summary" | "currentStatus" | "updatedAt">>;
+  recentlyResolved: Array<Pick<TicketSummary, "id" | "ticketNumber" | "summary" | "currentStatus" | "updatedAt">>;
+}
+
+export interface StaffDashboardData {
+  windowStart: string;
+  metrics: { unassignedOpenTickets: number; myOpenTickets: number; highUrgentOpenTickets: number; myActiveActions: number };
+  ticketsByStatus: Record<TicketStatus, number>;
+  urgentTickets: Array<Pick<TicketSummary, "id" | "ticketNumber" | "summary" | "currentStatus" | "itPriority" | "updatedAt">>;
+  myActiveActions: Array<Pick<ActionTaken, "id" | "ticketId" | "actionAt" | "description" | "status"> & { ticket: { ticketNumber: string; summary: string } }>;
 }
 
 export type TicketSort = "createdAt" | "updatedAt" | "ticketNumber" | "summary";
@@ -252,6 +296,7 @@ export interface TicketListParams {
   relatedSystemId?: number;
   requestedPriority?: RequestedPriority;
   status?: TicketStatus;
+  statusGroup?: "open";
   sort?: TicketSort;
   order?: SortOrder;
   page?: number;
@@ -266,6 +311,7 @@ export interface TicketListResponse {
 
 export interface StaffTicketListParams extends Omit<TicketListParams, "sort"> {
   itPriority?: RequestedPriority;
+  priorityGroup?: "high-or-urgent";
   assignment?: "assigned" | "unassigned";
   ownerId?: number | "unassigned";
   unassigned?: boolean;
@@ -311,6 +357,26 @@ export function createTicket(requesterId: number | undefined, input: CreateTicke
 
 export function listTickets(requesterId: number | undefined, params: TicketListParams = {}): Promise<TicketListResponse> {
   return readJson(`/api/tickets${queryString(params)}`, { headers: requesterHeaders(requesterId) });
+}
+
+export function getTicketActions(ticketId: number): Promise<{ actions: ActionTaken[] }> {
+  return readJson(`/api/tickets/${ticketId}/actions`);
+}
+
+export function createTicketAction(ticketId: number, input: ActionInput): Promise<{ action: ActionTaken }> {
+  return readJson(`/api/tickets/${ticketId}/actions`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(input) });
+}
+
+export function updateTicketAction(ticketId: number, actionId: number, expectedUpdatedAt: string, input: Partial<ActionInput> & { status?: ActionStatus }): Promise<{ action: ActionTaken }> {
+  return readJson(`/api/tickets/${ticketId}/actions/${actionId}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...input, expectedUpdatedAt }) });
+}
+
+export function getRequesterDashboard(): Promise<RequesterDashboardData> {
+  return readJson("/api/requester/dashboard");
+}
+
+export function getStaffDashboard(): Promise<StaffDashboardData> {
+  return readJson("/api/staff/dashboard");
 }
 
 export function getTicket(requesterId: number | undefined, ticketId: number): Promise<TicketDetail> {
@@ -398,11 +464,11 @@ export async function updateTicketPriority(ticketId: number, itPriority: Request
   }
 }
 
-export async function updateTicketStatus(ticketId: number, status: TicketStatus, confirm = false): Promise<StaffTicketDetail | { ticket: StaffTicketDetail }> {
+export async function updateTicketStatus(ticketId: number, status: TicketStatus, expectedUpdatedAt: string, confirm = false, cancellationReason?: string): Promise<StaffTicketDetail | { ticket: StaffTicketDetail }> {
   return readJson(`/api/staff/tickets/${ticketId}/status`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ status, currentStatus: status, confirm }),
+    body: JSON.stringify({ status, expectedUpdatedAt, confirm, ...(cancellationReason ? { cancellationReason } : {}) }),
   });
 }
 

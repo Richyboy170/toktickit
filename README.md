@@ -1,4 +1,4 @@
-﻿# TokTickIT — Lab 3 Users, Roles, and IT Ticketing
+# TokTickIT — Lab 3 Users, Roles, and IT Ticketing
 
 TokTickIT is a full-stack IT service desk course project. Lab 3 replaces the temporary Development Requester flow with real email/password authentication, role-based access, an IT Staff queue and ticket workflow, and a focused Administrator User Management screen. Lab 2 Requester ticket and attachment behavior remains available to authenticated Requesters.
 
@@ -89,7 +89,15 @@ Normal application routes use the authenticated session cookie. The legacy `X-De
 | GET/POST | `/api/staff/tickets/:ticketId/notes` | Read or append Internal Notes |
 | GET/POST/PATCH | `/api/admin/users` | Administrator User Management |
 
-The complete request/response, validation, authorization, status, and safe-error contract is in [`docs/lab-03/api-spec.md`](docs/lab-03/api-spec.md). The engineering contract, test traceability, UI rules, review record, and AI reflection are in [`docs/lab-03/`](docs/lab-03/).
+The complete Lab 3 request/response, validation, authorization, status, and safe-error contract is in [`docs/lab-03/api-spec.md`](docs/lab-03/api-spec.md). The engineering contract, test traceability, UI rules, review record, and AI reflection are in [`docs/lab-03/`](docs/lab-03/).
+
+## Lab 4 Actions Taken and dashboards
+
+The Lab 4 increment adds auditable Actions Taken to Tickets, guarded Ticket resolution, Requester and Staff dashboards, and dashboard-linked queue filters. The approved contract was merged to `lab4-staging`; implementation on `feature/lab4-action-model` is being prepared for peer review. Database-backed integration and E2E checks require PostgreSQL; see the local verification and release ledger in [`docs/lab-04/tests.md`](docs/lab-04/tests.md).
+
+The [Engineering Contract](docs/lab-04/Engineering_Contract.md), [Specification](docs/lab-04/specification.md), [API Specification](docs/lab-04/api-spec.md), [UI Specification](docs/lab-04/ui-spec.md), [Test DD](docs/lab-04/tests.md), [Peer Review Record](docs/lab-04/reviewer.md), and [AI Use Record](docs/lab-04/ai-use.md) capture decisions and evidence. GitHub issue descriptions are in [github-issue-drafts.md](docs/lab-04/github-issue-drafts.md).
+
+Lab 4 adds `GET /api/requester/dashboard`, `GET /api/staff/dashboard`, `GET/POST /api/tickets/:ticketId/actions`, and `PATCH /api/tickets/:ticketId/actions/:actionId`. Staff Ticket filters accept `statusGroup=open` and `priorityGroup=high-or-urgent`; Requester Ticket filters accept `statusGroup=open`.
 
 ## Attachment safety and lifecycle
 

@@ -9,7 +9,7 @@ test("Requester can sign in, see the role shell, and lose access after logout", 
   await page.getByLabel("Password").fill(requesterPassword);
   await page.getByRole("button", { name: "Sign In" }).click();
 
-  await expect(page.getByRole("heading", { name: "My Tickets" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Requester Dashboard" })).toBeVisible();
   await expect(page.getByText("Requester", { exact: true }).first()).toBeVisible();
   await page.getByRole("button", { name: "Logout" }).click();
   await expect(page).toHaveURL(/\/login$/);

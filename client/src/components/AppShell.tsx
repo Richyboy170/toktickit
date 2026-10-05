@@ -24,7 +24,7 @@ export function AppShell() {
   }
 
   const role = user?.role;
-  const home = role === "IT_STAFF" ? "/staff/tickets" : role === "ADMINISTRATOR" ? "/users" : "/tickets";
+  const home = user ? "/dashboard" : "/tickets";
   const roleLabel = role === "IT_STAFF" ? "IT Staff" : role === "ADMINISTRATOR" ? "Administrator" : "Requester";
 
   return (
@@ -33,11 +33,12 @@ export function AppShell() {
         <div className="app-header__inner">
           <NavLink className="brand" to={home} aria-label="TokTickIT home">TokTickIT</NavLink>
           <nav className="main-nav" aria-label="Primary navigation">
+            {user && <NavLink to="/dashboard">Dashboard</NavLink>}
             {(!user || user.role === "REQUESTER") && <>
               <NavLink to="/tickets" end>My Tickets</NavLink>
               <NavLink to="/tickets/new">Create Ticket</NavLink>
             </>}
-            {user?.role === "IT_STAFF" && <NavLink to="/staff/tickets">Ticket Queue</NavLink>}
+            {(user?.role === "IT_STAFF" || user?.role === "ADMINISTRATOR") && <NavLink to="/staff/tickets">Ticket Queue</NavLink>}
             {user?.role === "ADMINISTRATOR" && <NavLink to="/users">User Management</NavLink>}
             {user && <NavLink to="/change-password">Change Password</NavLink>}
           </nav>

@@ -1,5 +1,5 @@
 import { FormEvent, useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   ReferenceItem,
   RequestedPriority,
@@ -21,13 +21,14 @@ interface Filters {
   relatedSystemId: string;
   requestedPriority: RequestedPriority | "";
   status: TicketStatus | "";
+  statusGroup: "" | "open";
   sort: TicketSort;
   order: SortOrder;
   pageSize: 5 | 10 | 20 | 50;
 }
 
 const DEFAULT_FILTERS: Filters = {
-  search: "", categoryId: "", relatedSystemId: "", requestedPriority: "", status: "",
+  search: "", categoryId: "", relatedSystemId: "", requestedPriority: "", status: "", statusGroup: "",
   sort: "updatedAt", order: "desc", pageSize: 10,
 };
 
@@ -38,6 +39,7 @@ function toParams(filters: Filters, page: number): TicketListParams {
     relatedSystemId: filters.relatedSystemId ? Number(filters.relatedSystemId) : undefined,
     requestedPriority: filters.requestedPriority || undefined,
     status: filters.status || undefined,
+    statusGroup: filters.statusGroup || undefined,
     sort: filters.sort,
     order: filters.order,
     page,
@@ -46,7 +48,13 @@ function toParams(filters: Filters, page: number): TicketListParams {
 }
 
 function hasNarrowingFilter(filters: Filters): boolean {
-  return Boolean(filters.search.trim() || filters.categoryId || filters.relatedSystemId || filters.requestedPriority || filters.status);
+  return Boolean(filters.search.trim() || filters.categoryId || filters.relatedSystemId || filters.requestedPriority || filters.status || filters.statusGroup);
+}
+
+function initialFilters(params: URLSearchParams): Filters {
+  const status = params.get("status") ?? "";
+  const statuses: TicketStatus[] = ["NEW", "OPEN", "IN_PROGRESS", "WAITING_FOR_REQUESTER", "RESOLVED", "CLOSED", "REOPENED", "CANCELLED"];
+  return { ...DEFAULT_FILTERS, status: statuses.includes(status as TicketStatus) ? status as TicketStatus : "", statusGroup: params.get("statusGroup") === "open" && !status ? "open" : "" };
 }
 
 function displayDate(value: string): string {
@@ -58,11 +66,12 @@ function label(value: string): string {
 }
 
 export function MyTickets() {
+  const [searchParams] = useSearchParams();
   const { user } = useAuth();
   const { requester: legacyRequester } = useRequester();
   const requester = user?.role === "REQUESTER" ? user : legacyRequester;
-  const [draft, setDraft] = useState<Filters>(DEFAULT_FILTERS);
-  const [applied, setApplied] = useState<Filters>(DEFAULT_FILTERS);
+  const [draft, setDraft] = useState<Filters>(() => initialFilters(searchParams));
+  const [applied, setApplied] = useState<Filters>(() => initialFilters(searchParams));
   const [page, setPage] = useState(1);
   const [categories, setCategories] = useState<ReferenceItem[]>([]);
   const [systems, setSystems] = useState<ReferenceItem[]>([]);
@@ -114,7 +123,7 @@ export function MyTickets() {
         <FilterSelect id="filter-category" label="Category" value={draft.categoryId} onChange={(value) => setDraft({ ...draft, categoryId: value })} options={categories} />
         <FilterSelect id="filter-system" label="Related System" value={draft.relatedSystemId} onChange={(value) => setDraft({ ...draft, relatedSystemId: value })} options={systems} />
         <div><label htmlFor="filter-priority">Priority</label><select id="filter-priority" value={draft.requestedPriority} onChange={(event) => setDraft({ ...draft, requestedPriority: event.target.value as Filters["requestedPriority"] })}><option value="">All priorities</option>{["LOW", "MEDIUM", "HIGH", "URGENT"].map((value) => <option key={value} value={value}>{label(value)}</option>)}</select></div>
-        <div><label htmlFor="filter-status">Status</label><select id="filter-status" value={draft.status} onChange={(event) => setDraft({ ...draft, status: event.target.value as Filters["status"] })}><option value="">All statuses</option>{["NEW", "OPEN", "IN_PROGRESS", "WAITING_FOR_REQUESTER", "RESOLVED", "CLOSED", "REOPENED", "CANCELLED"].map((value) => <option key={value} value={value}>{label(value)}</option>)}</select></div>
+        <div><label htmlFor="filter-status">Status</label><select id="filter-status" value={draft.statusGroup ? "OPEN_GROUP" : draft.status} onChange={(event) => setDraft({ ...draft, status: event.target.value === "OPEN_GROUP" ? "" : event.target.value as Filters["status"], statusGroup: event.target.value === "OPEN_GROUP" ? "open" : "" })}><option value="">All statuses</option><option value="OPEN_GROUP">All open statuses</option>{["NEW", "OPEN", "IN_PROGRESS", "WAITING_FOR_REQUESTER", "RESOLVED", "CLOSED", "REOPENED", "CANCELLED"].map((value) => <option key={value} value={value}>{label(value)}</option>)}</select></div>
         <div><label htmlFor="filter-sort">Sort by</label><select id="filter-sort" value={draft.sort} onChange={(event) => setDraft({ ...draft, sort: event.target.value as TicketSort })}><option value="updatedAt">Last updated</option><option value="createdAt">Ticket date</option><option value="ticketNumber">Ticket number</option><option value="summary">Summary</option></select></div>
         <div><label htmlFor="filter-order">Order</label><select id="filter-order" value={draft.order} onChange={(event) => setDraft({ ...draft, order: event.target.value as SortOrder })}><option value="desc">Descending</option><option value="asc">Ascending</option></select></div>
         <div><label htmlFor="filter-page-size">Per page</label><select id="filter-page-size" value={draft.pageSize} onChange={(event) => setDraft({ ...draft, pageSize: Number(event.target.value) as Filters["pageSize"] })}>{[5, 10, 20, 50].map((value) => <option key={value} value={value}>{value}</option>)}</select></div>

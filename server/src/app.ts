@@ -9,6 +9,8 @@ import { authRouter } from "./routes/auth.js";
 import { staffRouter } from "./routes/staff.js";
 import { messagesRouter } from "./routes/messages.js";
 import { adminRouter } from "./routes/admin.js";
+import { actionsRouter } from "./routes/actions.js";
+import { dashboardsRouter } from "./routes/dashboards.js";
 // getPrisma() is the lazy database handle. It is called INSIDE the route that
 // needs the DB, so importing this file never opens a connection by itself.
 
@@ -49,7 +51,9 @@ app.use("/api/auth", authRouter);
 // Short aliases keep the REST surface friendly for the browser client and
 // older integration fixtures.
 app.use("/api", authRouter);
+app.use("/api", dashboardsRouter);
 app.use("/api/tickets", ticketsRouter);
+app.use("/api/tickets", actionsRouter);
 app.use("/api/attachments", attachmentsRouter);
 app.use("/api/tickets", messagesRouter);
 app.use("/api/staff/tickets", messagesRouter);

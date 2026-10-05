@@ -40,6 +40,7 @@ export const ticketListQuerySchema = z.object({
     "REOPENED",
     "CANCELLED",
   ]).optional(),
+  statusGroup: z.enum(["open"]).optional(),
   sort: z.enum(["createdAt", "updatedAt", "ticketNumber", "summary"]).optional().default("updatedAt"),
   order: z.enum(["asc", "desc"]).optional().default("desc"),
   page: z.preprocess((value) => (value === undefined || value === "" ? 1 : Number(value)), z.number().int().positive()),
@@ -47,6 +48,10 @@ export const ticketListQuerySchema = z.object({
     (value) => (value === undefined || value === "" ? 10 : Number(value)),
     z.number().refine((value) => [5, 10, 20, 50].includes(value), "Page size must be 5, 10, 20, or 50."),
   ),
+}).superRefine((query, context) => {
+  if (query.status && query.statusGroup) {
+    context.addIssue({ code: z.ZodIssueCode.custom, path: ["statusGroup"], message: "Choose a single status or a status group, not both." });
+  }
 });
 
 export type TicketListQuery = z.infer<typeof ticketListQuerySchema>;

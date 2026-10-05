@@ -65,4 +65,13 @@ describe("IT Staff Ticket Queue", () => {
     await userEvent.click(screen.getByRole("button", { name: "Apply Filters" }));
     await waitFor(() => expect(list).toHaveBeenLastCalledWith(expect.objectContaining({ search: "campus", itPriority: "URGENT", page: 1 })));
   });
+
+  it("initializes and retains dashboard drill-down filters", async () => {
+    window.history.replaceState({}, "", "/staff/tickets?ownerId=7&statusGroup=open&priorityGroup=high-or-urgent");
+    const list = vi.spyOn(api, "listStaffTickets").mockResolvedValue({ items: [], pagination: { page: 1, pageSize: 10, totalItems: 0, totalPages: 0 } });
+    render(<App />);
+    await waitFor(() => expect(list).toHaveBeenCalledWith(expect.objectContaining({ ownerId: 7, statusGroup: "open", priorityGroup: "high-or-urgent", page: 1 })));
+    expect(screen.getByLabelText("Status")).toHaveValue("OPEN_GROUP");
+    expect(screen.getByLabelText("Priority group")).toHaveValue("high-or-urgent");
+  });
 });

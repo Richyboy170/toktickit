@@ -202,3 +202,9 @@ textarea { min-height: 160px; resize: vertical; }
   .staff-ticket-cards .ticket-card dl { gap: 6px; }
   .staff-ticket-cards .ticket-card__action { margin-top: 10px; }
 }
+
+/* Keep role navigation readable on phones; labels wrap at word boundaries. */
+@media (max-width: 767px) {
+  .main-nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .main-nav a { min-width: 0; overflow-wrap: normal; word-break: normal; }
+}

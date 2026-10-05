@@ -256,6 +256,14 @@ test("captures Lab 3 role screens at desktop, tablet, and mobile widths", async 
   await expect(page).toHaveURL(/\/login$/);
   await signIn(page, users.requester.email);
   await expect(page.getByRole("heading", { name: "Requester Dashboard" })).toBeVisible();
+  await page.setViewportSize({ width: 390, height: 844 });
+  const dashboardNavigationLink = page.getByRole("link", { name: "Dashboard", exact: true });
+  const dashboardNavigationWidth = await dashboardNavigationLink.evaluate((element) => element.getBoundingClientRect().width);
+  expect(dashboardNavigationWidth).toBeGreaterThanOrEqual(140);
+  await page.keyboard.press("Tab");
+  const keyboardFocusedControl = page.locator(":focus-visible");
+  await expect(keyboardFocusedControl).toBeVisible();
+  await expect(keyboardFocusedControl).toHaveCSS("outline-style", "solid");
   await capture(page, "requester-dashboard/overview", lab4Artifacts);
   await page.getByRole("link", { name: "My Tickets" }).click();
   await expect(page.getByRole("heading", { name: "My Tickets" })).toBeVisible();
@@ -273,6 +281,15 @@ test("captures Lab 3 role screens at desktop, tablet, and mobile widths", async 
   await expect(page.getByRole("heading", { name: ticket.ticketNumber })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Record an Action" })).toBeVisible();
   await capture(page, "actions-taken/staff-editable", lab4Artifacts);
+  await page.getByRole("button", { name: "Edit Action" }).first().click();
+  await expect(page.getByLabel("Description").first()).toHaveValue("Inspect battery health and capture diagnostic readings");
+  await capture(page, "actions-taken/editing", lab4Artifacts);
+  await page.getByRole("button", { name: "Close editor" }).first().click();
+  const followUpRequired = page.getByRole("checkbox", { name: "Follow-up Required" });
+  await followUpRequired.check();
+  await expect(page.getByLabel("Follow-up Note")).toBeVisible();
+  await capture(page, "actions-taken/create-follow-up", lab4Artifacts);
+  await followUpRequired.uncheck();
   await capture(page, "staff-ticket-detail/ticket-detail");
 
   await page.getByRole("button", { name: "Logout" }).click();

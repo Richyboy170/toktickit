@@ -286,6 +286,7 @@ test("captures Lab 3 role screens at desktop, tablet, and mobile widths", async 
   await page.getByRole("button", { name: "Logout" }).click();
   await expect(page).toHaveURL(/\/login$/);
   await signIn(page, users.requester.email);
+  await expect(page.getByRole("heading", { name: "Requester Dashboard" })).toBeVisible();
   await page.goto("/tickets/1");
   await expect(page.getByRole("heading", { name: "Actions Taken" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Record an Action" })).not.toBeVisible();

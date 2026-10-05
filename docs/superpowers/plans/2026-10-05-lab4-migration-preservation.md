@@ -44,6 +44,6 @@
 - [x] Attempt a local database run; this workspace has no PostgreSQL service, so GitHub Actions is the database execution environment.
 - [x] Implement schema creation, pre-Lab-4 migration application, fixture insertion, Lab 4 migration application, verification, and cleanup.
 - [x] Add the server-job step before normal `prisma migrate deploy`; keep the existing public test schema independent.
-- [x] Run the TypeScript build. The GitHub Actions server job and issue #56 update remain pending until the PR runs successfully.
-- [ ] Update issue #56 and the migration evidence record only after a successful CI run.
-- [ ] Commit and publish the test and CI wiring on this branch; the PR link will be shared for review.
+- [x] Run the TypeScript build and GitHub Actions checks. The server migration-preservation step, server suite/build/audit, client checks, and E2E job passed on workflow run 37281590333 attempt 2.
+- [x] Record the passing run on issue #56 and in the assignment evidence. Keep the issue Started until PR #57 is merged.
+- [x] Commit and publish the test and CI wiring on this branch; PR #57 is open for peer review and merge.

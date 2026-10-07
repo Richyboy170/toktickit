@@ -1,6 +1,6 @@
 # Lab 4 Test Evidence and Traceability
 
-**Status:** The integrated feature passed its staging pull request and post-merge CI. The exact staging merge is `45431b9b8769dc20a4c23c0595793c4c831ca769`; final-main verification remains pending. The feature implementation commit before the merge was `6877630`.
+**Status:** PR #47 and follow-up PR #57 are merged. Final `main` is `76067e973bf3a3d7668c95936f1d8f3c3db02e47`; [workflow 37307397634](https://github.com/Richyboy170/toktickit/actions/runs/37307397634) passed server, client, E2E, populated migration preservation, and visual screenshot capture. The accessibility follow-up branch adds the mobile navigation and Action checkbox fixes and is awaiting its own CI and peer merge.
 
 ## Test suites mapped to acceptance criteria
 
@@ -12,11 +12,12 @@
 | Dashboard queries and ownership | AC-11–13 | `server/tests/lab-04/dashboards.api.test.ts`, `client/tests/lab-04/RequesterDashboard.test.tsx`, `client/tests/lab-04/StaffDashboard.test.tsx`, `e2e/lab-04/dashboards.spec.ts` | Passed |
 | Action detail UI | AC-04–08, AC-17 | `client/tests/lab-04/ActionsTaken.test.tsx`, `e2e/lab-04/actions-taken-flow.spec.ts` | Passed |
 | Lab 1–3 regression | AC-16 | Existing server/client test suites and Playwright suite | Passed |
-| Migration and seed | AC-14–15 | CI `prisma migrate deploy`, `prisma:seed`, server API suite | Passed in staging CI; no separate populated Lab 3 snapshot comparison test is present |
-| Responsive visual capture | AC-18 | `e2e/lab-03/visual-evidence.spec.ts` (captures Lab 3 and Lab 4 views) | Local visual run passed after adding Lab 4 captures; staging run predates the added Lab 4 captures |
-| Release gate | AC-19 | GitHub Actions PR #46 post-merge run | [Passed on staging](https://github.com/Richyboy170/toktickit/actions/runs/37191660316); final `main` pending |
+| Migration and seed | AC-14–15 | `server/scripts/verify-lab4-migration-preserves-data.ts`, CI `prisma migrate deploy`, `prisma:seed`, server API suite | Passed on final `main` in workflow 37307397634 |
+| Responsive visual capture | AC-18 | `e2e/lab-03/visual-evidence.spec.ts` (captures Lab 3 and Lab 4 views) | Passed on final `main` in workflow 37307397634; the workflow artifact contains the 12 desktop/tablet/mobile captures |
+| Accessibility follow-up | AC-18 | `docs/lab-04/accessibility-review.md`, `client/tests/lab-04/ActionsTaken.test.tsx`, visual Playwright checks | Branch checks pending; main screenshots exposed the mobile nav and checkbox presentation issues now fixed on this branch |
+| Release gate | AC-19 | GitHub Actions PR #47 and PR #57 merge workflows | [Final `main` passed](https://github.com/Richyboy170/toktickit/actions/runs/37307397634) |
 
-This mapping records test files that exist. It does not claim separate performance benchmarking, a populated Lab 3 migration comparison test, a full screen-reader/contrast audit, or final-main evidence. See `ui-spec.md` for the visual evidence scope.
+This mapping records test files that exist. It does not claim separate performance benchmarking or a manual screen-reader session. Contrast calculations and browser-based keyboard checks are documented in `accessibility-review.md`; assistive-technology and physical-device testing remain outside this review. See `ui-spec.md` for the visual evidence scope.
 
 ## Verification records
 
@@ -48,7 +49,6 @@ On the current Windows workspace, sandboxed Vitest startup initially failed with
 
 ## Remaining release checks
 
-- Open and review the `lab4-staging` → `main` release PR; record merge SHA and green final-main workflow.
-- Capture final-main screenshots and review evidence for the PDF.
-- Complete issues [#56](https://github.com/Richyboy170/toktickit/issues/56), [#51](https://github.com/Richyboy170/toktickit/issues/51), and [#53](https://github.com/Richyboy170/toktickit/issues/53), then capture final Project/Kanban evidence.
-- Complete the populated pre-Lab-4 database preservation check if required by the course; the current CI deploys migrations and seeds a fresh test database.
+- Complete peer review and merge the accessibility follow-up PR; then verify its final-main run and refresh the screenshot index.
+- Complete issue [#51](https://github.com/Richyboy170/toktickit/issues/51) with peer-merged accessibility evidence and capture final Project/Kanban evidence.
+- Complete issue [#53](https://github.com/Richyboy170/toktickit/issues/53), including the student's own reflection and final PDF.

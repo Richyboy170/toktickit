@@ -25,6 +25,7 @@ describe("Actions Taken UI", () => {
     const create = vi.spyOn(api, "createTicketAction").mockRejectedValue(new api.ApiError("Service unavailable.", 500));
     render(<ActionsTaken ticketId={41} canManage currentUserId={staff.id} />);
     await screen.findByRole("heading", { name: "Record an Action" });
+    expect(screen.getByRole("checkbox", { name: "Follow-up Required" }).closest("label")).toHaveClass("checkbox-field");
     await userEvent.type(screen.getByLabelText("Description"), "Checked the network cable");
     expect(screen.getByLabelText("Assigned To")).toHaveValue("7");
     await userEvent.click(screen.getByRole("button", { name: "Record Action" }));

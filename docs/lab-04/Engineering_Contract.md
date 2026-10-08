@@ -1,6 +1,6 @@
 # TokTickIT Lab 4 Engineering Contract
 
-**Status:** Approved contract PR #45 and implementation PR #46 are merged to `lab4-staging`; the post-merge CI passed. Release/PDF work remains.
+**Status:** Contract PR #45 and implementation PR #46 were approved and merged to `lab4-staging`; release PR #47 and follow-up PRs #57, #58, and #60 were peer reviewed and merged to `main`. Final `main` is `6e6d645d61621f8a74166947326f59e5b3d141b4`; final-main CI [run 37747697657](https://github.com/Richyboy170/toktickit/actions/runs/37747697657) passed server, client, and E2E. The assignment report and final issue closure remain submission-tracking tasks.
 **Brief:** `SE+Lab+4.pdf` (course handout supplied outside this application repository)
 **Application:** `dev/toktickit`
 **Assumption:** Continue the Lab 3 repository, Zen Green design system, peer review process, `lab4-staging` branch, and existing GitHub Project/Kanban. Issue and PR numbers are assigned when created; this contract does not claim remote actions have happened.
@@ -20,7 +20,7 @@ Finish TokTickIT's service-desk workflow by recording auditable Actions Taken un
 - Data-preserving Prisma migration, idempotent seed, tests across database/API/UI/E2E, and full Lab 1–3 regression.
 - Zen Green UI, responsive behavior, accessibility, visual inspection, README and repository hygiene.
 - Issues, feature branches, reviewed PRs into `lab4-staging`, staging CI, approved release PR to `main`, and final-main evidence.
-- One final PDF at `04_Assignment/report_lab04_66070503489.pdf`, with exactly the nine required Answer Part headings in order.
+- One final PDF at `04_Assignment/report_lab04_66070503489.pdf`, with exactly the nine required Answer Part headings in order, readable screenshots, and working source/evidence links.
 
 ### Excluded
 

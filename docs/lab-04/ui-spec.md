@@ -1,6 +1,6 @@
 # Lab 4 UI Specification
 
-**Status:** Approved baseline implemented on `lab4-staging`. Local visual evidence is captured at desktop, tablet, and mobile sizes for both dashboards and staff/requester Action views. These are deterministic fixture screenshots; final-main evidence and broader accessibility review remain pending. Uses the existing TokTickIT Zen Green tokens, shared components, authenticated shell, and responsive conventions.
+**Status:** Implemented and merged to `main` at `6e6d645d61621f8a74166947326f59e5b3d141b4`. Final-main Playwright artifacts contain desktop, tablet, and mobile views of both dashboards and staff-editable and Requester-read-only Action details. Screenshots use deterministic fixture data. Browser keyboard/focus and responsive checks passed in PR #58 and final-main CI. Manual screen-reader and physical-device testing were not performed; see `accessibility-review.md`.
 
 ## Navigation and roles
 
@@ -72,12 +72,13 @@ The frontend displays server aggregates unchanged and does not recompute counts 
 
 ## Visual/release checklist
 
-- [x] Requester dashboard desktop/tablet/mobile; fixture shows dashboard content.
-- [x] Staff dashboard desktop/tablet/mobile; fixture shows metrics, urgent list, and My Active Actions.
-- [x] Action list view for staff and Requester at desktop/tablet/mobile; fixtures show separate performer/assignee and read-only Requester mode.
-- [ ] Create/edit form, conditional follow-up validation, result/cancel validation, busy/success/error/conflict states.
-- [ ] Terminal completed/cancelled read-only behavior and Requester read-only view.
-- [ ] Ticket resolution gate, confirmation, validation, success, and stale feedback.
-- [ ] Visible keyboard focus, labels/errors, color-independent status/priority cues, readable contrast.
-- [x] No page-level horizontal overflow at the captured viewports; visual Playwright check passed. A full manual screen-reader/contrast audit is not claimed.
-- [ ] Screenshots are captured from final `main` commit and indexed under `artifacts/lab-04/screenshots/`.
+- [x] Requester dashboard desktop/tablet/mobile captured from final `main`; fixtures show dashboard content.
+- [x] Staff dashboard desktop/tablet/mobile captured from final `main`; fixtures show metrics, urgent list, and My Active Actions.
+- [x] Staff-editable and Requester-read-only Action detail captured at desktop/tablet/mobile; roles and editable/read-only fields are visibly distinct.
+- [x] Create/edit and conditional follow-up behavior is covered by client and E2E tests; create/edit/follow-up screenshots are in final-main CI artifacts.
+- [x] Action validation, terminal lifecycle, inactive-assignee rejection, and role restrictions are covered by server/client/API/E2E tests listed in `tests.md`.
+- [x] Ticket transition and resolution gate behavior is covered by unit/API/E2E tests; allowed transitions and confirmation flows are specified above and in `specification.md`.
+- [x] Visible keyboard focus, navigation width, checkbox label treatment, field labels/errors, and non-color status cues are covered by the accessibility review and PR #58 browser checks.
+- [x] Theme contrast ratios were calculated and recorded in `accessibility-review.md`; screen-reader and physical-device testing remain unperformed.
+- [x] No page-level horizontal overflow at the captured viewports; visual Playwright check passed in CI.
+- [x] Final-main screenshots are indexed in the CI artifact and local evidence package `04_Assignment/evidence/lab4-final-main/`.

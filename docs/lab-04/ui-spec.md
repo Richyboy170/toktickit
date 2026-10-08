@@ -73,7 +73,7 @@ The frontend displays server aggregates unchanged and does not recompute counts 
 ## Visual/release checklist
 
 - [x] Requester dashboard desktop/tablet/mobile captured from final `main`; fixtures show dashboard content.
-- [x] Staff dashboard desktop/tablet/mobile captured from final `main`; fixtures show metrics, urgent list, and My Active Actions.
+- [x] Staff dashboard desktop/tablet/mobile captured from final `main`; fixtures show metrics, urgent list, and My Active Actions. Component tests cover loading, empty, forbidden, and safe-failure/retry states (extended in PR #61).
 - [x] Staff-editable and Requester-read-only Action detail captured at desktop/tablet/mobile; roles and editable/read-only fields are visibly distinct.
 - [x] Create/edit and conditional follow-up behavior is covered by client and E2E tests; create/edit/follow-up screenshots are in final-main CI artifacts.
 - [x] Action validation, terminal lifecycle, inactive-assignee rejection, and role restrictions are covered by server/client/API/E2E tests listed in `tests.md`.

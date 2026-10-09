@@ -169,16 +169,17 @@ Create `dev/toktickit/docs/lab-04/tests.md` before or alongside implementation. 
 
 | Coverage | Minimum files/scenarios |
 |---|---|
-| Unit | Action and Ticket transition/validation, dashboard predicates/date boundaries; `server/tests/lab-04/*.unit.test.ts` |
-| API/security | `actions-taken.api.test.ts`, `ticket-workflow.api.test.ts`: create/list/edit/assign, actor spoof, inactive assignee, roles/ownership, stale/error/resolution gate |
-| Dashboard API | `requester-dashboard.api.test.ts`, `staff-dashboard.api.test.ts`: query math, scope, windows, ordering, limits, zeroes, forbidden |
+| Unit (implemented) | `server/tests/lab-04/action-validation.unit.test.ts` covers Action input/transition policy; `server/tests/lab-04/ticket-workflow.unit.test.ts` covers the resolution predicate. No dashboard predicate/date-boundary unit file is present. |
+| API/security (implemented) | `server/tests/lab-04/actions-taken.api.test.ts`: create/list/edit/assign, actor spoof, inactive assignee, roles/ownership, stale writes, terminal records, and stable order |
+| Ticket workflow (implemented) | `server/tests/lab-04/ticket-workflow.unit.test.ts` covers the resolution predicate; `e2e/lab-04/ticket-resolution.spec.ts` covers the browser workflow. No dedicated `ticket-workflow.api.test.ts` exists. |
+| Dashboard API (implemented) | `server/tests/lab-04/dashboards.api.test.ts` combines Requester and Staff dashboard API cases, including query math, scope, limits, filters, zero counts, and role access. |
 | Migration/seed/regression | Upgrade populated Lab 3 database, preserved data, no synthetic Actions, repeat seed, prior-lab API/data regression |
-| UI | `client/tests/lab-04/{ActionsTaken,TicketWorkflow,RequesterDashboard,StaffDashboard}.test.tsx`: roles, forms, states, calculations/drill-down/errors |
+| UI (implemented) | `client/tests/lab-04/{ActionsTaken,RequesterDashboard,StaffDashboard}.test.tsx`: roles, forms, dashboard states, calculations/drill-downs, and errors. No `TicketWorkflow.test.tsx` exists. |
 | Responsive/accessibility | Zen Green, names/focus/keyboard, status cues, no clipping/overlap/page overflow at all target widths |
 | E2E | `e2e/lab-04/actions-taken-flow.spec.ts`, `ticket-resolution.spec.ts`, `dashboards.spec.ts`, plus representative prior-lab regression |
 | Performance smoke | Dashboard/Action-list query at realistic seed volume; record budget and avoid unbounded payload/N+1 query behavior |
 
-Planned/compiled/visually inspected does not mean passed. Record local database blockers truthfully; final evidence must show final-main results.
+The original plan proposed separate dashboard API files, `ticket-workflow.api.test.ts`, and `TicketWorkflow.test.tsx`. The implementation instead combines both dashboard APIs in `dashboards.api.test.ts`; the two Ticket workflow files were not created. Do not report those planned files as present or imply that the resolution gate has a dedicated API suite. Planned/compiled/visually inspected does not mean passed. Record local database blockers truthfully; final evidence must show final-main results.
 
 ## 8. GitHub Issues, branches, PRs
 
@@ -249,14 +250,14 @@ Assemble after release; include rendered excerpts and source links pinned to fin
 
 ```text
 dev/toktickit/docs/lab-04/{specification.md,tests.md,ui-spec.md,api-spec.md,reviewer.md,ai-use.md}
-dev/toktickit/server/tests/lab-04/{actions-taken.api.test.ts,ticket-workflow.api.test.ts,requester-dashboard.api.test.ts,staff-dashboard.api.test.ts}
-dev/toktickit/client/tests/lab-04/{ActionsTaken,TicketWorkflow,RequesterDashboard,StaffDashboard}.test.tsx
+dev/toktickit/server/tests/lab-04/{action-validation.unit.test.ts,actions-taken.api.test.ts,dashboards.api.test.ts,ticket-workflow.unit.test.ts}
+dev/toktickit/client/tests/lab-04/{ActionsTaken,RequesterDashboard,StaffDashboard}.test.tsx
 dev/toktickit/e2e/lab-04/{actions-taken-flow.spec.ts,ticket-resolution.spec.ts,dashboards.spec.ts}
 dev/toktickit/artifacts/lab-04/screenshots/{staff-dashboard,requester-dashboard,actions-taken}/
 04_Assignment/{SE+Lab+4.pdf,Engineering_Contract.md,report_lab04_66070503489.pdf}
 ```
 
-Follow repository conventions if paths differ; update inventory and Test DD rather than leaving planned files missing. Source docs/tests/screenshots/GitHub records remain in TokTickIT; the single nine-part PDF is the submission artifact.
+This inventory reflects the files present at PR #61; it supersedes the earlier proposed separate `ticket-workflow.api.test.ts`, `TicketWorkflow.test.tsx`, `requester-dashboard.api.test.ts`, and `staff-dashboard.api.test.ts`. Dashboard API cases are combined in `dashboards.api.test.ts`. Source docs/tests/screenshots/GitHub records remain in TokTickIT; the single nine-part PDF is the submission artifact.
 
 ## 12. Choices for review
 

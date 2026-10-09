@@ -77,8 +77,8 @@ The frontend displays server aggregates unchanged and does not recompute counts 
 - [x] Staff-editable and Requester-read-only Action detail captured at desktop/tablet/mobile; roles and editable/read-only fields are visibly distinct.
 - [x] Create/edit and conditional follow-up behavior is covered by client and E2E tests; create/edit/follow-up screenshots are in final-main CI artifacts.
 - [x] Action validation, terminal lifecycle, inactive-assignee rejection, and role restrictions are covered by server/client/API/E2E tests listed in `tests.md`.
-- [x] Ticket transition and resolution gate behavior is covered by unit/API/E2E tests; allowed transitions and confirmation flows are specified above and in `specification.md`.
+- [x] The resolution predicate is covered by `server/tests/lab-04/ticket-workflow.unit.test.ts`, and the end-to-end workflow is covered by `e2e/lab-04/ticket-resolution.spec.ts`. There is no dedicated Ticket workflow API test file or `TicketWorkflow.test.tsx`; the E2E scenario exercises the workflow through the browser. The full transition matrix is specified above and in `specification.md`.
 - [x] Visible keyboard focus, navigation width, checkbox label treatment, field labels/errors, and non-color status cues are covered by the accessibility review and PR #58 browser checks.
 - [x] Theme contrast ratios were calculated and recorded in `accessibility-review.md`; screen-reader and physical-device testing remain unperformed.
 - [x] No page-level horizontal overflow at the captured viewports; visual Playwright check passed in CI.
-- [x] Final-main screenshots are indexed in the CI artifact and local evidence package `04_Assignment/evidence/lab4-final-main/`.
+- [x] The final-main CI screenshot artifact is `toktickit-playwright-evidence` in [run 37747697657](https://github.com/Richyboy170/toktickit/actions/runs/37747697657). Deterministic committed captures are indexed in [`artifacts/lab-04/README.md`](../../artifacts/lab-04/README.md) and stored under [`artifacts/lab-04/screenshots/`](../../artifacts/lab-04/screenshots/).

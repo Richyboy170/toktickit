@@ -7,7 +7,7 @@ evidence.
 | Screenshot | Evidence |
 |---|---|
 | `pr-33-approved-merged.png` | PR #33 merged into `lab3-staging`; reviewer `iceswift` has a green approval check. |
-| `pr-41-review-request.png` | Historical capture of follow-up PR #41 before approval. |
+| `pr-41-approved-merged.png` | PR #41 approved by `iceswift`, linked to Issue #40, and merged into `lab3-staging`. |
 | `pr-41-checks.png` | Historical PR #41 check-group evidence. |
 | `pr-41-actions-run.png` | Follow-up CI run `35212325233` with server, client, and E2E green. |
 | `pr-42-approved-merged.png` | Approved release PR #42 merged `lab3-staging` into `main`; reviewer check and linked Issues are visible. |

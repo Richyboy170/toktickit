@@ -1,6 +1,6 @@
 # Lab 4 Accessibility Review
 
-**Status:** Review in progress; fixes and automated checks are in the accessibility follow-up PR. Final-main screenshots will be refreshed after peer merge.
+**Status:** Source and browser review completed for the scoped checks below. PR #58 was peer reviewed and merged; its server/client/E2E checks passed in run 37314112381. Final-main CI run 37747697657 passed after the follow-up dependency fix. Manual screen-reader and physical-device testing were not performed.
 
 ## Scope and method
 

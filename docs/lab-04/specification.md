@@ -123,29 +123,28 @@ Errors: invalid input `400 VALIDATION_ERROR`; unauthenticated `401`; forbidden r
 
 ## 9. Acceptance Criteria
 
-| ID | Observable criterion | Planned test group |
+| ID | Observable criterion | Current evidence ID(s) |
 |---|---|---|
-| AC-01 | Action creation links to correct Ticket, authenticated performer, active IT Staff assignee | API-01, SEC-01 |
-| AC-02 | Different performers/assignees on same Ticket do not change primary owner | API-02, E2E-01 |
-| AC-03 | Requester cannot mutate Actions and sees only owned Ticket Actions | SEC-01/02 |
-| AC-04 | Stable Action order and distinct actor/assignee display | API-03, UI-01 |
-| AC-05 | Follow-up/result/cancellation/length/date validation is enforced in API/UI | UNIT-01, API-04, UI-02 |
-| AC-06 | Only valid Action transitions; terminal records cannot be edited/deleted | UNIT-02, API-05, UI-03 |
-| AC-07 | Inactive/missing/non-staff assignee rejected without mutation | API-06 |
-| AC-08 | Stale writes conflict without overwriting; UI retains draft | API-07, UI-04 |
-| AC-09 | Full Ticket transition matrix/role policy enforced by server | UNIT-03, API-08 |
-| AC-10 | Resolution requires owner + one completed Action + all non-cancelled Actions complete; Requester indication is advisory | API-09, E2E-02 |
-| AC-11 | Requester dashboard values match DB for authenticated owner, including zeros | API-10, UI-05 |
-| AC-12 | Staff dashboard matches predicates/scope/order/limits, including zeros | API-11, UI-06 |
-| AC-13 | Dashboard links open correct filters/Ticket/Actions | UI-07, E2E-03 |
+| AC-01 | Action creation links to correct Ticket, authenticated performer, active IT Staff assignee | API-ACT-01, VAL-03 |
+| AC-02 | Different performers/assignees on same Ticket do not change primary owner | Gap: not directly asserted by current Lab 4-specific tests |
+| AC-03 | Requester cannot mutate Actions and sees only owned Ticket Actions | API-ACT-02, UI-ACT-01 |
+| AC-04 | Stable Action order and distinct actor/assignee display | API-ACT-01; distinct display is specified but not directly asserted in current component tests |
+| AC-05 | Follow-up/result/cancellation/length/date validation is enforced in API/UI | VAL-01–04, UI-ACT-02, E2E-ACT-01 (the listed cases do not cover every validation edge) |
+| AC-06 | Only valid Action transitions; terminal records cannot be edited/deleted | ACT-01, API-ACT-03, UI-ACT-01, E2E-ACT-01 |
+| AC-07 | Inactive/missing/non-staff assignee rejected without mutation | API-ACT-01 directly checks inactive assignee rejection |
+| AC-08 | Stale writes conflict without overwriting; UI retains draft | VAL-05, API-ACT-03, UI-ACT-02 |
+| AC-09 | Full Ticket transition matrix/role policy enforced by server | E2E-TICKET-01 covers a representative browser path; full matrix/role coverage lacks a dedicated Lab 4 API suite |
+| AC-10 | Resolution requires owner + one completed Action + all non-cancelled Actions complete; Requester indication is advisory | UNIT-TICKET-01/02, E2E-TICKET-01 |
+| AC-11 | Requester dashboard values match DB for authenticated owner, including zeros | API-DASH-01/03, UI-REQ-01/02, E2E-DASH-01 |
+| AC-12 | Staff dashboard matches predicates/scope/order/limits, including zeros | API-DASH-02/03, UI-STAFF-01/02, E2E-DASH-02 |
+| AC-13 | Dashboard links open correct filters/Ticket/Actions | API-DASH-01/02, UI-REQ-01, UI-STAFF-01, E2E-DASH-01/02 |
 | AC-14 | Migration preserves Lab 3 records; legacy zero-Action Tickets remain usable | MIG-01 |
-| AC-15 | Seed reruns without duplicates and supports empty/nonempty dashboards | SEED-01 |
-| AC-16 | Labs 1–3 role/auth/Ticket/Attachment/comment/note/Admin regression passes | REG-01 |
-| AC-17 | Screens support loading/empty/validation/forbidden/not-found/conflict/failure and retain draft | UI-08 |
-| AC-18 | Accessibility/responsive/visual/E2E behavior passes at target viewports | UI-09, VIS-01, E2E-04 |
+| AC-15 | Seed reruns without duplicates and supports empty/nonempty dashboards | SEED-01 runs the seed command; no explicit repeated-seed assertion is recorded |
+| AC-16 | Labs 1–3 role/auth/Ticket/Attachment/comment/note/Admin regression passes | REG-01 (suite-level CI evidence) |
+| AC-17 | Screens support loading/empty/validation/forbidden/not-found/conflict/failure and retain draft | UI-ACT-02, UI-REQ-02, UI-STAFF-02–05 |
+| AC-18 | Accessibility/responsive/visual/E2E behavior passes at target viewports | E2E-ACT-01, E2E-DASH-01/02, VIS-01; manual assistive-technology/device testing is not claimed |
 | AC-19 | Full suite passes on final `main` released SHA; no secrets/transient files committed | REL-01 |
-| AC-20 | Final PDF has exact Parts 1–9, working links, readable evidence, truthful claims | SUB-01 |
-
+| AC-20 | Final PDF has exact Parts 1–9, working links, readable evidence, truthful claims | SUB-01 is pending; tracked in Issue #53 |
 ## 10. Product Definition of Done
 
 - [ ] This numbered Spec DD, `api-spec.md`, `ui-spec.md`, and `tests.md` were committed before implementation PRs.

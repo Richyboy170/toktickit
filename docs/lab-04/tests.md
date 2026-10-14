@@ -1,54 +1,54 @@
 # Lab 4 Test Evidence and Traceability
 
-**Status:** PR #47 and follow-up PR #57 are merged. Final `main` is `76067e973bf3a3d7668c95936f1d8f3c3db02e47`; [workflow 37307397634](https://github.com/Richyboy170/toktickit/actions/runs/37307397634) passed server, client, E2E, populated migration preservation, and visual screenshot capture. The accessibility follow-up branch adds the mobile navigation and Action checkbox fixes and is awaiting its own CI and peer merge.
+**Status:** Final `main` is `6e6d645d61621f8a74166947326f59e5b3d141b4`; server, client, and E2E jobs passed in [run 37747697657](https://github.com/Richyboy170/toktickit/actions/runs/37747697657). The assertions and dashboard-state cases in [PR #61](https://github.com/Richyboy170/toktickit/pull/61) passed in [run 37765483898](https://github.com/Richyboy170/toktickit/actions/runs/37765483898): server 23 files / 72 tests, client 16 files / 59 tests, 15 E2E scenarios, and the additional visual capture. These are CI results; the suites were not rerun locally. Statuses below refer to those CI runs unless stated otherwise.
 
-## Test suites mapped to acceptance criteria
+## Test case traceability
 
-| Evidence group | Main coverage | Test files | Staging CI status |
+Each row names an implemented test case or CI verification step. The status identifies the evidence source; it does not imply a local rerun.
+
+| Test ID | AC | Test case and file | Status |
 |---|---|---|---|
-| Action validation and lifecycle | AC-05, AC-06 | `server/tests/lab-04/action-validation.unit.test.ts`, `server/tests/lab-04/actions-taken.api.test.ts` | Passed |
-| Ticket workflow and resolution gate | AC-09, AC-10 | `server/tests/lab-04/ticket-workflow.unit.test.ts`, `e2e/lab-04/ticket-resolution.spec.ts` | Passed |
-| Action access, actor/assignee, ownership | AC-01–04, AC-07–08 | `server/tests/lab-04/actions-taken.api.test.ts`, `e2e/lab-04/actions-taken-flow.spec.ts` | Passed |
-| Dashboard queries and ownership | AC-11–13 | `server/tests/lab-04/dashboards.api.test.ts`, `client/tests/lab-04/RequesterDashboard.test.tsx`, `client/tests/lab-04/StaffDashboard.test.tsx`, `e2e/lab-04/dashboards.spec.ts` | Passed |
-| Action detail UI | AC-04–08, AC-17 | `client/tests/lab-04/ActionsTaken.test.tsx`, `e2e/lab-04/actions-taken-flow.spec.ts` | Passed |
-| Lab 1–3 regression | AC-16 | Existing server/client test suites and Playwright suite | Passed |
-| Migration and seed | AC-14–15 | `server/scripts/verify-lab4-migration-preserves-data.ts`, CI `prisma migrate deploy`, `prisma:seed`, server API suite | Passed on final `main` in workflow 37307397634 |
-| Responsive visual capture | AC-18 | `e2e/lab-03/visual-evidence.spec.ts` (captures Lab 3 and Lab 4 views) | Passed on final `main` in workflow 37307397634; the workflow artifact contains the 12 desktop/tablet/mobile captures |
-| Accessibility follow-up | AC-18 | `docs/lab-04/accessibility-review.md`, `client/tests/lab-04/ActionsTaken.test.tsx`, visual Playwright checks | Branch checks pending; main screenshots exposed the mobile nav and checkbox presentation issues now fixed on this branch |
-| Release gate | AC-19 | GitHub Actions PR #47 and PR #57 merge workflows | [Final `main` passed](https://github.com/Richyboy170/toktickit/actions/runs/37307397634) |
+| VAL-01 | AC-05 | Trims text and accepts a complete creation payload — `server/tests/lab-04/action-validation.unit.test.ts` | Pass — PR #61 server CI |
+| VAL-02 | AC-05 | Rejects invalid date, blank description, and non-positive assignee ID — `server/tests/lab-04/action-validation.unit.test.ts` | Pass — PR #61 server CI |
+| VAL-03 | AC-01, AC-05 | Rejects client-supplied Action identity and Ticket link — `server/tests/lab-04/action-validation.unit.test.ts` | Pass — PR #61 server CI |
+| VAL-04 | AC-05 | Requires and trims the follow-up note; clears it when follow-up is disabled — `server/tests/lab-04/action-validation.unit.test.ts` | Pass — PR #61 server CI |
+| VAL-05 | AC-08 | Requires update version and validates nullable fields — `server/tests/lab-04/action-validation.unit.test.ts` | Pass — PR #61 server CI |
+| ACT-01 | AC-06 | Parameterized Action transition policy (8 from/to cases) — `server/tests/lab-04/action-validation.unit.test.ts` | Pass — PR #61 server CI |
+| API-ACT-01 | AC-01, AC-04, AC-07 | Uses authenticated performer, rejects inactive assignee, accepts active Staff assignee, and checks chronological order with ID tie-break — `server/tests/lab-04/actions-taken.api.test.ts` | Pass — PR #61 server CI; includes added assertions |
+| API-ACT-02 | AC-03 | Limits Requester reads to owned Tickets and denies Action writes — `server/tests/lab-04/actions-taken.api.test.ts` | Pass — PR #61 server CI |
+| API-ACT-03 | AC-06, AC-08 | Enforces version checks, allowed Action transitions, and terminal-record immutability — `server/tests/lab-04/actions-taken.api.test.ts` | Pass — PR #61 server CI |
+| UNIT-TICKET-01 | AC-10 | Requires active owner and at least one completed Action — `server/tests/lab-04/ticket-workflow.unit.test.ts` | Pass — PR #61 server CI |
+| UNIT-TICKET-02 | AC-10 | Allows cancelled history only when remaining Actions are complete — `server/tests/lab-04/ticket-workflow.unit.test.ts` | Pass — PR #61 server CI |
+| API-DASH-01 | AC-11, AC-13 | Compares Requester metrics to DB counts, bounds and scopes recent lists, checks filters — `server/tests/lab-04/dashboards.api.test.ts` | Pass — PR #61 server CI |
+| API-DASH-02 | AC-12, AC-13 | Checks all eight Staff status counts and matches dashboard metrics to queue filters — `server/tests/lab-04/dashboards.api.test.ts` | Pass — PR #61 server CI |
+| API-DASH-03 | AC-11, AC-12 | Rejects role crossover and prevents Requester identity selection — `server/tests/lab-04/dashboards.api.test.ts` | Pass — PR #61 server CI |
+| UI-ACT-01 | AC-03, AC-06, AC-17 | Keeps Requester Action history read-only, including terminal records — `client/tests/lab-04/ActionsTaken.test.tsx` | Pass — PR #61 client CI |
+| UI-ACT-02 | AC-05, AC-08, AC-17 | Defaults assignee to current Staff and preserves form values after recoverable error — `client/tests/lab-04/ActionsTaken.test.tsx` | Pass — PR #61 client CI |
+| UI-REQ-01 | AC-11, AC-13 | Shows Requester metrics, recent Tickets, and exact drill-down links — `client/tests/lab-04/RequesterDashboard.test.tsx` | Pass — PR #61 client CI |
+| UI-REQ-02 | AC-17 | Provides retry path for safe Requester Dashboard failure — `client/tests/lab-04/RequesterDashboard.test.tsx` | Pass — PR #61 client CI |
+| UI-STAFF-01 | AC-12, AC-13 | Shows Staff metrics, statuses, urgent Tickets, and assigned Action links — `client/tests/lab-04/StaffDashboard.test.tsx` | Pass — PR #61 client CI |
+| UI-STAFF-02 | AC-12, AC-17 | Shows zero counts and empty states — `client/tests/lab-04/StaffDashboard.test.tsx` | Pass — PR #61 client CI |
+| UI-STAFF-03 | AC-17 | Shows safe failure, hides backend details, and retries — `client/tests/lab-04/StaffDashboard.test.tsx` | Pass — PR #61 client CI |
+| UI-STAFF-04 | AC-17 | Shows forbidden state without retry control — `client/tests/lab-04/StaffDashboard.test.tsx` | Pass — PR #61 client CI |
+| UI-STAFF-05 | AC-17 | Announces loading while data is pending — `client/tests/lab-04/StaffDashboard.test.tsx` | Pass — PR #61 client CI |
+| E2E-ACT-01 | AC-05, AC-06, AC-18 | Records, starts, and completes an Action in the browser — `e2e/lab-04/actions-taken-flow.spec.ts` | Pass — PR #61 E2E CI |
+| E2E-TICKET-01 | AC-09, AC-10 | Blocks resolution before completed work and permits completed work with cancelled history — `e2e/lab-04/ticket-resolution.spec.ts` | Pass — PR #61 E2E CI |
+| E2E-DASH-01 | AC-11, AC-13, AC-16, AC-18 | Exercises Requester Dashboard drill-down and read-only Action history — `e2e/lab-04/dashboards.spec.ts` | Pass — PR #61 E2E CI |
+| E2E-DASH-02 | AC-12, AC-13, AC-16, AC-18 | Exercises Staff/Admin dashboard navigation and Ticket Queue — `e2e/lab-04/dashboards.spec.ts` | Pass — PR #61 E2E CI |
+| VIS-01 | AC-18 | Captures responsive Lab 3/Lab 4 visual evidence — `e2e/lab-03/visual-evidence.spec.ts`, CI artifact `toktickit-playwright-evidence` | Pass — PR #61 visual capture in run 37765483898 |
+| MIG-01 | AC-14 | Runs populated Lab 3 migration-preservation comparison — `server/scripts/verify-lab4-migration-preserves-data.ts` via `npm run test:migration-preservation` | Pass — runs 37307397634 and 37765483898 |
+| SEED-01 | AC-15 | Applies migration and runs Prisma seed — CI workflow steps `prisma migrate deploy`, `prisma:seed` | Pass — PR #61 server CI; seed command ran once in this workflow |
+| REG-01 | AC-16 | Prior-lab regression suites included in server, client, and E2E jobs — repository test suites | Pass — PR #61 CI; 15 E2E scenarios |
+| REL-01 | AC-19 | Final-main server, client, and E2E jobs — [workflow 37747697657](https://github.com/Richyboy170/toktickit/actions/runs/37747697657) | Pass — final released SHA |
+| SUB-01 | AC-20 | Nine-part PDF, evidence review, and student reflection — tracked in Issue #53; no corresponding file in this application repository | Pending — not a software test |
 
-This mapping records test files that exist. It does not claim separate performance benchmarking or a manual screen-reader session. Contrast calculations and browser-based keyboard checks are documented in `accessibility-review.md`; assistive-technology and physical-device testing remain outside this review. See `ui-spec.md` for the visual evidence scope.
+## Coverage limits and file inventory
 
-## Verification records
+- `server/tests/lab-04/ticket-workflow.unit.test.ts` tests the resolution predicate, while `e2e/lab-04/ticket-resolution.spec.ts` exercises the browser-to-server flow. There is no dedicated `ticket-workflow.api.test.ts` and no `client/tests/lab-04/TicketWorkflow.test.tsx`; the contract's original separate-file plan was not implemented.
+- Requester and Staff dashboard API cases are combined in `server/tests/lab-04/dashboards.api.test.ts`; there are no separate `requester-dashboard.api.test.ts` or `staff-dashboard.api.test.ts` files.
+- AC-02's invariant that Actions do not change a Ticket's primary owner is not directly asserted by the current Lab 4-specific tests. The E2E test covers a representative transition path, not the full Ticket status matrix or all role combinations in a dedicated API suite.
+- The Staff dashboard API test checks status counts, list caps, and metric-to-filter totals, but does not assert every list-ordering rule or every empty-database case.
+- The seed command passes in CI, but this workflow invokes it once; no Lab 4 test explicitly reruns seed and compares duplicate counts. No separate performance smoke test is recorded.
+- The visual fixtures are deterministic representative UI content, not live database records. No manual screen-reader or physical-device test is claimed; see [`accessibility-review.md`](./accessibility-review.md).
 
-### Staging CI
-
-- PR: [#46](https://github.com/Richyboy170/toktickit/pull/46)
-- Merge commit: `45431b9b8769dc20a4c23c0595793c4c831ca769`
-- Workflow run: [37191660316 — successful](https://github.com/Richyboy170/toktickit/actions/runs/37191660316)
-- Workflow executes PostgreSQL migration and seed, full server and client test suites, builds, dependency audits, Playwright E2E, and Lab 3 visual evidence.
-
-### Release-evidence PR CI
-
-- PR: [#47](https://github.com/Richyboy170/toktickit/pull/47)
-- Workflow run: [37202724379 — server, client, and E2E jobs passed](https://github.com/Richyboy170/toktickit/actions/runs/37202724379).
-- This verifies the release-prep branch, including the new Lab 4 visual captures. It is not final-main evidence because PR #47 is still open.
-
-### Local verification on feature commit `6877630`
-
-| Check | Result | Evidence |
-|---|---|---|
-| Server full tests | Pass | `npm test`: 23 files, 72 tests passed. |
-| Client full tests | Pass | `npm test`: 16 files, 55 tests passed. |
-| Production builds | Pass | `npm run build` passed for server and client. |
-| E2E | Pass | `npm run test:e2e`: 15 tests passed. |
-| Visual evidence | Pass | `npm run test:e2e:visual`: 1 visual-capture test passed after Lab 4 captures were added. |
-| Dependency audits | Pass | Root, server, and client `npm audit` each reported zero vulnerabilities after the `undici` update. |
-
-On the current Windows workspace, sandboxed Vitest startup initially failed with `spawn EPERM`. An elevated retry ran but the server API tests could not reach PostgreSQL at `localhost:5432`; 14 server files passed, nine failed, and 27 tests were skipped due to unavailable database setup (one Categories API test returned 500). Separately, the client suite passed all 16 files/55 tests, `npm run build` passed for both packages, and root `npm audit` reported zero vulnerabilities. The successful remote PR CI runs above provide the full PostgreSQL-backed suite evidence; the local DB limitation is not a passing test result.
-
-## Remaining release checks
-
-- Complete peer review and merge the accessibility follow-up PR; then verify its final-main run and refresh the screenshot index.
-- Complete issue [#51](https://github.com/Richyboy170/toktickit/issues/51) with peer-merged accessibility evidence and capture final Project/Kanban evidence.
-- Complete issue [#53](https://github.com/Richyboy170/toktickit/issues/53), including the student's own reflection and final PDF.
+The screenshots committed in [`artifacts/lab-04/screenshots/`](../../artifacts/lab-04/screenshots/) are indexed by [`artifacts/lab-04/README.md`](../../artifacts/lab-04/README.md). Final-main screenshot evidence is available in the `toktickit-playwright-evidence` artifact from run 37747697657.

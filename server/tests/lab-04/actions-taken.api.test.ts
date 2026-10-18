@@ -11,6 +11,7 @@ let otherRequesterCookie: string;
 let ticketId: number;
 let otherTicketId: number;
 let actionId: number;
+const actionIds: number[] = [];
 const sessionHashes: string[] = [];
 
 async function createSession(email: string): Promise<string> {
@@ -37,7 +38,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  if (actionId) await getPrisma().actionTaken.deleteMany({ where: { id: actionId } });
+  if (actionIds.length) await getPrisma().actionTaken.deleteMany({ where: { id: { in: actionIds } } });
   if (sessionHashes.length) await getPrisma().session.deleteMany({ where: { tokenHash: { in: sessionHashes } } });
 });
 
@@ -45,6 +46,16 @@ describe("Lab 4 Actions Taken API", () => {
   it("creates an Action with authenticated performer and a separately validated active Staff assignee", async () => {
     const performer = await getPrisma().user.findUniqueOrThrow({ where: { email: "krit.staff@example.edu" }, select: { id: true } });
     const assignee = await getPrisma().user.findUniqueOrThrow({ where: { email: "mali.staff@example.edu" }, select: { id: true } });
+    const inactiveAssignee = await getPrisma().user.findUniqueOrThrow({ where: { email: "archive.staff@example.edu" }, select: { id: true } });
+    const rejectedInactive = await request(app).post(`/api/tickets/${ticketId}/actions`).set("Cookie", staffCookie).send({
+      actionAt: "2026-10-04T03:15:00.000Z",
+      description: "This Action must not be assigned to inactive Staff.",
+      assigneeUserId: inactiveAssignee.id,
+      followUpRequired: false,
+    });
+    expect(rejectedInactive.status).toBe(400);
+    expect(rejectedInactive.body.error.code).toBe("INVALID_ASSIGNEE");
+
     const response = await request(app).post(`/api/tickets/${ticketId}/actions`).set("Cookie", staffCookie).send({
       actionAt: "2026-10-04T03:15:00.000Z",
       description: "  Confirmed replacement cable availability.  ",
@@ -72,6 +83,33 @@ describe("Lab 4 Actions Taken API", () => {
       followUpNote: "Check delivery tomorrow.",
     });
     actionId = created.body.action.id;
+    actionIds.push(actionId);
+
+    const earlier = await request(app).post(`/api/tickets/${ticketId}/actions`).set("Cookie", staffCookie).send({
+      actionAt: "2026-10-04T02:15:00.000Z",
+      description: "Earlier Action for stable-order verification.",
+      assigneeUserId: assignee.id,
+      followUpRequired: false,
+    });
+    expect(earlier.status).toBe(201);
+    actionIds.push(earlier.body.action.id);
+
+    const sameTime = await request(app).post(`/api/tickets/${ticketId}/actions`).set("Cookie", staffCookie).send({
+      actionAt: "2026-10-04T02:15:00.000Z",
+      description: "Same-time Action for stable ID tie-break verification.",
+      assigneeUserId: assignee.id,
+      followUpRequired: false,
+    });
+    expect(sameTime.status).toBe(201);
+    actionIds.push(sameTime.body.action.id);
+
+    const history = await request(app).get(`/api/tickets/${ticketId}/actions`).set("Cookie", staffCookie);
+    expect(history.status).toBe(200);
+    expect(history.body.actions.map((action: { id: number }) => action.id)).toEqual([
+      earlier.body.action.id,
+      sameTime.body.action.id,
+      created.body.action.id,
+    ]);
   });
 
   it("limits Requester reads to owned Tickets and denies Action writes", async () => {
@@ -84,6 +122,31 @@ describe("Lab 4 Actions Taken API", () => {
     expect(hidden.status).toBe(404);
     const denied = await request(app).post(`/api/tickets/${ticketId}/actions`).set("Cookie", requesterCookie).send({});
     expect(denied.status).toBe(403);
+  });
+
+  it("keeps the primary Ticket owner when another Staff member performs and reassigns an Action", async () => {
+    const ownerBefore = await getPrisma().ticket.findUniqueOrThrow({ where: { id: otherTicketId }, select: { ownerId: true } });
+    const performer = await getPrisma().user.findUniqueOrThrow({ where: { email: "krit.staff@example.edu" }, select: { id: true } });
+    const replacementAssignee = await getPrisma().user.findUniqueOrThrow({ where: { email: "nok.staff@example.edu" }, select: { id: true } });
+    const created = await request(app).post(`/api/tickets/${otherTicketId}/actions`).set("Cookie", staffCookie).send({
+      actionAt: "2026-10-04T05:15:00.000Z",
+      description: "Another Staff member performed work while preserving the Ticket owner.",
+      assigneeUserId: replacementAssignee.id,
+      followUpRequired: false,
+    });
+    expect(created.status).toBe(201);
+    actionIds.push(created.body.action.id);
+    expect(created.body.action.performedBy.id).toBe(performer.id);
+    expect(created.body.action.performedBy.id).not.toBe(ownerBefore.ownerId);
+
+    const reassigned = await request(app).patch(`/api/tickets/${otherTicketId}/actions/${created.body.action.id}`).set("Cookie", staffCookie).send({
+      expectedUpdatedAt: created.body.action.updatedAt,
+      assigneeUserId: performer.id,
+    });
+    expect(reassigned.status).toBe(200);
+    const ownerAfter = await getPrisma().ticket.findUniqueOrThrow({ where: { id: otherTicketId }, select: { ownerId: true } });
+    expect(ownerBefore.ownerId).not.toBeNull();
+    expect(ownerAfter.ownerId).toBe(ownerBefore.ownerId);
   });
 
   it("enforces version checks, allowed transitions, and immutable terminal records", async () => {

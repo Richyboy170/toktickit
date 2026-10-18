@@ -1,6 +1,18 @@
 # Lab 4 GitHub Issue Drafts
 
-Create these Issues in the existing TokTickIT GitHub Project before feature implementation. Apply the repository's existing Kanban status and a `Lab 4` label. Add dependencies/Development links after GitHub assigns issue numbers. Do not close an Issue until every checkbox and its linked PR are complete. Branches and PR destinations follow `Engineering_Contract.md`.
+**Remote status:** The Lab 4 issues below were created retrospectively on 2026-10-04 and added to the existing TokTickIT Individual Sprints project. This records the work and current state; it does not claim that issues existed before implementation.
+
+| Issue | GitHub record | Project state |
+|---|---|---|
+| 0 Contract and Test DD | [#48](https://github.com/Richyboy170/toktickit/issues/48) | Done / closed |
+| 1 Action data, migration, seed | [#56](https://github.com/Richyboy170/toktickit/issues/56) | Started / open; populated legacy-data verification remains |
+| 2 Action API and authorization | [#52](https://github.com/Richyboy170/toktickit/issues/52) | Done / closed |
+| 3 Ticket workflow and resolution gate | [#50](https://github.com/Richyboy170/toktickit/issues/50) | Done / closed |
+| 4 Staff dashboard | [#55](https://github.com/Richyboy170/toktickit/issues/55) | Done / closed |
+| 5 Requester dashboard | [#54](https://github.com/Richyboy170/toktickit/issues/54) | Done / closed |
+| 6 Actions Taken UI | [#49](https://github.com/Richyboy170/toktickit/issues/49) | Done / closed |
+| 7 Regression/accessibility/evidence | [#51](https://github.com/Richyboy170/toktickit/issues/51) | Started / open; final screenshots and broader accessibility review remain |
+| 8 Submission and release | [#53](https://github.com/Richyboy170/toktickit/issues/53) | PR Review / open; PR #47 checks pass, while final release, PDF, and student reflection remain |
 
 ## Issue 0 — [Lab 4] Contract and Test DD baseline
 

@@ -17,7 +17,7 @@ This checklist tracks the remaining work against the Lab 4 course rubric and `04
 ## Required before final submission
 
 - [x] Refresh the remote refs and confirm PR #61's merge/current Issue state.
-- [x] Create dedicated Issue [#63](https://github.com/Richyboy170/toktickit/issues/63), add it to the Project, and link it to feature PR [#64](https://github.com/Richyboy170/toktickit/pull/64) through `Closes #63`, which appears in the PR Development relationship. The PR body names the covered ACs. After CI passed, move #63 to PR Review. Issues #51 and #53 remain open/Started.
+- [x] Create dedicated Issue [#63](https://github.com/Richyboy170/toktickit/issues/63), add it to the Project, and link it to feature PR [#64](https://github.com/Richyboy170/toktickit/pull/64) through `Closes #63`, which appears in the PR Development relationship. The PR body names the covered ACs. After CI passed, move #63 to PR Review. GitHub API state checked 2026-10-18 shows #51 and #53 closed while their Project Status fields remain Started; this does not mean their broader acceptance work is complete.
 - [x] Pass PR #64 CI on `lab4-staging`: server/client/E2E visual jobs succeeded, including the database-backed API, populated migration check, seed-idempotency, performance-smoke, builds, and audits in [run 39101398642](https://github.com/Richyboy170/toktickit/actions/runs/39101398642).
 - [ ] Obtain an independent peer review of PR #64; GitHub currently shows no submitted reviews.
 - [ ] Merge to staging only after review; open a separate reviewed `lab4-staging` to `main` release PR and pass final-main CI.
@@ -25,7 +25,7 @@ This checklist tracks the remaining work against the Lab 4 course rubric and `04
 - [ ] Replace remaining screenshot placeholders with verified, readable captures; check every image path and Markdown link.
 - [ ] Confirm the reflection text is the student's own final wording before labeling it confirmed. Keep any instructor-only exception for PR #61's direct-to-main target explicitly unconfirmed unless the instructor confirms it.
 - [ ] Regenerate the single nine-part PDF after final-main evidence exists; inspect all pages for the nine headings, missing images, clipping, broken links, and leftover placeholders.
-- [ ] Leave Issue #53 open until PDF assembly, reflection confirmation, and final evidence review are complete; update its Project state only from the actual acceptance status.
+- [ ] Resolve the tracking mismatch caused by Issue #53 being closed while PDF assembly, reflection confirmation, and final evidence review remain incomplete. The reviewer requested keeping it open until those criteria are complete; confirm the appropriate tracking state with the instructor. Keep the report/PDF marked draft until acceptance evidence is complete.
 
 ## Current verification limits
 

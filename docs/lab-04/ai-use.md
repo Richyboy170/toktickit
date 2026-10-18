@@ -2,7 +2,7 @@
 
 ## Model and workflow
 
-AI assistance in this work used OpenAI Codex (GPT-6) for requirements planning, implementation support, CI failure diagnosis, and documentation. The student reviewed the engineering contract and supplied the personal experience included in the AI-assisted reflection below.
+OpenAI Codex (GPT-6) was used in both specification-agent and coding-agent roles: to structure the requirements and acceptance criteria, support implementation, diagnose CI findings, and prepare documentation. The student reviewed and approved the Engineering Contract before implementation. The reflection below is a draft based on documented project events and the student's stated sentiment; the student must review and edit it before submission.
 
 ## Selected prompts from the actual work
 
@@ -55,7 +55,7 @@ The quotations below preserve the user's original wording. CI entries show the r
 
    > and can you do the reflection for me?
 
-   **How it guided the work:** A reflection was prepared from the actual project history, and the student supplied the personal perspective included below.
+   **How it guided the work:** A reflection draft was prepared from the actual project history, and the student supplied the personal sentiment that informs it.
 
 8. **Student's personal reflection detail**
 
@@ -65,8 +65,10 @@ The quotations below preserve the user's original wording. CI entries show the r
 
 ## My Reflection
 
-For this lab, I used Codex to help turn the assignment brief into an engineering contract, organize the work into GitHub issues and pull requests, and diagnose CI failures. I reviewed the contract before implementation and kept peer review and merging as explicit steps in the workflow. That helped me treat generated code and documentation as work to inspect, rather than as evidence that the assignment was complete. I felt good doing this work, and it made me interested in improving my engineering workflow, issue-writing, and GitHub skills.
-
-One concrete example was the dependency audit after the accessibility changes were merged. The pull request checks had passed, but the new `main` run found vulnerable transitive versions of `source-map-js` and `proxy-addr`. The lockfiles were updated to patched releases, and I waited for the follow-up pull request to pass the server, client, and E2E checks and for the peer to merge it. The final `main` run [37747697657](https://github.com/Richyboy170/toktickit/actions/runs/37747697657) then passed all three jobs. This showed me that a green feature pull request alone does not establish that the merged release is healthy; the checks on the actual `main` commit matter too.
-
-I also learned to keep the workflow evidence connected: the contract described the acceptance criteria, tests checked behavior and permissions, and issues and pull requests recorded implementation and review. I used the peer-review feedback to link the regression work to its issue and waited for peer approval and merge instead of treating my own implementation checks as a substitute. This gave me practical experience with writing and tracking issues, connecting them to pull requests, and following work through review and merge. In future work, I would create the issue and evidence checklist before implementation so the GitHub history and final report are complete as the work happens.
+> **Student review draft:** Please edit this first-person text so every statement matches your own experience before submitting.
+>
+> For the specification-agent role, I asked Codex to turn the handout into an Engineering Contract, numbered requirements, acceptance criteria, and a test plan before implementation. Reviewing and approving the contract helped me see how product rules, tests, and GitHub work fit together. I enjoyed the assignment and want to improve my workflow, issue-writing, and GitHub skills.
+>
+> For the coding-agent role, I used Codex to implement changes and investigate failed API tests and CI findings. Peer review on PR #58 required a direct link to Issue #51, and the later `main` audit found dependency issues after feature checks had passed. Those examples taught me to verify traceability and test the merged branch; agent output and a green feature PR were not enough. Peer review, regression tests, and final-main checks each found different problems.
+>
+> I also closed Issues #51 and #53 while the final PDF and evidence review were still outstanding. That was a tracking mistake: issue closure should follow acceptance criteria, and a closed issue does not prove the deliverable is accepted. Next time I will keep remaining acceptance work visible and confirm final evidence before closing the issue. PR #64 still awaits independent review and staged release, so I should not describe this work as fully accepted.

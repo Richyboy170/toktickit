@@ -31,5 +31,4 @@ This checklist tracks the remaining work against the Lab 4 course rubric and `04
 
 ## Current verification limits
 
-The local workspace has no disposable PostgreSQL service or Docker engine, so database-backed API and smoke checks ran in CI rather than locally. The seed/performance scripts refuse to run unless `DATABASE_URL` and `TEST_DATABASE_URL` match a local `*_test` database. The GitHub CLI token reports invalid, although the Git credential helper successfully pushed `e03b20e`; manual Development-field changes are not available through the current tools. PR #64 is open against `lab4-staging`; CI passed on the prior head, checks on `e03b20e` are pending, and independent peer review is still pending.
-
+The local workspace has no disposable PostgreSQL service or Docker engine, so database-backed API and smoke checks ran in CI rather than locally. The seed/performance scripts refuse to run unless `DATABASE_URL` and `TEST_DATABASE_URL` match a local `*_test` database. The GitHub CLI token reports invalid, although branch pushes succeeded through the configured Git credential helper; manual Development-field changes are not available through the current tools. PR #64 is open against `lab4-staging`; the earlier head `5a984e8` passed run 39105317501, while CI for the latest pushed head remains pending. Independent peer review is still pending.

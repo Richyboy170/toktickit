@@ -124,6 +124,31 @@ describe("Lab 4 Actions Taken API", () => {
     expect(denied.status).toBe(403);
   });
 
+  it("keeps the primary Ticket owner when another Staff member performs and reassigns an Action", async () => {
+    const ownerBefore = await getPrisma().ticket.findUniqueOrThrow({ where: { id: otherTicketId }, select: { ownerId: true } });
+    const performer = await getPrisma().user.findUniqueOrThrow({ where: { email: "krit.staff@example.edu" }, select: { id: true } });
+    const replacementAssignee = await getPrisma().user.findUniqueOrThrow({ where: { email: "nok.staff@example.edu" }, select: { id: true } });
+    const created = await request(app).post(`/api/tickets/${otherTicketId}/actions`).set("Cookie", staffCookie).send({
+      actionAt: "2026-10-04T05:15:00.000Z",
+      description: "Another Staff member performed work while preserving the Ticket owner.",
+      assigneeUserId: replacementAssignee.id,
+      followUpRequired: false,
+    });
+    expect(created.status).toBe(201);
+    actionIds.push(created.body.action.id);
+    expect(created.body.action.performedBy.id).toBe(performer.id);
+    expect(created.body.action.performedBy.id).not.toBe(ownerBefore.ownerId);
+
+    const reassigned = await request(app).patch(`/api/tickets/${otherTicketId}/actions/${created.body.action.id}`).set("Cookie", staffCookie).send({
+      expectedUpdatedAt: created.body.action.updatedAt,
+      assigneeUserId: performer.id,
+    });
+    expect(reassigned.status).toBe(200);
+    const ownerAfter = await getPrisma().ticket.findUniqueOrThrow({ where: { id: otherTicketId }, select: { ownerId: true } });
+    expect(ownerBefore.ownerId).not.toBeNull();
+    expect(ownerAfter.ownerId).toBe(ownerBefore.ownerId);
+  });
+
   it("enforces version checks, allowed transitions, and immutable terminal records", async () => {
     const action = await getPrisma().actionTaken.findUniqueOrThrow({ where: { id: actionId }, select: { updatedAt: true } });
     const started = await request(app).patch(`/api/tickets/${ticketId}/actions/${actionId}`).set("Cookie", staffCookie).send({ expectedUpdatedAt: action.updatedAt.toISOString(), status: "IN_PROGRESS" });

@@ -126,20 +126,20 @@ Errors: invalid input `400 VALIDATION_ERROR`; unauthenticated `401`; forbidden r
 | ID | Observable criterion | Current evidence ID(s) |
 |---|---|---|
 | AC-01 | Action creation links to correct Ticket, authenticated performer, active IT Staff assignee | API-ACT-01, VAL-03 |
-| AC-02 | Different performers/assignees on same Ticket do not change primary owner | Gap: not directly asserted by current Lab 4-specific tests |
+| AC-02 | Different performers/assignees on same Ticket do not change primary owner | API-ACT-04 directly checks creation and reassignment by another Staff member; pending score-remediation branch CI |
 | AC-03 | Requester cannot mutate Actions and sees only owned Ticket Actions | API-ACT-02, UI-ACT-01 |
-| AC-04 | Stable Action order and distinct actor/assignee display | API-ACT-01; distinct display is specified but not directly asserted in current component tests |
+| AC-04 | Stable Action order and distinct actor/assignee display | API-ACT-01 checks chronological order/ties; UI-ACT-03 asserts different performer and assignee labels with different users; updated UI case awaits branch CI |
 | AC-05 | Follow-up/result/cancellation/length/date validation is enforced in API/UI | VAL-01–04, UI-ACT-02, E2E-ACT-01 (the listed cases do not cover every validation edge) |
 | AC-06 | Only valid Action transitions; terminal records cannot be edited/deleted | ACT-01, API-ACT-03, UI-ACT-01, E2E-ACT-01 |
 | AC-07 | Inactive/missing/non-staff assignee rejected without mutation | API-ACT-01 directly checks inactive assignee rejection |
 | AC-08 | Stale writes conflict without overwriting; UI retains draft | VAL-05, API-ACT-03, UI-ACT-02 |
-| AC-09 | Full Ticket transition matrix/role policy enforced by server | E2E-TICKET-01 covers a representative browser path; full matrix/role coverage lacks a dedicated Lab 4 API suite |
-| AC-10 | Resolution requires owner + one completed Action + all non-cancelled Actions complete; Requester indication is advisory | UNIT-TICKET-01/02, E2E-TICKET-01 |
+| AC-09 | Full Ticket transition matrix/role policy enforced by server | API-TICKET-01/02 covers all current/target pairs, role denials, confirmation, and stale writes; UI-TICKET-01 checks role-appropriate controls; pending score-remediation branch CI |
+| AC-10 | Resolution requires owner + one completed Action + all non-cancelled Actions complete; Requester indication is advisory | UNIT-TICKET-01/02, API-TICKET-03, UI-TICKET-02, E2E-TICKET-01; new API/UI cases pending branch CI |
 | AC-11 | Requester dashboard values match DB for authenticated owner, including zeros | API-DASH-01/03, UI-REQ-01/02, E2E-DASH-01 |
 | AC-12 | Staff dashboard matches predicates/scope/order/limits, including zeros | API-DASH-02/03, UI-STAFF-01/02, E2E-DASH-02 |
 | AC-13 | Dashboard links open correct filters/Ticket/Actions | API-DASH-01/02, UI-REQ-01, UI-STAFF-01, E2E-DASH-01/02 |
 | AC-14 | Migration preserves Lab 3 records; legacy zero-Action Tickets remain usable | MIG-01 |
-| AC-15 | Seed reruns without duplicates and supports empty/nonempty dashboards | SEED-01 runs the seed command; no explicit repeated-seed assertion is recorded |
+| AC-15 | Seed reruns without duplicates and supports empty/nonempty dashboards | SEED-01 snapshots fixture counts and IDs, reruns seed, and compares; PERF-01 checks disposable dashboard fixture behavior. Both new CI checks are pending |
 | AC-16 | Labs 1–3 role/auth/Ticket/Attachment/comment/note/Admin regression passes | REG-01 (suite-level CI evidence) |
 | AC-17 | Screens support loading/empty/validation/forbidden/not-found/conflict/failure and retain draft | UI-ACT-02, UI-REQ-02, UI-STAFF-02–05 |
 | AC-18 | Accessibility/responsive/visual/E2E behavior passes at target viewports | E2E-ACT-01, E2E-DASH-01/02, VIS-01; manual assistive-technology/device testing is not claimed |

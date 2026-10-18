@@ -19,6 +19,7 @@ This checklist tracks the remaining work against the Lab 4 course rubric and `04
 - [x] Refresh the remote refs and confirm PR #61's merge/current Issue state.
 - [x] Create dedicated Issue [#63](https://github.com/Richyboy170/toktickit/issues/63), add it to the Project, and move it to PR Review after CI passed. PR [#64](https://github.com/Richyboy170/toktickit/pull/64) names the covered ACs and includes `Closes #63` in its body. GitHub currently shows no Development relationship because #64 targets non-default `lab4-staging`.
 - [x] Pass PR #64 CI on `lab4-staging`: server/client/E2E visual jobs succeeded, including the database-backed API, populated migration check, seed-idempotency, performance-smoke, builds, and audits in [run 39101398642](https://github.com/Richyboy170/toktickit/actions/runs/39101398642).
+- [ ] Confirm all CI jobs pass on latest pushed head `e03b20e`; previous head `5a984e8` passed run 39105317501.
 - [ ] Obtain an independent peer review of PR #64; GitHub currently shows no submitted reviews.
 - [ ] Manually link PR #64 to Issue #63 through the Issue Development field; the closing keyword is ignored while the PR targets non-default `lab4-staging`.
 - [ ] Merge to staging only after review; open a separate reviewed `lab4-staging` to `main` release PR and pass final-main CI.
@@ -30,4 +31,4 @@ This checklist tracks the remaining work against the Lab 4 course rubric and `04
 
 ## Current verification limits
 
-The local workspace has no disposable PostgreSQL service or Docker engine, so database-backed API and smoke checks ran in CI rather than locally. The seed/performance scripts refuse to run unless `DATABASE_URL` and `TEST_DATABASE_URL` match a local `*_test` database. The current local GitHub CLI token is invalid; external GitHub updates from this checkout may be unavailable until authentication is restored. PR #64 is open against `lab4-staging`; all CI jobs passed, and independent peer review is still pending.
+The local workspace has no disposable PostgreSQL service or Docker engine, so database-backed API and smoke checks ran in CI rather than locally. The seed/performance scripts refuse to run unless `DATABASE_URL` and `TEST_DATABASE_URL` match a local `*_test` database. The GitHub CLI token reports invalid, although the Git credential helper successfully pushed `e03b20e`; manual Development-field changes are not available through the current tools. PR #64 is open against `lab4-staging`; CI passed on the prior head, checks on `e03b20e` are pending, and independent peer review is still pending.

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createActionSchema, patchActionSchema } from "../../src/action-validation.js";
+import { createActionSchema, patchActionSchema, zodActionFieldErrors } from "../../src/action-validation.js";
 import { canTransitionAction } from "../../src/action-workflow.js";
 
 const validCreate = {
@@ -22,6 +22,14 @@ describe("Lab 4 Action Taken validation", () => {
     expect(createActionSchema.safeParse({ ...validCreate, actionAt: "tomorrow" }).success).toBe(false);
     expect(createActionSchema.safeParse({ ...validCreate, description: "  " }).success).toBe(false);
     expect(createActionSchema.safeParse({ ...validCreate, assigneeUserId: 0 }).success).toBe(false);
+  });
+
+  it("returns the assignee selection message for a nonnumeric id", () => {
+    const result = createActionSchema.safeParse({ ...validCreate, assigneeUserId: "invalid" });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(zodActionFieldErrors(result.error).assigneeUserId).toBe("Select an active IT Staff assignee.");
+    }
   });
 
   it("rejects client supplied Action identity and Ticket links", () => {

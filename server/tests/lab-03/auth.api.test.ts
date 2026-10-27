@@ -17,4 +17,14 @@ describe("Lab 3 authentication boundary", () => {
     expect(response.body.error.code).toBe("VALIDATION_ERROR");
     expect(response.body.error.fields).toEqual(expect.objectContaining({ email: expect.any(String), password: expect.any(String) }));
   });
+
+  it("returns the existing required-field messages when login fields are missing", async () => {
+    const response = await request(app).post("/api/auth/login").send({});
+
+    expect(response.status).toBe(400);
+    expect(response.body.error.fields).toEqual(expect.objectContaining({
+      email: "Email is required.",
+      password: "Password is required.",
+    }));
+  });
 });

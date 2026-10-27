@@ -12,7 +12,7 @@ export const attachmentsRouter = Router();
 
 const removalSchema = z.object({
   reason: z
-    .string({ required_error: "Removal reason is required." })
+    .string({ error: (issue) => issue.input === undefined ? "Removal reason is required." : undefined })
     .transform((value) => value.trim())
     .pipe(z.string().min(3, "Removal reason must be 3-200 characters.").max(200, "Removal reason must be 3-200 characters.")),
 });

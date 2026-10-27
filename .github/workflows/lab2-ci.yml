@@ -33,9 +33,18 @@ jobs:
         with: { node-version: 24, cache: npm, cache-dependency-path: server/package-lock.json }
       - run: npm ci
         working-directory: server
+      - name: Verify Lab 4 migration preserves populated Lab 3 data
+        run: npm run test:migration-preservation
+        working-directory: server
       - run: npx prisma migrate deploy
         working-directory: server
       - run: npm run prisma:seed
+        working-directory: server
+      - name: Verify Lab 4 seed idempotency on the disposable database
+        run: npm run verify:lab4-seed-idempotency
+        working-directory: server
+      - name: Run bounded Lab 4 dashboard and Action query smoke
+        run: npm run verify:lab4-performance-smoke
         working-directory: server
       - run: npm test
         working-directory: server
@@ -93,7 +102,7 @@ jobs:
       - name: Enable legacy Lab 2 fixture for browser tests
         run: echo "VITE_ENABLE_LEGACY_REQUESTER=true" > client/.env.local
       - run: npm run test:e2e
-      - name: Capture Lab 3 visual evidence
+      - name: Capture Lab 3 and Lab 4 visual evidence
         if: always()
         run: npm run test:e2e:visual
       - uses: actions/upload-artifact@v4

@@ -5,7 +5,8 @@ import { ActionsTaken } from "../../src/components/ActionsTaken.js";
 import * as api from "../../src/api.js";
 
 const staff: api.StaffUser = { id: 7, name: "Narin Staff", email: "narin@example.edu", role: "IT_STAFF", isActive: true };
-const action: api.ActionTaken = { id: 71, ticketId: 41, actionAt: "2026-10-04T02:00:00.000Z", description: "Review Wi-Fi access logs", result: null, performedBy: staff, assignee: staff, status: "PLANNED", followUpRequired: false, followUpNote: null, attachmentNotes: null, createdAt: "2026-10-04T02:00:00.000Z", updatedAt: "2026-10-04T02:00:00.000Z" };
+const assignee: api.StaffUser = { id: 8, name: "Mali Staff", email: "mali@example.edu", role: "IT_STAFF", isActive: true };
+const action: api.ActionTaken = { id: 71, ticketId: 41, actionAt: "2026-10-04T02:00:00.000Z", description: "Review Wi-Fi access logs", result: null, performedBy: staff, assignee, status: "PLANNED", followUpRequired: false, followUpNote: null, attachmentNotes: null, createdAt: "2026-10-04T02:00:00.000Z", updatedAt: "2026-10-04T02:00:00.000Z" };
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -14,7 +15,8 @@ describe("Actions Taken UI", () => {
     vi.spyOn(api, "getTicketActions").mockResolvedValue({ actions: [{ ...action, status: "COMPLETED", result: "Logs reviewed." }] });
     render(<ActionsTaken ticketId={41} canManage={false} />);
     expect(await screen.findByText("Review Wi-Fi access logs")).toBeInTheDocument();
-    expect(screen.getAllByText("Narin Staff")).toHaveLength(2);
+    expect(screen.getByText("Performed by").parentElement).toHaveTextContent("Narin Staff");
+    expect(screen.getByText("Assigned to").parentElement).toHaveTextContent("Mali Staff");
     expect(screen.queryByRole("button", { name: /edit action|complete action|cancel action/i })).not.toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Record an Action" })).not.toBeInTheDocument();
   });
@@ -25,6 +27,7 @@ describe("Actions Taken UI", () => {
     const create = vi.spyOn(api, "createTicketAction").mockRejectedValue(new api.ApiError("Service unavailable.", 500));
     render(<ActionsTaken ticketId={41} canManage currentUserId={staff.id} />);
     await screen.findByRole("heading", { name: "Record an Action" });
+    expect(screen.getByRole("checkbox", { name: "Follow-up Required" }).closest("label")).toHaveClass("checkbox-field");
     await userEvent.type(screen.getByLabelText("Description"), "Checked the network cable");
     expect(screen.getByLabelText("Assigned To")).toHaveValue("7");
     await userEvent.click(screen.getByRole("button", { name: "Record Action" }));

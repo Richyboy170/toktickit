@@ -1,6 +1,6 @@
-# TokTickIT — Lab 3 Users, Roles, and IT Ticketing
+# TokTickIT — IT Service Desk
 
-TokTickIT is a full-stack IT service desk course project. Lab 3 replaces the temporary Development Requester flow with real email/password authentication, role-based access, an IT Staff queue and ticket workflow, and a focused Administrator User Management screen. Lab 2 Requester ticket and attachment behavior remains available to authenticated Requesters.
+TokTickIT is a full-stack IT service desk course project. Labs 1–4 deliver authenticated Requester, IT Staff, and Administrator workflows; Requester ticket and attachment handling; staff ticket operations; auditable Actions Taken; guarded Ticket resolution; and role-appropriate dashboards. Lab 4 preserves the earlier authentication, authorization, attachment, comment, note, and administration behavior.
 
 ## Technology
 
@@ -33,7 +33,7 @@ npm run prisma:seed
 npm run dev
 ```
 
-The migration evolves the existing `DevelopmentRequester` table into `User` while preserving integer IDs, Tickets, Attachments, and timestamps. The idempotent local seed creates four active Requesters and one inactive Requester, three active IT Staff and one inactive IT Staff, one Administrator, reference data, workflow Tickets, Public Comments, and Internal Notes. Seed passwords are local development credentials only; see `server/prisma/seed.ts` and `docs/lab-03/README.md`.
+The migrations preserve existing Users, Tickets, Attachments, comments, and notes while adding the Lab 4 Action Taken records. The idempotent local seed creates role-appropriate users, reference data, workflow Tickets, and representative Action Taken data. Seed passwords are local development credentials only; see `server/prisma/seed.ts` and `docs/lab-03/README.md`.
 
 For a database that contains legacy Requesters outside the stable local seed, set a temporary local `LAB3_MIGRATION_INITIAL_PASSWORD` environment variable and run `npm run prisma:initialize-legacy-passwords` after the migration. The command hashes that value for rows still marked with an empty credential, keeps `mustChangePassword=true`, and never prints the password. The Administrator can then issue an individual initial password through User Management. Do not commit the variable or use it as a production secret.
 
@@ -89,11 +89,11 @@ Normal application routes use the authenticated session cookie. The legacy `X-De
 | GET/POST | `/api/staff/tickets/:ticketId/notes` | Read or append Internal Notes |
 | GET/POST/PATCH | `/api/admin/users` | Administrator User Management |
 
-The complete Lab 3 request/response, validation, authorization, status, and safe-error contract is in [`docs/lab-03/api-spec.md`](docs/lab-03/api-spec.md). The engineering contract, test traceability, UI rules, review record, and AI reflection are in [`docs/lab-03/`](docs/lab-03/).
+The Labs 2–4 request/response, validation, authorization, status, and safe-error contracts are in [`docs/lab-02/`](docs/lab-02/), [`docs/lab-03/`](docs/lab-03/), and [`docs/lab-04/`](docs/lab-04/).
 
 ## Lab 4 Actions Taken and dashboards
 
-The Lab 4 increment adds auditable Actions Taken to Tickets, guarded Ticket resolution, Requester and Staff dashboards, and dashboard-linked queue filters. The approved contract was merged to `lab4-staging`; implementation on `feature/lab4-action-model` is being prepared for peer review. Database-backed integration and E2E checks require PostgreSQL; see the local verification and release ledger in [`docs/lab-04/tests.md`](docs/lab-04/tests.md).
+The Lab 4 increment adds auditable Actions Taken to Tickets, guarded Ticket resolution, Requester and Staff dashboards, and dashboard-linked queue filters. The approved contract, feature work, and release have been peer reviewed and merged through `lab4-staging` to `main`. Final main is `6e6d645d61621f8a74166947326f59e5b3d141b4`; [GitHub Actions run 37747697657](https://github.com/Richyboy170/toktickit/actions/runs/37747697657) passed server, client, and E2E jobs. Database-backed checks require PostgreSQL; the final CI and local verification record are in [`docs/lab-04/tests.md`](docs/lab-04/tests.md).
 
 The [Engineering Contract](docs/lab-04/Engineering_Contract.md), [Specification](docs/lab-04/specification.md), [API Specification](docs/lab-04/api-spec.md), [UI Specification](docs/lab-04/ui-spec.md), [Test DD](docs/lab-04/tests.md), [Peer Review Record](docs/lab-04/reviewer.md), and [AI Use Record](docs/lab-04/ai-use.md) capture decisions and evidence. GitHub issue descriptions are in [github-issue-drafts.md](docs/lab-04/github-issue-drafts.md).
 
@@ -112,19 +112,19 @@ Lab 4 adds `GET /api/requester/dashboard`, `GET /api/staff/dashboard`, `GET/POST
 ```text
 toktickit/
 ├── .github/workflows/
-├── artifacts/lab-02,lab-03/screenshots/
+├── artifacts/lab-02,lab-03,lab-04/screenshots/
 ├── client/
 │   ├── src/                         React role-based screens and API client
-│   └── tests/lab-01,lab-02,lab-03/  UI and responsive-structure tests
-├── docs/lab-01,lab-02,lab-03/       Contracts, plans, and evidence
-├── e2e/lab-02,lab-03/               Playwright requester/staff/admin flows
+│   └── tests/lab-01…lab-04/          UI and responsive-structure tests
+├── docs/lab-01…lab-04/               Contracts, plans, and evidence
+├── e2e/lab-02…lab-04/                Playwright requester/staff/admin flows
 ├── server/
 │   ├── prisma/                      Schema, migrations, and seed
 │   ├── src/                         Express API and authorization
-│   └── tests/lab-01,lab-02,lab-03/  Unit and PostgreSQL API tests
+│   └── tests/lab-01…lab-04/          Unit and PostgreSQL API tests
 └── package.json                     Workspace verification commands
 ```
 
 ## Git and secrets
 
-`.env`, dependencies, builds, logs, and transient test reports are ignored. Only `.env.example` files with placeholder values are committed. Lab 3 feature branches target `lab3-staging` and are peer-reviewed before the release reaches `main`; the concrete branch sequence and current merge state are recorded in [`docs/lab-03/branch-flow.md`](docs/lab-03/branch-flow.md). The final report records genuine repository and verification evidence.
+`.env`, dependencies, builds, logs, and transient test reports are ignored. Only `.env.example` files with placeholder values are committed. Lab 4 contract and feature branches were merged to `lab4-staging` through reviewed pull requests; the release and accepted follow-up fixes were peer reviewed before merge to `main`. See the [Lab 4 reviewer record](docs/lab-04/reviewer.md), [test traceability](docs/lab-04/tests.md), and [GitHub Project](https://github.com/users/Richyboy170/projects/2).

@@ -1,90 +1,74 @@
-# Lab 4 Test-Driven Development and Traceability
+# Lab 4 Test Evidence and Traceability
 
-**Status:** Authored as the approved Test DD before implementation. `Planned` means the row has not been verified on the final released commit. Preliminary local checks are recorded below; they do not replace final staging/main CI evidence.
+**Evidence baseline:** Cached `origin/main` is `93e8d81e1e9743677dcc3e2a09d8495c0f302823`, which merges PR #61. The prior released implementation passed final-main CI in [run 37747697657](https://github.com/Richyboy170/toktickit/actions/runs/37747697657). PR #61's documentation and regression assertions passed [run 37765483898](https://github.com/Richyboy170/toktickit/actions/runs/37765483898): server 23 files / 72 tests, client 16 files / 59 tests, 15 E2E scenarios, and the additional visual capture. These are CI results, not local reruns; no separate post-merge main run is recorded here. The score-remediation branch adds API and UI workflow coverage, separates dashboard suites, and adds seed/performance checks. All server, client, and E2E/visual jobs passed in [PR #64 run 39101398642](https://github.com/Richyboy170/toktickit/actions/runs/39101398642), including the populated migration check, seed-idempotency check, bounded dashboard/Action query smoke, builds, and audits. Local verification also passed: the complete client suite (17 files / 71 tests), focused Ticket workflow file (12 tests), server DB-free unit suites (2 files / 15 tests), and both production builds. These CI results are not local reruns.
 
-## Strategy
+## Test case traceability
 
-Use Vitest for server unit/API and client component tests, PostgreSQL-backed migration/seed/API regression in CI, and Playwright for end-to-end and responsive evidence. Write each behavior test before its production implementation, observe the intended failure, then implement the smallest passing change. The CI workflow must provision an isolated test database and run server, client, build, migration/seed, E2E, and final visual checks on staging and final `main`.
+The columns below follow Section 10: Test ID, Type, Requirement/AC, What It Tests, Expected Result, Automated Test File, and Final status. Branch-specific results cite PR #64 CI where applicable; the separate release-to-main run remains outstanding.
 
-`PASS` requires a recorded successful command/output for the exact commit. If local PostgreSQL is unavailable, mark local result Blocked and use only a verified final-main CI run for database claims. Keep exact test file paths synchronized with repository state.
+| Test ID | Type | Requirement / AC | What It Tests | Expected Result | Automated Test File | Final |
+|---|---|---|---|---|---|---|
+| VAL-01 | Unit | AC-05 | Trims Action text and accepts a complete creation payload | Normalized valid payload | `server/tests/lab-04/action-validation.unit.test.ts` | Pass - PR #61 server CI |
+| VAL-02 | Unit | AC-05 | Rejects invalid date, blank description, and non-positive assignee ID | Validation errors; no write | `server/tests/lab-04/action-validation.unit.test.ts` | Pass - PR #61 server CI |
+| VAL-03 | Unit | AC-01, AC-05 | Rejects client-supplied Action identity and Ticket link | Validation error | `server/tests/lab-04/action-validation.unit.test.ts` | Pass - PR #61 server CI |
+| VAL-04 | Unit | AC-05 | Requires follow-up note when selected and clears it when disabled | Conditional validation is enforced | `server/tests/lab-04/action-validation.unit.test.ts` | Pass - PR #61 server CI |
+| VAL-05 | Unit | AC-08 | Requires update version and validates nullable fields | Stale/malformed inputs are rejected | `server/tests/lab-04/action-validation.unit.test.ts` | Pass - PR #61 server CI |
+| ACT-01 | Unit | AC-06 | Covers the Action transition policy table | Only specified edges are allowed | `server/tests/lab-04/action-validation.unit.test.ts` | Pass - PR #61 server CI |
+| API-ACT-01 | API | AC-01, AC-04, AC-07 | Authenticated performer, active assignee, inactive-assignee rejection, chronological Action order and ID tie-break | Correct actor/assignee; invalid assignee rejected; stable order | `server/tests/lab-04/actions-taken.api.test.ts` | Pass - PR #64 server CI |
+| API-ACT-02 | API | AC-03 | Requester ownership limits and denied Action writes | Owned read succeeds; cross-owner read is hidden; write is forbidden | `server/tests/lab-04/actions-taken.api.test.ts` | Pass - PR #61 server CI |
+| API-ACT-03 | API | AC-06, AC-08 | Action version checks, valid transitions, and terminal immutability | Stale/invalid writes fail without changing persisted state | `server/tests/lab-04/actions-taken.api.test.ts` | Pass - PR #61 server CI |
+| API-ACT-04 | API | AC-02 | Another Staff member performs and reassigns an Action | Parent Ticket `ownerId` remains unchanged | `server/tests/lab-04/actions-taken.api.test.ts` | Pass - PR #64 server CI |
+| API-TICKET-01 | API | AC-09 | Table-driven matrix of all 64 current-status/target-status pairs | Allowed edges persist; unchanged or invalid edges return the specified conflict and preserve state | `server/tests/lab-04/ticket-workflow.api.test.ts` | Pass - PR #64 server CI |
+| API-TICKET-02 | API | AC-09, AC-10 | Requester/Admin denial, cancellation confirmation/reason, stale Ticket version, active-owner requirement | Role or workflow violation is rejected without changing Ticket state | `server/tests/lab-04/ticket-workflow.api.test.ts` | Pass - PR #64 server CI |
+| API-TICKET-03 | API | AC-10 | No completed Action, incomplete non-cancelled Action, advisory Requester indication, and completed work with cancelled history | Resolution requires an active owner, at least one completed Action, and no incomplete non-cancelled Action | `server/tests/lab-04/ticket-workflow.api.test.ts` | Pass - PR #64 server CI |
+| UNIT-TICKET-01 | Unit | AC-10 | Active owner and completed Action predicate | Missing owner or completed work blocks resolution | `server/tests/lab-04/ticket-workflow.unit.test.ts` | Pass - PR #61 server CI |
+| UNIT-TICKET-02 | Unit | AC-10 | Cancelled history handling | Cancelled Action does not block otherwise eligible resolution | `server/tests/lab-04/ticket-workflow.unit.test.ts` | Pass - PR #61 server CI |
+| API-DASH-REQ-01 | API | AC-11, AC-13 | Requester metrics against DB counts, owned/recent list limits, and open-ticket filter | Counts match DB; lists are owned and bounded; filter totals agree | `server/tests/lab-04/requester-dashboard.api.test.ts` | Pass - PR #64 server CI |
+| API-DASH-REQ-02 | API | AC-11 | Requester cannot select another account's identity | Dashboard uses the authenticated Requester | `server/tests/lab-04/requester-dashboard.api.test.ts` | Pass - PR #64 server CI |
+| API-DASH-REQ-03 | API | AC-11 | Requester account with no Tickets | Zero metrics and empty recent lists | `server/tests/lab-04/requester-dashboard.api.test.ts` | Pass - PR #64 server CI |
+| API-DASH-STAFF-01 | API | AC-12, AC-13 | All eight status counts, list caps, and metric-to-queue filter totals | Counts and filters agree; result lists remain bounded | `server/tests/lab-04/staff-dashboard.api.test.ts` | Pass - PR #64 server CI |
+| API-DASH-STAFF-02 | API | AC-12 | Role crossover between Requester and Staff dashboards | Wrong-role access returns forbidden | `server/tests/lab-04/staff-dashboard.api.test.ts` | Pass - PR #64 server CI |
+| UI-ACT-01 | Component | AC-03, AC-06, AC-17 | Requester Action history is read-only, including terminal Actions | No mutation controls are available | `client/tests/lab-04/ActionsTaken.test.tsx` | Pass - PR #61 client CI |
+| UI-ACT-02 | Component | AC-05, AC-08, AC-17 | Staff default assignee and recoverable form failure | Assignee defaults correctly and draft values remain | `client/tests/lab-04/ActionsTaken.test.tsx` | Pass - PR #61 client CI |
+| UI-ACT-03 | Component | AC-04 | Action history with a different performer and assignee | Correct person appears under each distinct label | `client/tests/lab-04/ActionsTaken.test.tsx` | Pass - PR #64 client CI; local full client suite |
+| UI-TICKET-01 | Component | AC-09, AC-17 | Staff status options, cancellation confirmation, Admin read-only controls, and safe update failure | Only valid transitions appear; consequential actions are confirmed; errors hide server details | `client/tests/lab-04/TicketWorkflow.test.tsx` | Pass - PR #64 client CI; local focused file and full client suite |
+| UI-TICKET-02 | Component | AC-10 | Requester advisory resolution indication | Requester can send advisory feedback but cannot formally change status | `client/tests/lab-04/TicketWorkflow.test.tsx` | Pass - PR #64 client CI; local focused file and full client suite |
+| UI-REQ-01 | Component | AC-11, AC-13 | Requester metrics, recent Tickets, and drill-down links | Values, owned lists, and links render correctly | `client/tests/lab-04/RequesterDashboard.test.tsx` | Pass - PR #61 client CI |
+| UI-REQ-02 | Component | AC-17 | Requester Dashboard safe failure and retry | Safe message and retry control are available | `client/tests/lab-04/RequesterDashboard.test.tsx` | Pass - PR #61 client CI |
+| UI-STAFF-01 | Component | AC-12, AC-13 | Staff metrics, statuses, urgent Tickets, and assigned Action links | Metrics and navigation render correctly | `client/tests/lab-04/StaffDashboard.test.tsx` | Pass - PR #61 client CI |
+| UI-STAFF-02 | Component | AC-12, AC-17 | Zero counts and empty states | Zero values remain visible with useful empty-state text | `client/tests/lab-04/StaffDashboard.test.tsx` | Pass - PR #61 client CI |
+| UI-STAFF-03 | Component | AC-17 | Safe failure, backend-detail hiding, and retry | Safe error and retry render | `client/tests/lab-04/StaffDashboard.test.tsx` | Pass - PR #61 client CI |
+| UI-STAFF-04 | Component | AC-17 | Forbidden dashboard response | Forbidden state has no retry control | `client/tests/lab-04/StaffDashboard.test.tsx` | Pass - PR #61 client CI |
+| UI-STAFF-05 | Component | AC-17 | Loading announcement | Pending state uses a status announcement | `client/tests/lab-04/StaffDashboard.test.tsx` | Pass - PR #61 client CI |
+| MIG-01 | Integration | AC-14 | Populated Lab 3 migration-preservation comparison | Existing IDs/data and zero-Action Tickets survive migration | `server/scripts/verify-lab4-migration-preserves-data.ts` | Pass - runs 37307397634 and 37765483898 |
+| SEED-01 | Integration | AC-15 | Seed rerun compares fixture keys, counts, and IDs, including child counts | Second run creates no duplicate or missing seed fixture and changes no identities | `server/scripts/verify-lab4-seed-idempotency.ts` | Pass - PR #64 server CI disposable database |
+| PERF-01 | Performance smoke | AC-12, AC-15 | 240-ticket/720-action disposable fixture; dashboard query bundles and stable Action ordering | Result shapes/order are correct and three timed query bundles stay within 5 seconds; fixture data is removed transactionally | `server/scripts/verify-lab4-performance-smoke.ts` | Pass - PR #64 server CI disposable database |
+| E2E-ACT-01 | E2E | AC-05, AC-06, AC-18 | Create, start, and complete Action in browser | Staff flow succeeds and history updates | `e2e/lab-04/actions-taken-flow.spec.ts` | Pass - PR #61 E2E CI |
+| E2E-TICKET-01 | E2E | AC-09, AC-10 | Resolution gate and cancelled Action history | Browser flow blocks incomplete work and allows eligible resolution | `e2e/lab-04/ticket-resolution.spec.ts` | Pass - PR #64 E2E CI; API matrix passed PR #64 server CI |
+| E2E-DASH-01 | E2E | AC-11, AC-13, AC-16, AC-18 | Requester dashboard navigation and read-only Action history | Links and Requester permissions work end to end | `e2e/lab-04/dashboards.spec.ts` | Pass - PR #61 E2E CI |
+| E2E-DASH-02 | E2E | AC-12, AC-13, AC-16, AC-18 | Staff/Admin dashboard navigation and Ticket Queue | Dashboard cards open matching queues/details | `e2e/lab-04/dashboards.spec.ts` | Pass - PR #61 E2E CI |
+| VIS-01 | Visual/accessibility | AC-18 | Responsive desktop/tablet/mobile captures and keyboard/focus checks | No reported horizontal overflow; visual evidence is readable | `e2e/lab-03/visual-evidence.spec.ts`, `artifacts/lab-04/screenshots/` | Pass - PR #61 visual capture; no manual screen-reader/device test claimed |
+| REG-01 | Regression | AC-16 | Prior Lab 1-3 suites in server, client, and E2E jobs | Existing behavior remains passing | Repository test suites / CI workflow | Pass - PR #61 CI; 15 E2E scenarios |
+| REL-01 | Release CI | AC-19 | Previously released `main` server, client, E2E, build, and audit jobs | All required jobs pass for released SHA | GitHub Actions workflow | Pass - run 37747697657 for the prior release; remediation release pending |
+| SUB-01 | Submission evidence | AC-20 | Nine-part report, final evidence review, and student reflection | Report/PDF matches the released SHA and required evidence; reflection is student-confirmed | `04_Assignment/report_lab04.md`, `04_Assignment/report_lab04_66070503489.pdf` | Pending final release and student confirmation; not a software test |
 
-## Traceability matrix
+## Required file inventory
 
-| Test ID | Type | AC | Scenario/assertion | Planned test file | Final status |
-|---|---|---|---|---|---|
-| UNIT-01 | Unit | AC-05 | Trim/required/maximum lengths, conditional follow-up, malformed dates/time zones for Action fields | `server/tests/lab-04/action-validation.unit.test.ts` | Planned |
-| UNIT-02 | Unit/workflow | AC-06 | Every Action state edge; terminal state has no outgoing edge | `server/tests/lab-04/action-workflow.unit.test.ts` | Planned |
-| UNIT-03 | Unit/workflow | AC-09 | Complete Ticket matrix and confirmation requirements | `server/tests/lab-04/ticket-workflow.unit.test.ts` | Planned |
-| UNIT-04 | Unit/workflow | AC-10 | Resolution gate rejects missing/inactive owner, no completed Action, or incomplete non-cancelled Action; cancelled Action does not block | `server/tests/lab-04/ticket-workflow.unit.test.ts` | Planned |
-| API-01 | API/integration | AC-01 | Valid create persists correct Ticket, server actor, active assignee, UTC dates | `server/tests/lab-04/actions-taken.api.test.ts` | Planned |
-| API-02 | API/integration | AC-02 | Multiple performers/assignees may act on a Ticket without changing Ticket owner | `server/tests/lab-04/actions-taken.api.test.ts` | Planned |
-| API-03 | API | AC-04 | GET list order is `actionAt ASC,id ASC`, including ties; empty is `[]` | `server/tests/lab-04/actions-taken.api.test.ts` | Planned |
-| API-04 | API/validation | AC-05 | Reject blank/long description, missing follow-up note/result, invalid date; accept valid optional notes | `server/tests/lab-04/actions-taken.api.test.ts` | Planned |
-| API-05 | API/workflow | AC-06 | Allowed Action transitions pass; invalid/terminal update/delete rejected | `server/tests/lab-04/actions-taken.api.test.ts` | Planned |
-| API-06 | API/security | AC-07 | Inactive, missing, Requester, or Admin assignee is rejected; DB unchanged | `server/tests/lab-04/actions-taken.api.test.ts` | Planned |
-| API-07 | API/concurrency | AC-08 | Stale Action `expectedUpdatedAt` returns 409 and preserves latest persisted fields | `server/tests/lab-04/actions-taken.api.test.ts` | Planned |
-| API-08 | API/security/workflow | AC-09 | Each Ticket status edge/role/confirmation checked through HTTP API | `server/tests/lab-04/ticket-workflow.api.test.ts` | Planned |
-| API-09 | API/integration | AC-10 | Resolution gate checks active owner + ≥1 completed Action + all non-cancelled Actions complete transactionally; Requester indication alone insufficient | `server/tests/lab-04/ticket-workflow.api.test.ts` | Planned |
-| API-10 | API/privacy | AC-11 | Requester aggregate/recent lists match only session-owned DB rows, rolling UTC window, empty/zero | `server/tests/lab-04/requester-dashboard.api.test.ts` | Planned |
-| API-11 | API/query | AC-12 | Staff counts/status map/priority list/My Actions match DB predicates, stable order, five-row cap | `server/tests/lab-04/staff-dashboard.api.test.ts` | Planned |
-| API-12 | API/filter | AC-13 | `statusGroup=open` and `priorityGroup=high-or-urgent` compose with owner/assignment filters; contradictory filters return 400 | `server/tests/lab-04/dashboard-drilldown.api.test.ts` | Planned |
-| SEC-01 | Authorization | AC-03 | Requester direct POST/PATCH/DELETE Action denied; owned GET allowed | `server/tests/lab-04/actions-taken.api.test.ts` | Planned |
-| SEC-02 | Authorization | AC-03, AC-11 | Cross-owner Requester Ticket/Action/dashboard access is denied without data leakage | `server/tests/lab-04/actions-taken.api.test.ts`, `requester-dashboard.api.test.ts` | Planned |
-| SEC-03 | Authorization | AC-09 | Administrator cannot change Ticket status; inactive users cannot write | `server/tests/lab-04/ticket-workflow.api.test.ts` | Planned |
-| MIG-01 | Migration/regression | AC-14 | Upgrade representative populated Lab 3 DB preserves IDs, ownership, Attachment bytes/metadata, comments/notes/status | `server/tests/lab-04/migration.regression.test.ts` | Planned |
-| SEED-01 | Migration/seed | AC-15 | Seed twice: stable row counts/IDs, no duplicate or erased non-seed rows, all dashboard edge cases | `server/tests/lab-04/seed.regression.test.ts` | Planned |
-| UI-01 | UI component | AC-04 | Multiple Action display order, performer and assignee labels, terminal read-only state | `client/tests/lab-04/ActionsTaken.test.tsx` | Planned |
-| UI-02 | UI component | AC-05 | Conditional follow-up/result/reason validation, field-level feedback | `client/tests/lab-04/ActionsTaken.test.tsx` | Planned |
-| UI-03 | UI/workflow | AC-06 | Only valid status buttons; completion/cancellation confirmation; no terminal edit/delete | `client/tests/lab-04/ActionsTaken.test.tsx` | Planned |
-| UI-04 | UI/concurrency | AC-08 | 409 preserves draft, explains stale state, offers refresh/reapply | `client/tests/lab-04/TicketWorkflow.test.tsx` | Planned |
-| UI-05 | UI component | AC-11 | Requester Dashboard cards/lists and empty states render API values/links | `client/tests/lab-04/RequesterDashboard.test.tsx` | Planned |
-| UI-06 | UI component | AC-12 | Staff Dashboard cards/status counts/urgent list/current Actions and zero state render accurately | `client/tests/lab-04/StaffDashboard.test.tsx` | Planned |
-| UI-07 | UI/navigation | AC-13 | Each card/row reaches correct queue filter, Ticket, or Actions section | `client/tests/lab-04/RequesterDashboard.test.tsx`, `StaffDashboard.test.tsx` | Planned |
-| UI-10 | UI/navigation | AC-13 | My Tickets/Staff Queue initialize exact status/priority/owner filters from dashboard URL and preserve while paginating | `client/tests/lab-04/DashboardDrilldown.test.tsx` | Planned |
-| UI-08 | UI resilience | AC-17 | Loading, error, forbidden, validation, no-results, duplicate-submit and draft preservation | `client/tests/lab-04/ActionsTaken.test.tsx`, both dashboard tests | Planned |
-| UI-09 | UI style/accessibility | AC-18 | Accessible names, labels/errors, keyboard/focus, status text beyond color, no overlap/clipping | `client/tests/lab-04/ResponsiveAccessibility.test.tsx` | Planned |
-| VIS-01 | Responsive/visual | AC-18 | Screens at 1280×900, 820×1000, 390×844; no page horizontal overflow; capture named states | `e2e/lab-04/visual-evidence.spec.ts` | Planned |
-| PERF-01 | Performance smoke | AC-12 | Dashboard and ordered Action list with realistic seed volume, bounded payload/query plan, measured response budget | `server/tests/lab-04/dashboard-performance.test.ts` | Planned |
-| E2E-01 | E2E | AC-01–07 | Staff creates/assigns/edits/transitions Actions; multiple actors; inactive assignee rejected; Requester read-only | `e2e/lab-04/actions-taken-flow.spec.ts` | Planned |
-| E2E-02 | E2E/workflow | AC-09–10 | Ticket cannot resolve before gate; valid completion then resolve/close/reopen flow; cancelled terminal | `e2e/lab-04/ticket-resolution.spec.ts` | Planned |
-| E2E-03 | E2E/privacy | AC-11–13 | Requester/staff dashboard values, zero states, drill-down and owner isolation | `e2e/lab-04/dashboards.spec.ts` | Planned |
-| REG-01 | Regression/E2E | AC-16 | Representative authentication, My Tickets, Ticket Detail, Attachment, Public Comment, Staff Queue, Internal Note, Admin User Management | existing Lab 1–3 tests plus `e2e/lab-04/regression.spec.ts` | Planned |
-| REL-01 | Release/CI | AC-19 | Full server/client/build/migration/seed/E2E/regression/visual jobs green on recorded final `main` SHA | GitHub Actions run URL + workflow logs | Planned |
-| SUB-01 | Submission audit | AC-20 | One PDF, exact nine headings/order, working links, readable captures, claims match released SHA | `04_Assignment/report_lab04_66070503489.pdf` | Planned |
+| Area | Required/implemented files |
+|---|---|
+| Server validation and Actions | `server/tests/lab-04/action-validation.unit.test.ts`, `server/tests/lab-04/actions-taken.api.test.ts` |
+| Server Ticket workflow | `server/tests/lab-04/ticket-workflow.unit.test.ts`, `server/tests/lab-04/ticket-workflow.api.test.ts` |
+| Server dashboards | `server/tests/lab-04/requester-dashboard.api.test.ts`, `server/tests/lab-04/staff-dashboard.api.test.ts` |
+| Client Actions and workflow | `client/tests/lab-04/ActionsTaken.test.tsx`, `client/tests/lab-04/TicketWorkflow.test.tsx` |
+| Client dashboards | `client/tests/lab-04/RequesterDashboard.test.tsx`, `client/tests/lab-04/StaffDashboard.test.tsx` |
+| Seed/performance checks | `server/scripts/verify-lab4-seed-idempotency.ts`, `server/scripts/verify-lab4-performance-smoke.ts` |
 
-## Required test commands
+The required file names now exist on the score-remediation branch. The existing combined `dashboards.api.test.ts` was replaced by the two named dashboard suites; its assertions were moved without changing the covered outcomes. This branch still needs CI evidence before its database-backed statuses can be marked passing.
 
-Use repository scripts and exact current arguments (document any adjustments):
+## Evidence limits and follow-up
 
-```bash
-npm --prefix server test -- tests/lab-04 --reporter=dot
-npm --prefix client test -- tests/lab-04 --reporter=dot
-npm run build
-npm --prefix server exec -- prisma validate --schema prisma/schema.prisma
-npm run test:e2e
-npm run test:evidence
-```
-
-Migration and seed tests require isolated PostgreSQL test data. Run them twice from the Lab 3 schema snapshot and confirm non-seed rows survive. Capture exact output and commit SHA in `artifacts/lab-04/ci/`; do not commit credentials or DB dumps.
-
-## Local verification log (2026-10-04)
-
-These results were run against the source now committed as `c1424ef` on `feature/lab4-action-model`; they are not final-release results.
-
-| Check | Result | Evidence/limitation |
-|---|---|---|
-| Server TypeScript build | Pass | `npm run build` in `server/` exited 0. |
-| Server focused unit tests | Pass | `npx vitest run tests/lab-04/action-validation.unit.test.ts tests/lab-04/ticket-workflow.unit.test.ts tests/lab-03/query-validation.unit.test.ts --reporter=dot`: 3 files, 18 tests passed. |
-| Client TypeScript check | Pass | `npx tsc --noEmit` in `client/` exited 0. |
-| Focused client regression and Lab 4 component tests | Pass | `npx vitest run tests/lab-04 tests/lab-02/MyTickets.test.tsx tests/lab-02/RequesterTicketDetail.test.tsx tests/lab-03/AdministratorTicketDetail.test.tsx tests/lab-03/StaffTicketDetail.test.tsx tests/lab-03/StaffTicketQueue.test.tsx --reporter=dot`: 8 files, 23 tests passed. |
-| Client production build | Pass | `npm run build` in `client/` exited 0; Vite emitted production assets. |
-| Full client suite | Pass | `npx vitest run --reporter=dot` in `client/`: 16 files, 55 tests passed. |
-| Prisma validation | Pass | `npx prisma validate --schema prisma/schema.prisma` exited 0. |
-| Prisma generation | Pass | `npx prisma generate` exited 0 and generated Prisma Client v5.22.0. |
-| PostgreSQL migration/API tests/E2E | Blocked | No PostgreSQL service is listening on `localhost:5432`; `prisma migrate deploy` returned P1001. No database-backed or browser E2E result is claimed. |
-| Client dependency audit | Pass | After updating transitive `undici` to 8.11.2, `npm audit` in `client/` and `server/` each reported 0 vulnerabilities. |
-| Peer review, staging CI, release CI, visual/accessibility evidence | Pending | Must be populated from actual PR/CI/screenshots before final PDF. |
-| Playwright discovery | Pass | `npx playwright test --config=client/playwright.config.ts --list`: 15 tests in 9 files discovered; this does not execute browser flows. |
-| Initial PR CI at `82cb4e3` | Fail; fixes pending rerun | One API test used the owner session for the supposedly cross-owner Ticket; the Staff status links' accessible names concatenated label and count (`New1`). The test now uses the other Requester's session, and the links now expose explicit status/count accessible names. |
-
-The traceability matrix above remains **Planned** as a final-release status ledger. Update every row against the exact released SHA and link the corresponding output; explain skips/blocks rather than inferring a pass from file existence.
+- The application workspace has no local PostgreSQL server or Docker engine. The API matrix, split dashboard API files, seed rerun, and performance smoke have not been run locally; CI uses the workflow's disposable PostgreSQL 17 service.
+- The performance smoke exercises the same Prisma query shapes as the dashboard routes inside a transaction. Its fixtures are isolated and deleted before the transaction commits. The 5-second bound is intentionally generous and should be confirmed by the CI run.
+- Visual fixtures are deterministic representative UI content, not live database records. No manual screen-reader or physical-device test is claimed; see [`accessibility-review.md`](./accessibility-review.md).
+- The existing committed screenshots are indexed in [`artifacts/lab-04/README.md`](../../artifacts/lab-04/README.md). Previously released-main screenshot evidence is available in the `toktickit-playwright-evidence` artifact from run 37747697657.
+- Issue #53 covers final report/PDF and evidence review. Do not mark it complete while report assembly, evidence review, or student reflection confirmation is outstanding.

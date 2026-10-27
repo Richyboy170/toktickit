@@ -1,41 +1,32 @@
-# Lab 4 Peer Review Record
+# Lab 4 Peer Review and Integration Record
 
-**Status:** Feature PR CI feedback received; fixes are being prepared for rerun. Populate review fields from real GitHub activity only.
+**Status:** Lab 4 contract, implementation, release, migration-preservation, accessibility, dependency-fix, and documentation/regression PRs have been peer reviewed and merged. PR #61 was merged by iceswift to `main` on 2026-10-14 at `93e8d81e1e9743677dcc3e2a09d8495c0f302823`; its server, client, E2E, and visual checks passed in [run 37765483898](https://github.com/Richyboy170/toktickit/actions/runs/37765483898). The score-remediation work is in separate PR #64 against `lab4-staging`, linked to dedicated Issue #63. All server, client, and E2E/visual jobs passed in [run 39101398642](https://github.com/Richyboy170/toktickit/actions/runs/39101398642), including the populated migration-preservation, seed-idempotency, and bounded query smoke steps. PR #64 is open with no submitted review yet; staging merge and a reviewed release PR to `main` remain outstanding.
 
-## Ready for review
+## Pull requests and reviewer
 
-- Branch: `feature/lab4-action-model`
-- Commit: `c1424ef` (`feat: add Lab 4 actions workflow and dashboards`)
-- Target: `lab4-staging`
-- PR number/URL: Pending recording from GitHub; the compare link is available if the PR still needs to be opened.
-- Create PR if needed: [compare feature branch with lab4-staging](https://github.com/Richyboy170/toktickit/compare/lab4-staging...feature/lab4-action-model?expand=1)
-- Local verification summary: `docs/lab-04/tests.md`
-- Limitation: GitHub CLI reports its saved token is invalid, so I cannot retrieve the PR URL or review threads through the API in this session. Record those from the GitHub page before submission.
+| PR | Work | Review/integration |
+|---|---|---|
+| [#45](https://github.com/Richyboy170/toktickit/pull/45) | Lab 4 contract and Test DD baseline | Approved by `Tanakrit-triton` (“Look good, Approve”); merged to `lab4-staging` at `08e92e6` |
+| [#46](https://github.com/Richyboy170/toktickit/pull/46) | Actions Taken, Ticket workflow, dashboards, tests, and CI fixes | `Tanakrit-triton` approved twice on 2026-10-04; merged by `Tanakrit-triton` to `lab4-staging` at `45431b9b8769dc20a4c23c0595793c4c831ca769` |
+| [#47](https://github.com/Richyboy170/toktickit/pull/47) | Release PR from `lab4-staging` to `main` | Approved by `Tanakrit-triton` (“Look good, Approve.”); merged to `main` at `3e0492cf438e218cdd6ac4fd2a3f10e0fbf23116` |
+| [#57](https://github.com/Richyboy170/toktickit/pull/57) | Populated migration-preservation coverage | Approved by `Tanakrit-triton` (“Look good, Approve.”); merged to `main` at `76067e973bf3a3d7668c95936f1d8f3c3db02e47` |
+| [#58](https://github.com/Richyboy170/toktickit/pull/58) | Mobile navigation, keyboard focus, and Action form accessibility evidence | `iceswift` requested a direct Development link to #51; after the link was added, `iceswift` approved the unchanged head and merged to `main` at `7887cd960caa40919f19647a6bb28b578001e5a5`. `Tanakrit-triton` also approved. The review found no blocking source-code defect and records manual testing limits. |
+| [#60](https://github.com/Richyboy170/toktickit/pull/60) | Post-merge dependency audit remediation | `iceswift` verified both lockfiles and passing PR CI, approved, and merged to `main` at `6e6d645d61621f8a74166947326f59e5b3d141b4` |
+| [#61](https://github.com/Richyboy170/toktickit/pull/61) | Submission documentation and additional regression assertions; tracked by dedicated Issue [#62](https://github.com/Richyboy170/toktickit/issues/62) | iceswift merged it directly to `main` on 2026-10-14 at `93e8d81`; PR checks passed on run 37765483898. The PR targeted `main` after the release. The course's staging/release workflow requires feature work through `lab4-staging`; this record does not claim an instructor-approved exception for PR #61. |
+| [#64](https://github.com/Richyboy170/toktickit/pull/64) | Workflow and test evidence remediation; linked to dedicated Issue [#63](https://github.com/Richyboy170/toktickit/issues/63); covers AC-02, AC-04, AC-09, AC-10, AC-11/12, AC-15, and Section 10 test traceability | Open against `lab4-staging`; server, client, and E2E/visual checks passed on run 39101398642. No peer review has been submitted; staging merge and reviewed release PR remain outstanding. |
 
-## Reviewer
+The feature PR's CI feedback identified a cross-owner API test that reused the owner session and an accessible name that concatenated status and count. The test was corrected to use the other Requester's session; status links were given explicit accessible names. Later CI fixes stabilized E2E login/navigation and fixture behavior. These code changes are visible in the PR commit history; GitHub records the peer's approvals but no separate PR #46 review-comment threads. The PR #58 review requested an explicit Issue #51 Development relationship; the student linked the issue, replied, and received approval on the unchanged source/test commit. This was a workflow requirement, not a blocking code defect. Review scope and limits are recorded in the actual [iceswift review](https://github.com/Richyboy170/toktickit/pull/58#pullrequestreview-5436999371) and its preceding review.
 
-| Field | Record |
-|---|---|
-| Reviewer name / GitHub handle | Pending peer assignment |
-| PRs reviewed | Pending |
-| Review dates | Pending |
-| Approval(s) | Pending |
+## CI
 
-## Review history
+- [Staging Actions run 37191660316](https://github.com/Richyboy170/toktickit/actions/runs/37191660316) passed for the Lab 4 feature integration.
+- [PR #47](https://github.com/Richyboy170/toktickit/pull/47) was approved and merged to `main`; its release checks passed in [run 37206521084](https://github.com/Richyboy170/toktickit/actions/runs/37206521084).
+- [PR #57](https://github.com/Richyboy170/toktickit/pull/57) added populated migration-preservation coverage; [run 37307397634](https://github.com/Richyboy170/toktickit/actions/runs/37307397634) passed after merge.
+- [PR #58](https://github.com/Richyboy170/toktickit/pull/58) added responsive and accessibility checks. [Run 37314112381](https://github.com/Richyboy170/toktickit/actions/runs/37314112381) passed; the review explicitly requests final-main CI and evidence refresh after merge.
+- [PR #60](https://github.com/Richyboy170/toktickit/pull/60) fixed the post-merge audit findings. Final-main run [37747697657](https://github.com/Richyboy170/toktickit/actions/runs/37747697657) passed on the actual merge SHA.
+- Issues #48–#50, #52, #54–#56, and #59 were recorded as Done. GitHub API checked 2026-10-18 shows Issues #51 and #53 closed, while their Project Status fields remain Started; #63 is open and in PR Review for PR #64. The student closed #51 and #53 before the broader acceptance work was complete. This closure state does not establish acceptance: PDF assembly, student reflection confirmation, and final evidence review remain outstanding.
 
-| PR | Reviewer | Comment/requested change | Author response/change | Re-review/approval | Evidence |
-|---|---|---|---|---|---|
-| Contract-only PR → `lab4-staging` | Pending | Pending | Pending | Pending | Pending |
-| Feature PRs → `lab4-staging` | Pending | Pending | Pending | Pending | Pending |
-| Release PR `lab4-staging` → `main` | Pending | Pending | Pending | Pending | Pending |
+## Remaining evidence
 
-Do not fill reviewer identity, feedback, responses, approval, or merge state until the corresponding GitHub record exists. Link exact PR review threads and capture a readable screenshot for the final PDF.
-
-## Integration evidence
-
-- Contract PR and merge SHA: Pending
-- Feature PRs and staging merge SHAs: Pending
-- Staging CI URL/conclusion: Pending
-- Release PR and final-main SHA: Pending
-- Final-main CI URL/conclusion: Pending
-- Final Project/Kanban Done-board evidence: Pending
+- Current cached `main` commit: `93e8d81e1e9743677dcc3e2a09d8495c0f302823`, which merges PR #61. Its PR checks passed in [run 37765483898](https://github.com/Richyboy170/toktickit/actions/runs/37765483898); the prior released-main run [37747697657](https://github.com/Richyboy170/toktickit/actions/runs/37747697657) passed on `6e6d645`.
+- PR #64 supplies the dedicated Issue, feature PR to `lab4-staging`, and passing staging-targeted CI. Peer review, staging merge, and a separate reviewed release PR to `main` remain outstanding. Issue #53 is currently closed even though report/PDF assembly, student reflection confirmation, and final evidence review remain incomplete; do not present the issue closure as final acceptance.

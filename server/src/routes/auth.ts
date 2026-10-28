@@ -22,15 +22,15 @@ const LOGIN_FAILURE_LIMIT = 5;
 const loginFailures = new Map<string, { count: number; resetAt: number }>();
 
 const loginSchema = z.object({
-  email: z.string({ required_error: "Email is required." }).trim().email("Enter a valid email address."),
-  password: z.string({ required_error: "Password is required." }).min(1, "Password is required."),
+  email: z.string({ error: (issue) => issue.input === undefined ? "Email is required." : undefined }).trim().email("Enter a valid email address."),
+  password: z.string({ error: (issue) => issue.input === undefined ? "Password is required." : undefined }).min(1, "Password is required."),
 });
 
 const changePasswordSchema = z.object({
-  currentPassword: z.string({ required_error: "Current password is required." }).min(1, "Current password is required."),
+  currentPassword: z.string({ error: (issue) => issue.input === undefined ? "Current password is required." : undefined }).min(1, "Current password is required."),
   newPassword: z.string().optional(),
   password: z.string().optional(),
-  confirmPassword: z.string({ required_error: "Password confirmation is required." }),
+  confirmPassword: z.string({ error: (issue) => issue.input === undefined ? "Password confirmation is required." : undefined }),
 }).superRefine((value, ctx) => {
   const next = value.newPassword ?? value.password;
   if (!next) {

@@ -10,6 +10,8 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "tsx prisma/seed.ts",
     "test:migration-preservation": "tsx scripts/verify-lab4-migration-preserves-data.ts",
+    "verify:lab4-seed-idempotency": "tsx scripts/verify-lab4-seed-idempotency.ts",
+    "verify:lab4-performance-smoke": "tsx scripts/verify-lab4-performance-smoke.ts",
     "prisma:initialize-legacy-passwords": "tsx prisma/initialize-legacy-passwords.ts",
     "e2e:prepare": "prisma migrate deploy && npm run prisma:seed && tsx prisma/e2e-prepare.ts",
     "e2e:serve": "npm run e2e:prepare && npm run dev",
@@ -24,10 +26,10 @@
     "express": "^4.21.2",
     "file-type": "^21.3.4",
     "multer": "^2.4.0",
-    "zod": "^3.24.2"
+    "zod": "^4.6.7"
   },
   "overrides": {
-    "qs": "6.16.0"
+    "qs": "6.16.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
@@ -39,6 +41,6 @@
     "supertest": "^7.0.0",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",
-    "vitest": "^4.1.11"
+    "vitest": "^4.1.12"
   }
 }

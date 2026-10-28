@@ -1,6 +1,6 @@
 # Lab 4 UI Specification
 
-**Status:** Implemented and merged to `main` at `6e6d645d61621f8a74166947326f59e5b3d141b4`. Final-main Playwright artifacts contain desktop, tablet, and mobile views of both dashboards and staff-editable and Requester-read-only Action details. Screenshots use deterministic fixture data. Browser keyboard/focus and responsive checks passed in PR #58 and final-main CI. Manual screen-reader and physical-device testing were not performed; see `accessibility-review.md`.
+**Status as of 2026-10-28:** The released UI is present on `main` at `93e8d81e1e9743677dcc3e2a09d8495c0f302823`. The prior final-main Playwright artifact contains desktop, tablet, and mobile views of both dashboards and staff-editable and Requester-read-only Action details. Screenshots use deterministic fixture data. Browser keyboard/focus and responsive checks passed in PR #58 and the prior final-main CI. The Ticket workflow component and database-backed API tests passed in [PR #64 CI](https://github.com/Richyboy170/toktickit/actions/runs/39109989985); PR #64 was independently approved and merged to `lab4-staging` at `469d00c`. The follow-up release PR #65 remains open. Manual screen-reader and physical-device testing were not performed; see `accessibility-review.md`.
 
 ## Navigation and roles
 
@@ -77,7 +77,8 @@ The frontend displays server aggregates unchanged and does not recompute counts 
 - [x] Staff-editable and Requester-read-only Action detail captured at desktop/tablet/mobile; roles and editable/read-only fields are visibly distinct.
 - [x] Create/edit and conditional follow-up behavior is covered by client and E2E tests; create/edit/follow-up screenshots are in final-main CI artifacts.
 - [x] Action validation, terminal lifecycle, inactive-assignee rejection, and role restrictions are covered by server/client/API/E2E tests listed in `tests.md`.
-- [x] The resolution predicate is covered by `server/tests/lab-04/ticket-workflow.unit.test.ts`, and the end-to-end workflow is covered by `e2e/lab-04/ticket-resolution.spec.ts`. There is no dedicated Ticket workflow API test file or `TicketWorkflow.test.tsx`; the E2E scenario exercises the workflow through the browser. The full transition matrix is specified above and in `specification.md`.
+- [x] The resolution predicate is covered by `server/tests/lab-04/ticket-workflow.unit.test.ts`, and the browser flow is covered by `e2e/lab-04/ticket-resolution.spec.ts`.
+- [x] PR #64 adds `server/tests/lab-04/ticket-workflow.api.test.ts` for the full role/status matrix and resolution gate, and `client/tests/lab-04/TicketWorkflow.test.tsx` for workflow controls. The component and database-backed API tests passed in CI run 39101398642; the 12 component tests also passed locally.
 - [x] Visible keyboard focus, navigation width, checkbox label treatment, field labels/errors, and non-color status cues are covered by the accessibility review and PR #58 browser checks.
 - [x] Theme contrast ratios were calculated and recorded in `accessibility-review.md`; screen-reader and physical-device testing remain unperformed.
 - [x] No page-level horizontal overflow at the captured viewports; visual Playwright check passed in CI.

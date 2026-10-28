@@ -17,9 +17,9 @@ const passwordSchema = z.string().superRefine((value, ctx) => {
   if (message) ctx.addIssue({ code: z.ZodIssueCode.custom, message });
 });
 const createUserSchema = z.object({
-  name: z.string({ required_error: "Name is required." }).trim().min(1, "Name is required.").max(120, "Name must be at most 120 characters."),
-  email: z.string({ required_error: "Email is required." }).trim().email("Enter a valid email address."),
-  role: z.enum(roles, { errorMap: () => ({ message: "Select a valid role." }) }),
+  name: z.string({ error: (issue) => issue.input === undefined ? "Name is required." : undefined }).trim().min(1, "Name is required.").max(120, "Name must be at most 120 characters."),
+  email: z.string({ error: (issue) => issue.input === undefined ? "Email is required." : undefined }).trim().email("Enter a valid email address."),
+  role: z.enum(roles, { error: "Select a valid role." }),
   isActive: z.boolean().optional().default(true),
   initialPassword: passwordSchema.optional(),
   password: passwordSchema.optional(),
@@ -35,7 +35,7 @@ const createUserSchema = z.object({
 const updateUserSchema = z.object({
   name: z.string().trim().min(1, "Name is required.").max(120, "Name must be at most 120 characters.").optional(),
   email: z.string().trim().email("Enter a valid email address.").optional(),
-  role: z.enum(roles, { errorMap: () => ({ message: "Select a valid role." }) }).optional(),
+  role: z.enum(roles, { error: "Select a valid role." }).optional(),
   isActive: z.boolean().optional(),
   active: z.boolean().optional(),
 }).refine((value) => Object.keys(value).length > 0, { message: "Provide at least one account field." });

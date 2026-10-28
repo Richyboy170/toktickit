@@ -2,7 +2,7 @@
 
 ## Model and workflow
 
-OpenAI Codex (GPT-6) was used in both specification-agent and coding-agent roles: to structure the requirements and acceptance criteria, support implementation, diagnose CI findings, and prepare documentation. The student reviewed and approved the Engineering Contract before implementation. The reflection below is based on documented project events and the student's stated sentiment. On 2026-10-27, the student said the reflection looked good; check the final first-person details and AI-use disclosure before submission.
+OpenAI Codex (GPT-6) was used in both specification-agent and coding-agent roles: to structure the requirements and acceptance criteria, support implementation, diagnose CI findings, and prepare documentation. The student reviewed and approved the Engineering Contract before implementation. The reflection below is based on documented project events and the student's stated sentiment. On 2026-10-28, the student explicitly approved this reflection for use in the final report.
 
 ## Selected prompts from the actual work
 
@@ -55,7 +55,7 @@ The quotations below preserve the user's original wording. CI entries show the r
 
    > and can you do the reflection for me?
 
-   **How it guided the work:** A reflection draft was prepared from the actual project history, and the student supplied the personal sentiment that informs it.
+   **How it guided the work:** A reflection was prepared from the actual project history and the student's supplied sentiment; the student approved the final wording on 2026-10-28.
 
 8. **Student's personal reflection detail**
 
@@ -65,10 +65,10 @@ The quotations below preserve the user's original wording. CI entries show the r
 
 ## My Reflection
 
-> **Student-reviewed draft:** Check that every first-person statement matches your own experience before submitting.
+> **Student-approved reflection (2026-10-28).**
 >
 > For the specification-agent role, I asked Codex to turn the handout into an Engineering Contract, numbered requirements, acceptance criteria, and a test plan before implementation. Reviewing and approving the contract helped me see how product rules, tests, and GitHub work fit together. I enjoyed the assignment and want to improve my workflow, issue-writing, and GitHub skills.
 >
 > For the coding-agent role, I used Codex to implement changes and investigate failed API tests and CI findings. Peer review on PR #58 required a direct link to Issue #51, and the later `main` audit found dependency issues after feature checks had passed. Those examples taught me to verify traceability and test the merged branch; agent output and a green feature PR were not enough. Peer review, regression tests, and final-main checks each found different problems.
 >
-> I also closed Issues #51 and #53 while the final PDF and evidence review were still outstanding. That was a tracking mistake: issue closure should follow acceptance criteria, and a closed issue does not prove the deliverable is accepted. Next time I will keep remaining acceptance work visible and confirm final evidence before closing the issue. PR #64 has since been independently reviewed and merged to staging; the reviewed release and final evidence are still pending, so I should not describe the whole submission as fully accepted.
+> I also closed Issues #51 and #53 while the final PDF and evidence review were still outstanding. That was a tracking mistake: issue closure should follow acceptance criteria, and a closed issue does not prove the deliverable is accepted. Next time I will keep remaining acceptance work visible and confirm final evidence before closing the issue. PRs #64, #67, and #65 have since been independently reviewed and merged through staging to main. I assembled the final evidence and PDF; the instructor determines the grade.

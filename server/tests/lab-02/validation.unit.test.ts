@@ -28,4 +28,25 @@ describe("Ticket validation", () => {
       });
     }
   });
+
+  it("preserves required and selection messages for invalid Ticket inputs", () => {
+    const result = createTicketSchema.safeParse({
+      ...valid,
+      categoryId: "invalid",
+      requestedPriority: "INVALID",
+      summary: undefined,
+      description: undefined,
+      submissionToken: undefined,
+    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(zodFieldErrors(result.error)).toMatchObject({
+        categoryId: "Select a Category.",
+        requestedPriority: "Select a valid Requested Priority.",
+        summary: "Summary is required.",
+        description: "Description is required.",
+        submissionToken: "Submission token is required.",
+      });
+    }
+  });
 });

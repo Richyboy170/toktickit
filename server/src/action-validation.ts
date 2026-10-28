@@ -2,7 +2,7 @@ import { z } from "zod";
 import { FieldErrors } from "./http.js";
 
 const instant = z.string().datetime({ offset: true, message: "Enter a valid date and time." });
-const positiveId = z.number({ invalid_type_error: "Select an active IT Staff assignee." })
+const positiveId = z.number({ error: (issue) => issue.input === undefined ? "Required" : "Select an active IT Staff assignee." })
   .int("Select an active IT Staff assignee.")
   .positive("Select an active IT Staff assignee.");
 const trimmedText = (field: string, maximum: number, required: boolean) => z.string()

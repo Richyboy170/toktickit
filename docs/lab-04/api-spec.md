@@ -1,6 +1,6 @@
 # Lab 4 API Specification
 
-**Status:** Approved baseline implemented and merged to `lab4-staging` in PR #46. Server API tests passed in the successful post-merge staging CI run; final-main verification remains pending. This extends `api-spec.md` from Lab 3. Existing auth, Ticket, Attachment, comment, note, queue, and Admin endpoints retain their contracts unless stated below.
+**Status as of 2026-10-28:** The approved baseline was implemented in PR #46, released to `main` in PR #47, and verified in [final-main CI run 37280185283](https://github.com/Richyboy170/toktickit/actions/runs/37280185283). Subsequent workflow/test remediation was reviewed and merged to staging in PR #64; the current follow-up release to `main` remains pending in PR #65. This extends `api-spec.md` from Lab 3. Existing auth, Ticket, Attachment, comment, note, queue, and Admin endpoints retain their contracts unless stated below.
 
 ## Conventions
 

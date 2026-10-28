@@ -6,7 +6,7 @@
 
 | PR | Work | Review/integration |
 |---|---|---|
-| [#45](https://github.com/Richyboy170/toktickit/pull/45) | Lab 4 contract and Test DD baseline | Approved by `Tanakrit-triton` (“Look good, Approve”); merged to `lab4-staging` at `08e92e6` |
+| [#45](https://github.com/Richyboy170/toktickit/pull/45) | Lab 4 contract and Test DD baseline | Merged to `lab4-staging` at `08e92e6` at 04:26 UTC; `Tanakrit-triton` approved at 04:32 UTC, after the merge. |
 | [#46](https://github.com/Richyboy170/toktickit/pull/46) | Actions Taken, Ticket workflow, dashboards, tests, and CI fixes | `Tanakrit-triton` approved twice on 2026-10-04; merged by `Tanakrit-triton` to `lab4-staging` at `45431b9b8769dc20a4c23c0595793c4c831ca769` |
 | [#47](https://github.com/Richyboy170/toktickit/pull/47) | Release PR from `lab4-staging` to `main` | Approved by `Tanakrit-triton` (“Look good, Approve.”); merged to `main` at `3e0492cf438e218cdd6ac4fd2a3f10e0fbf23116` |
 | [#57](https://github.com/Richyboy170/toktickit/pull/57) | Populated migration-preservation coverage | Approved by `Tanakrit-triton` (“Look good, Approve.”); merged to `main` at `76067e973bf3a3d7668c95936f1d8f3c3db02e47` |
@@ -16,6 +16,8 @@
 | [#64](https://github.com/Richyboy170/toktickit/pull/64) | Workflow and test evidence remediation; linked to dedicated Issue [#63](https://github.com/Richyboy170/toktickit/issues/63); covers AC-02, AC-04, AC-09, AC-10, AC-11/12, AC-15, and Section 10 test traceability | Tanakrit-triton approved and merged to `lab4-staging` at `469d00c` on 2026-10-27. Head `aa52819` passed server, client, and E2E/visual run 39109989985. |
 | [#67](https://github.com/Richyboy170/toktickit/pull/67) | Dependency audit remediation and current evidence-status corrections; linked to Issue [#66](https://github.com/Richyboy170/toktickit/issues/66) | As of 2026-10-28, open against `lab4-staging` awaiting independent review. Original fix commit `1eeee3a` passed server, client, and E2E/visual run 40495359520; verify the current head's checks. |
 | [#65](https://github.com/Richyboy170/toktickit/pull/65) | Release from `lab4-staging` to `main`; linked to Issue #63 and references the audit follow-up #66 | As of 2026-10-28, open. Its prior checks failed on dependency audits; integrate the reviewed fix, rerun checks, and obtain independent review before merging. |
+
+PR #45's peer approval was recorded after its staging merge, so it is not evidence of pre-merge peer approval for that PR.
 
 The feature PR's CI feedback identified a cross-owner API test that reused the owner session and an accessible name that concatenated status and count. The test was corrected to use the other Requester's session; status links were given explicit accessible names. Later CI fixes stabilized E2E login/navigation and fixture behavior. These code changes are visible in the PR commit history; GitHub records the peer's approvals but no separate PR #46 review-comment threads. The PR #58 review requested an explicit Issue #51 Development relationship; the student linked the issue, replied, and received approval on the unchanged source/test commit. This was a workflow requirement, not a blocking code defect. Review scope and limits are recorded in the actual [iceswift review](https://github.com/Richyboy170/toktickit/pull/58#pullrequestreview-5436999371) and its preceding review.
 

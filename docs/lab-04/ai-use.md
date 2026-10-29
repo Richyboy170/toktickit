@@ -65,8 +65,6 @@ The quotations below preserve the user's original wording. CI entries show the r
 
 ## My Reflection
 
-> **Student-approved reflection (2026-10-28).**
->
 > For the specification-agent role, I asked Codex to turn the handout into an Engineering Contract, numbered requirements, acceptance criteria, and a test plan before implementation. Reviewing and approving the contract helped me see how product rules, tests, and GitHub work fit together. I enjoyed the assignment and want to improve my workflow, issue-writing, and GitHub skills.
 >
 > For the coding-agent role, I used Codex to implement changes and investigate failed API tests and CI findings. Peer review on PR #58 required a direct link to Issue #51, and the later `main` audit found dependency issues after feature checks had passed. Those examples taught me to verify traceability and test the merged branch; agent output and a green feature PR were not enough. Peer review, regression tests, and final-main checks each found different problems.
